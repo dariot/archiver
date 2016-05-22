@@ -46,13 +46,15 @@ public class Database {
     }
     
     // categories
-    private void insertCategory(Category c)
+    public void insertCategory(Category c)
     {
         try
         {
             stmt = conn.createStatement();
             
-            String insert = "";
+            long id = c.getId();
+            String name = c.getName();
+            String insert = "INSERT INTO CATEGORY (ID, NAME) VALUES (" + id + ", '" + name + "')";
             
             stmt.execute(insert);
             stmt.close();
@@ -63,7 +65,7 @@ public class Database {
         }
     }
     
-    private static void getCategory(String id)
+    public static void getCategory(String id)
     {
         try
         {

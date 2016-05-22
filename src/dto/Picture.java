@@ -1,36 +1,37 @@
 package dto;
 
 public class Picture {
-	
+
 	private int id = 0;
-	private int objectId = 0;
-	private byte[] img;
-	private boolean isMainPic = false;
-	
+	private int entityId = 0;
+	private byte[] data;
+
+	public byte[] getData() {
+		return data;
+	}
+
+	public int getEntityId() {
+		return entityId;
+	}
+
 	public int getId() {
 		return id;
 	}
 
-	public byte[] getImg() {
-		return img;
-	}
 	public int getObjectId() {
-		return objectId;
+		return entityId;
 	}
-	public boolean isMainPic() {
-		return isMainPic;
+
+	public void setData(byte[] data) {
+		this.data = data;
 	}
+
+	public void setEntityId(int entityId) {
+		this.entityId = entityId;
+	}
+
 	public void setId(int id) {
 		this.id = id;
-	}
-	public void setImg(byte[] img) {
-		this.img = img;
-	}
-	public void setMainPic(boolean isMainPic) {
-		this.isMainPic = isMainPic;
-	}
-	public void setObjectId(int objectId) {
-		this.objectId = objectId;
 	}
 
 }

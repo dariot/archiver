@@ -18,7 +18,8 @@ public class Entity {
 	private String notes = "";
 	private String sold = "";
 
-	public Entity() {}
+	public Entity() {
+	}
 
 	public Entity(String s) {
 		if (s != null) {
@@ -57,6 +58,10 @@ public class Entity {
 
 	public String getCurrentValue() {
 		return currentValue;
+	}
+
+	public String getCurrentValueDate() {
+		return currentValueDate;
 	}
 
 	public long getId() {
@@ -113,6 +118,10 @@ public class Entity {
 
 	public void setCurrentValue(String currentValue) {
 		this.currentValue = currentValue;
+	}
+
+	public void setCurrentValueDate(String currentValueDate) {
+		this.currentValueDate = currentValueDate;
 	}
 
 	public void setId(long id) {

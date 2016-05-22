@@ -27,6 +27,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
+import dao.CategoryDAO;
 import dto.Category;
 import dto.Entity;
 
@@ -74,6 +75,8 @@ public class Antics implements ActionListener {
 	private static JLabel originalPlaceLabel;
 	private static JLabel actualPlaceLabel;
 	private static JLabel currentValueLabel;
+	private static JLabel currentValueDateLabel;
+	private static JLabel soldLabel;
 	private static JLabel notesLabel;
 	
 	private static JTextField authorTF;
@@ -86,6 +89,8 @@ public class Antics implements ActionListener {
 	private static JTextField originalPlaceTF;
 	private static JTextField actualPlaceTF;
 	private static JTextField currentValueTF;
+	private static JTextField currentValueDateTF;
+	private static JTextField soldTF;
 	private static JTextField notesTF;
 	
 	// dettaglio oggetto
@@ -335,6 +340,16 @@ public class Antics implements ActionListener {
 		currentValueTF = new JTextField(e.getCurrentValue());
 		frameDettaglioEntity.add(currentValueTF);
 		
+		currentValueDateLabel = new JLabel("Data valore odierno");
+		frameDettaglioEntity.add(currentValueDateLabel);
+		currentValueDateTF = new JTextField(e.getCurrentValueDate());
+		frameDettaglioEntity.add(currentValueDateTF);
+		
+		soldLabel = new JLabel("Oggetto venduto");
+		frameDettaglioEntity.add(soldLabel);
+		soldTF = new JTextField(e.getCurrentValueDate());
+		frameDettaglioEntity.add(soldTF);
+		
 		notesLabel = new JLabel("Annotazioni varie");
 		frameDettaglioEntity.add(notesLabel);
 		notesTF = new JTextField(e.getNotes());
@@ -445,6 +460,8 @@ public class Antics implements ActionListener {
 		String originalPlace = originalPlaceTF.getText();
 		String actualPlace = actualPlaceTF.getText();
 		String currentValue = currentValueTF.getText();
+		String currentValueDate = currentValueDateTF.getText();
+		String sold = soldTF.getText();
 		String notes = notesTF.getText();
 		
 		Entity newEntity = new Entity();
@@ -455,6 +472,7 @@ public class Antics implements ActionListener {
 		Category c = findCategoryByName(categoryName);
 		newEntity.setCategoryId(c.getId());
 		newEntity.setCurrentValue(currentValue);
+		newEntity.setCurrentValueDate(currentValueDate);
 		newEntity.setId(id);
 		newEntity.setMeasures(measures);
 		newEntity.setNotes(notes);
@@ -463,6 +481,7 @@ public class Antics implements ActionListener {
 		newEntity.setPrice(price);
 		newEntity.setTechnique(technique);
 		newEntity.setTitle(title);
+		newEntity.setSold(sold);
 		
 		return newEntity;
 	}
@@ -495,7 +514,7 @@ public class Antics implements ActionListener {
     			if (event.getClickCount() == 1) {
     				
     				frameDettaglioEntity = new JFrame("Dettaglio");
-    				frameDettaglioEntity.setLayout(new GridLayout(13, 2, 10, 10));
+    				frameDettaglioEntity.setLayout(new GridLayout(15, 3, 10, 10));
     				
     				int row = tableEntities.getSelectedRow();
     				int convertedRow = tableEntities.convertRowIndexToModel(row);
@@ -707,6 +726,16 @@ public class Antics implements ActionListener {
 		currentValueTF = new JTextField();
 		frameDettaglioEntity.add(currentValueTF);
 		
+		currentValueDateLabel = new JLabel("Data valore odierno");
+		frameDettaglioEntity.add(currentValueDateLabel);
+		currentValueDateTF = new JTextField();
+		frameDettaglioEntity.add(currentValueDateTF);
+		
+		soldLabel = new JLabel("Oggetto venduto");
+		frameDettaglioEntity.add(soldLabel);
+		soldTF = new JTextField();
+		frameDettaglioEntity.add(soldTF);
+		
 		notesLabel = new JLabel("Annotazioni varie");
 		frameDettaglioEntity.add(notesLabel);
 		notesTF = new JTextField();
@@ -727,7 +756,9 @@ public class Antics implements ActionListener {
 				String originalPlace = originalPlaceTF.getText();
 				String actualPlace = actualPlaceTF.getText();
 				String currentValue = currentValueTF.getText();
+				String currentValueDate = currentValueDateTF.getText();
 				String notes = notesTF.getText();
+				String sold = soldTF.getText();
 				long id = getMaxIdEntities() + 1;
 				
 				Entity newEntity = new Entity();
@@ -738,6 +769,7 @@ public class Antics implements ActionListener {
 				Category c = findCategoryByName(categoryName);
 				newEntity.setCategoryId(c.getId());
 				newEntity.setCurrentValue(currentValue);
+				newEntity.setCurrentValueDate(currentValueDate);
 				newEntity.setId(id);
 				newEntity.setMeasures(measures);
 				newEntity.setNotes(notes);
@@ -746,13 +778,14 @@ public class Antics implements ActionListener {
 				newEntity.setPrice(price);
 				newEntity.setTechnique(technique);
 				newEntity.setTitle(title);
+				newEntity.setSold(sold);
 				
 				addEntity(newEntity);
 				dtmEntities.addRow(new Object[] {
 						newEntity.getId(), newEntity.getCategoryId(), newEntity.getAuthor(),
 						newEntity.getTitle(), newEntity.getTechnique(), newEntity.getMeasures(), newEntity.getBuyYear(),
 						newEntity.getPrice(), newEntity.getOriginalPlace(), newEntity.getActualPlace(),
-						newEntity.getCurrentValue()
+						newEntity.getCurrentValue(), newEntity.getCurrentValueDate(), newEntity.getSold()  
 				});
 				frameDettaglioEntity.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
 				JOptionPane.showMessageDialog(frame, MSG_SALVA_ENTITY_OK);
@@ -889,7 +922,7 @@ public class Antics implements ActionListener {
 		
 		Category newCategory = new Category(id, c);
 		listCategories.add(newCategory);
-		insertCategory(newCategory);
+		CategoryDAO.insertCategory(db, newCategory);
 	}
 	
 	public static void writeEntitiesToFile() {
