@@ -9,25 +9,28 @@ import java.sql.Statement;
 
 import org.apache.derby.drda.NetworkServerControl;
 
+import dto.Category;
+
 public class Database {
 	
-	private static String dbURL = "jdbc:derby://localhost:1527/myDB;create=true";
-    private static String tableName = "restaurants";
+	private static String dbURL = "jdbc:derby:antics;create=true";
+    private static String categoryTable = "category";
+    private static String entityTable = "entity";
+    private static String pictureTable = "picture";
     // jdbc Connection
     private static Connection conn = null;
     private static Statement stmt = null;
 
-    private static void startServer() {
+    public void startServer() {
     	NetworkServerControl serverControl;
 		try {
 			serverControl = new NetworkServerControl();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
     }
     
-    private static void createConnection()
+    public Connection getConnection()
     {
         try
         {
@@ -39,15 +42,19 @@ public class Database {
         {
             except.printStackTrace();
         }
+        return conn;
     }
     
-    private static void insertRestaurants(int id, String restName, String cityName)
+    // categories
+    private void insertCategory(Category c)
     {
         try
         {
             stmt = conn.createStatement();
-            stmt.execute("insert into " + tableName + " values (" +
-                    id + ",'" + restName + "','" + cityName +"')");
+            
+            String insert = "";
+            
+            stmt.execute(insert);
             stmt.close();
         }
         catch (SQLException sqlExcept)
@@ -56,12 +63,15 @@ public class Database {
         }
     }
     
-    private static void selectRestaurants()
+    private static void getCategory(String id)
     {
         try
         {
             stmt = conn.createStatement();
-            ResultSet results = stmt.executeQuery("select * from " + tableName);
+            
+            String query = "select * from " + categoryTable + " where id = '" + id + "'";
+            
+            ResultSet results = stmt.executeQuery(query);
             ResultSetMetaData rsmd = results.getMetaData();
             int numberCols = rsmd.getColumnCount();
             for (int i=1; i<=numberCols; i++)
@@ -74,7 +84,7 @@ public class Database {
 
             while(results.next())
             {
-                int id = results.getInt(1);
+                //int id = results.getInt(1);
                 String restName = results.getString(2);
                 String cityName = results.getString(3);
                 System.out.println(id + "\t\t" + restName + "\t\t" + cityName);
@@ -88,7 +98,7 @@ public class Database {
         }
     }
     
-    private static void shutdown()
+    public void shutdown()
     {
         try
         {

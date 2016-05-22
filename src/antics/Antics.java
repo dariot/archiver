@@ -27,11 +27,16 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
+import dto.Category;
+import dto.Entity;
+
 public class Antics implements ActionListener {
 	
 	private static String SEPARATOR = System.getProperty("line.separator");
 	
 	private static Antics ref = new Antics();
+	
+	private static Database db;
 	
 	private static JFrame frame;
 	private static JFrame frameAmministrazione;
@@ -169,7 +174,13 @@ public class Antics implements ActionListener {
 	}
 	
 	private static void startDB() {
-		
+		db = new Database();
+		db.startServer();
+		db.getConnection();
+	}
+	
+	private static void stopDB() {
+		db.shutdown();
 	}
 	
 	private static void init() {
@@ -301,7 +312,7 @@ public class Antics implements ActionListener {
 		
 		priceLabel = new JLabel("Importo originario pagato");
 		frameDettaglioEntity.add(priceLabel);
-		priceTF = new JTextField(Double.toString(e.getPrice()));
+		priceTF = new JTextField(e.getPrice());
 		frameDettaglioEntity.add(priceTF);
 		
 		paymentTypeLabel = new JLabel("Modalita' di pagamento");
@@ -321,7 +332,7 @@ public class Antics implements ActionListener {
 		
 		currentValueLabel = new JLabel("Valore odierno");
 		frameDettaglioEntity.add(currentValueLabel);
-		currentValueTF = new JTextField(Double.toString(e.getCurrentValue()));
+		currentValueTF = new JTextField(e.getCurrentValue());
 		frameDettaglioEntity.add(currentValueTF);
 		
 		notesLabel = new JLabel("Annotazioni varie");
@@ -429,11 +440,11 @@ public class Antics implements ActionListener {
 		String technique = techniqueTF.getText();
 		String measures = measuresTF.getText();
 		String buyYear = buyYearTF.getText();
-		double price = Double.parseDouble(priceTF.getText());
+		String price = priceTF.getText();
 		String paymentType = paymentTypeTF.getText();
 		String originalPlace = originalPlaceTF.getText();
 		String actualPlace = actualPlaceTF.getText();
-		double currentValue = Double.parseDouble(currentValueTF.getText());
+		String currentValue = currentValueTF.getText();
 		String notes = notesTF.getText();
 		
 		Entity newEntity = new Entity();
@@ -496,10 +507,10 @@ public class Antics implements ActionListener {
     				String technique = (String) tableEntities.getValueAt(row, 4);
     				String measures = (String) tableEntities.getValueAt(row, 5);
     				String buyYear = (String) tableEntities.getValueAt(row, 6);
-    				double price = (Double) tableEntities.getValueAt(row, 7);
+    				String price = (String) tableEntities.getValueAt(row, 7);
     				String originalPlace = (String) tableEntities.getValueAt(row, 8);
     				String actualPlace = (String) tableEntities.getValueAt(row, 9);
-    				double currentValue = (Double) tableEntities.getValueAt(row, 10);
+    				String currentValue = (String) tableEntities.getValueAt(row, 10);
     				
     				Entity originalEntity = findEntityById(id);
     				String paymentType = originalEntity.getPaymentType();
@@ -711,11 +722,11 @@ public class Antics implements ActionListener {
 				String technique = techniqueTF.getText();
 				String measures = measuresTF.getText();
 				String buyYear = buyYearTF.getText();
-				double price = Double.parseDouble(priceTF.getText());
+				String price = priceTF.getText();
 				String paymentType = paymentTypeTF.getText();
 				String originalPlace = originalPlaceTF.getText();
 				String actualPlace = actualPlaceTF.getText();
-				double currentValue = Double.parseDouble(currentValueTF.getText());
+				String currentValue = currentValueTF.getText();
 				String notes = notesTF.getText();
 				long id = getMaxIdEntities() + 1;
 				
@@ -878,7 +889,7 @@ public class Antics implements ActionListener {
 		
 		Category newCategory = new Category(id, c);
 		listCategories.add(newCategory);
-		writeCategoriesToFile();
+		insertCategory(newCategory);
 	}
 	
 	public static void writeEntitiesToFile() {
