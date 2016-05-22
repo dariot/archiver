@@ -1,0 +1,18 @@
+Sat May 21 17:31:30 CEST 2016 : Server di rete Apache Derby: 10.11.1.2 - (1629631) avviato e pronto ad accettare connessioni sulla porta 1527
+----------------------------------------------------------------
+Sat May 21 17:31:30 CEST 2016:
+Avvio della versione di Derby The Apache Software Foundation - Apache Derby - 10.11.1.2 - (1629631): istanza a816c00e-0154-d3f1-5a13-000003365e60
+sulla directory di database C:\Users\dariot\workspace\antics\myDB con caricatore classi sun.misc.Launcher$AppClassLoader@4e0e2f2a 
+Caricato da file:/C:/Program%20Files/Java/jdk1.8.0_73/db/lib/derby.jar
+java.vendor=Oracle Corporation
+java.runtime.version=1.8.0_73-b02
+user.dir=C:\Users\dariot\workspace\antics
+os.name=Windows 8
+os.arch=amd64
+os.version=6.2
+derby.system.home=null
+Programma di caricamento classe database avviato - derby.database.classpath=''
+----------------------------------------------------------------
+Sat May 21 17:31:31 CEST 2016:
+Arresto dell'istanza a816c00e-0154-d3f1-5a13-000003365e60 nella directory del database C:\Users\dariot\workspace\antics\myDB con il caricatore di classi sun.misc.Launcher$AppClassLoader@4e0e2f2a 
+Sat May 21 17:31:31 CEST 2016 Thread[DRDAConnThread_3,5,derby.daemons] (DATABASE = myDB), (DRDAID = {2}), Chiusura del database 'myDB'.
