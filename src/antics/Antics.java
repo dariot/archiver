@@ -124,9 +124,6 @@ public class Antics implements ActionListener {
 	private static final String MSG_AGGIORNA_ENTITY_OK = "Oggetto aggiornato correttamente.";
 	private static final String MSG_RIMUOVI_ENTITY_OK = "Oggetto rimosso correttamente.";
 	
-	private static final String FILE_CATEGORIES = "categories.txt";
-	private static final String FILE_ENTITIES = "entities.txt";
-	
 	private static void createWindow() {
 		frame = new JFrame("ANTICS");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -213,26 +210,7 @@ public class Antics implements ActionListener {
 		listEntities = new ArrayList<Entity>();
 		
 		try {
-			FileReader reader = new FileReader(FILE_ENTITIES);
-			String line = "";
-			Scanner in = new Scanner(reader);
-			while (in.hasNextLine()) {
-				line = in.nextLine();
-				if (!line.trim().isEmpty()) {
-					Entity entity = new Entity(line);
-					listEntities.add(entity);
-				}
-			}
-			in.close();
-			reader.close();
-		} catch (FileNotFoundException e) {
-			try {
-				FileWriter writer = new FileWriter(FILE_ENTITIES);
-				writer.close();
-			} catch (IOException ex) {
-				JOptionPane.showMessageDialog(frame, MSG_PROBLEM_LOAD_ENTITIES + ":\n\n" + ex.getMessage());
-				ex.printStackTrace();
-			}
+			// TODO
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(frame, MSG_PROBLEM_LOAD_ENTITIES + ":\n\n" + e.getMessage());
 			e.printStackTrace();
@@ -243,26 +221,7 @@ public class Antics implements ActionListener {
 		listCategories = new ArrayList<Category>();
 		
 		try {
-			FileReader reader = new FileReader(FILE_CATEGORIES);
-			String line = "";
-			Scanner in = new Scanner(reader);
-			while (in.hasNextLine()) {
-				line = in.nextLine();
-				if (!line.trim().isEmpty()) {
-					Category c = new Category(line);
-					listCategories.add(c);
-				}
-			}
-			in.close();
-			reader.close();
-		} catch (FileNotFoundException e) {
-			try {
-				FileWriter writer = new FileWriter(FILE_CATEGORIES);
-				writer.close();
-			} catch (IOException ex) {
-				JOptionPane.showMessageDialog(frame, MSG_PROBLEM_LOAD_CATEGORIES + ":\n\n" + ex.getMessage());
-				ex.printStackTrace();
-			}
+			// TODO
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(frame, MSG_PROBLEM_LOAD_CATEGORIES + ":\n\n" + e.getMessage());
 			e.printStackTrace();
@@ -824,18 +783,7 @@ public class Antics implements ActionListener {
 		ArrayList<Category> categories = new ArrayList<Category>();
 		
 		try {
-			FileReader reader = new FileReader(FILE_CATEGORIES);
-			Scanner in = new Scanner(reader);
-			String line = "";
-			while (in.hasNextLine()) {
-				line = in.nextLine();
-				if (!line.trim().isEmpty()) {
-					Category c = new Category(line);
-					categories.add(c);
-				}
-			}
-			in.close();
-			reader.close();
+			// TODO
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -913,12 +861,7 @@ public class Antics implements ActionListener {
 	
 	public static void writeEntitiesToFile() {
 		try {
-			FileWriter writer = new FileWriter(FILE_ENTITIES);
-			for (int i = 0; i < listEntities.size(); i++) {
-				writer.append(listEntities.get(i).toString() + SEPARATOR);
-			}
-			writer.flush();
-			writer.close();
+			// TODO
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(frame, MSG_SALVA_ENTITY_KO);
 		}
@@ -926,12 +869,7 @@ public class Antics implements ActionListener {
 	
 	public static void writeCategoriesToFile() {
 		try {
-			FileWriter writer = new FileWriter(FILE_CATEGORIES);
-			for (int i = 0; i < listCategories.size(); i++) {
-				writer.append(listCategories.get(i).toString() + SEPARATOR);
-			}
-			writer.flush();
-			writer.close();
+			// TODO
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(frame, MSG_PROBLEM_SAVE_CATEGORY);
 		}
