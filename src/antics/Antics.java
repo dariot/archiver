@@ -202,7 +202,7 @@ public class Antics implements ActionListener {
     	dtmCategories.setColumnIdentifiers(categoriesColumns);
     	tableCategories.setModel(dtmCategories);
     	
-    	// tabella entità
+    	// tabella entitï¿½
     	tableEntities = new JTable();
 		dtmEntities = new DefaultTableModel(0, 0);
     	dtmEntities.setColumnIdentifiers(entitiesColumns);
@@ -472,7 +472,7 @@ public class Antics implements ActionListener {
 		return newEntity;
 	}
 	
-	// la lista delle entità riceve in input la categoria per cui devono essere filtrate
+	// la lista delle entitï¿½ riceve in input la categoria per cui devono essere filtrate
 	private static void showTableEntities(Category c) {
     	for (int i = 0; i < listEntities.size(); i++) {
     		Entity current = listEntities.get(i);
@@ -505,7 +505,7 @@ public class Antics implements ActionListener {
     				int row = tableEntities.getSelectedRow();
     				int convertedRow = tableEntities.convertRowIndexToModel(row);
     				
-    				long id = (Long) tableEntities.getValueAt(convertedRow, 0);
+    				final long id = (Long) tableEntities.getValueAt(convertedRow, 0);
     				long categoryId = (Long) tableEntities.getValueAt(convertedRow, 1);
     				String author = (String) tableEntities.getValueAt(row, 2);
     				String title = (String) tableEntities.getValueAt(row, 3);
@@ -594,7 +594,7 @@ public class Antics implements ActionListener {
     				
     				long id = (long) tableCategories.getValueAt(convertedRow, 0);
     				String categoria = (String) tableCategories.getValueAt(convertedRow, 1);
-    				Category c = new Category(id, categoria);
+    				final Category c = new Category(id, categoria);
     				
     				categoriaTF = new JTextField(categoria);
     				categoriaTF.setColumns(25);

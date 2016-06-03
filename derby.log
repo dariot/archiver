@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 Fri Jun 03 19:33:20 CEST 2016 : Server di rete Apache Derby: 10.11.1.2 - (1629631) avviato e pronto ad accettare connessioni sulla porta 1527
 Fri Jun 03 19:33:20 CEST 2016 Thread[main,5,main] Cleanup action starting
 java.sql.SQLException: Impossibile avviare il database 'antics' con il caricatore di classi sun.misc.Launcher$AppClassLoader@4e0e2f2a. Per i dettagli, vedere l'eccezione successiva.
@@ -156,3 +157,19 @@ ERROR XSDB6: Un'altra istanza di Derby potrebbe avere avviato il database 'C:\Us
 	at antics.Antics.main(Antics.java:952)
 ============= end nested exception, level (2) ===========
 Cleanup action completed
+=======
+Sun May 29 12:25:24 CEST 2016 : Server di rete Apache Derby: 10.12.1.1 - (1704137) avviato e pronto ad accettare connessioni sulla porta 1527
+----------------------------------------------------------------
+Sun May 29 12:25:24 CEST 2016:
+Avvio della versione di Derby The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): istanza a816c00e-0154-fc0b-fbc2-0000030cfce8
+sulla directory di database /Users/dario/Documents/workspace/archiver/antics con caricatore classi sun.misc.Launcher$AppClassLoader@5a74b10b 
+Caricato da file:/Users/dario/Documents/workspace/archiver/lib/derby.jar
+java.vendor=Oracle Corporation
+java.runtime.version=1.7.0_45-b18
+user.dir=/Users/dario/Documents/workspace/archiver
+os.name=Mac OS X
+os.arch=x86_64
+os.version=10.11.1
+derby.system.home=null
+Programma di caricamento classe database avviato - derby.database.classpath=''
+>>>>>>> b69c3476888561da4dc7d2ce85c05020f82e341f
