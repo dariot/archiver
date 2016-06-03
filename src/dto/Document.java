@@ -1,9 +1,9 @@
-package antics;
+package dto;
 
 public class Document {
 
 	private int id = 0;
-	private int objectId = 0;
+	private String objectId = "";
 	private byte[] content;
 
 	public byte[] getContent() {
@@ -14,7 +14,7 @@ public class Document {
 		return id;
 	}
 
-	public int getObjectId() {
+	public String getObjectId() {
 		return objectId;
 	}
 
@@ -26,7 +26,7 @@ public class Document {
 		this.id = id;
 	}
 
-	public void setObjectId(int objectId) {
+	public void setObjectId(String objectId) {
 		this.objectId = objectId;
 	}
 

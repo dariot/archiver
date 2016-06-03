@@ -2,23 +2,23 @@ package dto;
 
 public class Picture {
 
-	private int id = 0;
-	private int entityId = 0;
+	private long id = 0;
+	private String entityId = "";
 	private byte[] data;
 
 	public byte[] getData() {
 		return data;
 	}
 
-	public int getEntityId() {
+	public String getEntityId() {
 		return entityId;
 	}
 
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 
-	public int getObjectId() {
+	public String getObjectId() {
 		return entityId;
 	}
 
@@ -26,7 +26,7 @@ public class Picture {
 		this.data = data;
 	}
 
-	public void setEntityId(int entityId) {
+	public void setEntityId(String entityId) {
 		this.entityId = entityId;
 	}
 

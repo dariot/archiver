@@ -229,7 +229,6 @@ public class Antics implements ActionListener {
 			try {
 				FileWriter writer = new FileWriter(FILE_ENTITIES);
 				writer.close();
-				showMsgEmptyCategories();
 			} catch (IOException ex) {
 				JOptionPane.showMessageDialog(frame, MSG_PROBLEM_LOAD_ENTITIES + ":\n\n" + ex.getMessage());
 				ex.printStackTrace();
@@ -238,14 +237,6 @@ public class Antics implements ActionListener {
 			JOptionPane.showMessageDialog(frame, MSG_PROBLEM_LOAD_ENTITIES + ":\n\n" + e.getMessage());
 			e.printStackTrace();
 		}
-	}
-	
-	private static void showMsgEmptyEntities() {
-		JOptionPane.showMessageDialog(frame, "Non sono attualmente presenti oggetti.");
-	}
-	
-	private static void showMsgEmptyCategories() {
-		JOptionPane.showMessageDialog(frame, "Non sono attualmente presenti categorie.");
 	}
 	
 	private static void loadCategories() {
@@ -268,7 +259,6 @@ public class Antics implements ActionListener {
 			try {
 				FileWriter writer = new FileWriter(FILE_CATEGORIES);
 				writer.close();
-				showMsgEmptyCategories();
 			} catch (IOException ex) {
 				JOptionPane.showMessageDialog(frame, MSG_PROBLEM_LOAD_CATEGORIES + ":\n\n" + ex.getMessage());
 				ex.printStackTrace();
@@ -367,27 +357,23 @@ public class Antics implements ActionListener {
 		clearTableEntities();
 		dtmEntities.fireTableDataChanged();
 
-		if (listEntities == null || listEntities.size() == 0) {
-        	showMsgEmptyEntities();
-        } else {
-        	for (int i = 0; i < listEntities.size(); i++) {
-        		Entity current = listEntities.get(i);
-        		if (c != null) {
-        			if (current.getCategoryId() == c.getId()) {
-	        			dtmEntities.addRow(new Object[] {current.getId(), current.getCategoryId(), current.getAuthor(),
-	        					current.getTitle(), current.getTechnique(), current.getMeasures(), current.getBuyYear(),
-	        					current.getPrice(), current.getOriginalPlace(), current.getActualPlace(),
-	        					current.getCurrentValue()});
-        			}
-        		} else {
+    	for (int i = 0; i < listEntities.size(); i++) {
+    		Entity current = listEntities.get(i);
+    		if (c != null) {
+    			if (current.getCategoryId() == c.getId()) {
         			dtmEntities.addRow(new Object[] {current.getId(), current.getCategoryId(), current.getAuthor(),
         					current.getTitle(), current.getTechnique(), current.getMeasures(), current.getBuyYear(),
         					current.getPrice(), current.getOriginalPlace(), current.getActualPlace(),
         					current.getCurrentValue()});
-        		}
-        	}
-        	dtmEntities.fireTableDataChanged();
-        }
+    			}
+    		} else {
+    			dtmEntities.addRow(new Object[] {current.getId(), current.getCategoryId(), current.getAuthor(),
+    					current.getTitle(), current.getTechnique(), current.getMeasures(), current.getBuyYear(),
+    					current.getPrice(), current.getOriginalPlace(), current.getActualPlace(),
+    					current.getCurrentValue()});
+    		}
+    	}
+    	dtmEntities.fireTableDataChanged();
 	}
 	
 	public static Category findCategoryById(long id) {

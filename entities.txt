@@ -1,3 +1,0 @@
-1|2|pippo|quadro|olio|20x20|1943|123.0|cash|ita|casa mia|150.0|boh|
-2|2|franco|blah|olio|30x30|1987|126.0|cash|eng|casa sua|200.0|meh|
-3|2|fgfghg|dddd|ssss|ffff|1982|1.0|www|loo|www|10.0|www|
