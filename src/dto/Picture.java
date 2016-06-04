@@ -5,6 +5,8 @@ public class Picture {
 	private long id = 0;
 	private String entityId = "";
 	private byte[] data;
+	
+	public Picture() {}
 
 	public byte[] getData() {
 		return data;

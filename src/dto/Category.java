@@ -3,6 +3,8 @@ package dto;
 public class Category {
 	private long id = 0;
 	private String name = "";
+	
+	public Category() {}
 
 	public Category(String s) {
 		if (s != null) {

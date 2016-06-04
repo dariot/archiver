@@ -3,13 +3,14 @@ package antics;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 import org.apache.derby.drda.NetworkServerControl;
 
 import dto.Category;
+import dto.Entity;
 
 public class Database {
 	
@@ -45,80 +46,214 @@ public class Database {
         return conn;
     }
     
-    // categories
-    public void insertCategory(Category c)
-    {
-        try
-        {
+    // CATEGORIES
+    public void insertCategory(Category c) {
+        try {
             stmt = conn.createStatement();
             
             long id = c.getId();
             String name = c.getName();
-            String insert = "INSERT INTO CATEGORY (ID, NAME) VALUES (" + id + ", '" + name + "')";
+            String insert = "insert into " + categoryTable + " (id, name) values (" + id + ", '" + name + "')";
             
             stmt.execute(insert);
             stmt.close();
-        }
-        catch (SQLException sqlExcept)
-        {
+        } catch (SQLException sqlExcept) {
             sqlExcept.printStackTrace();
         }
     }
     
-    public static void getCategory(String id)
-    {
-        try
-        {
+    public void updateCategory(Category c) {
+        try {
             stmt = conn.createStatement();
             
-            String query = "select * from " + categoryTable + " where id = '" + id + "'";
+            long id = c.getId();
+            String name = c.getName();
+            String update = "update" + categoryTable + " set name = '" + name + "' where id = '" + id + "'";
+            
+            stmt.execute(update);
+            stmt.close();
+        } catch (SQLException sqlExcept) {
+            sqlExcept.printStackTrace();
+        }
+    }
+    
+    public void deleteCategory(long id) {
+    	try {
+            stmt = conn.createStatement();
+            
+            String delete = "delete from " + categoryTable + " where id = '" + id + "'";
+            
+            stmt.execute(delete);
+            stmt.close();
+        } catch (SQLException sqlExcept) {
+            sqlExcept.printStackTrace();
+        }
+    }
+    
+    public Category getCategory(long id) {
+    	Category output = new Category();
+        try {
+            stmt = conn.createStatement();
+            
+            String query = "select * from " + categoryTable;
             
             ResultSet results = stmt.executeQuery(query);
-            ResultSetMetaData rsmd = results.getMetaData();
-            int numberCols = rsmd.getColumnCount();
-            for (int i=1; i<=numberCols; i++)
-            {
-                //print Column Names
-                System.out.print(rsmd.getColumnLabel(i)+"\t\t");  
-            }
-
-            System.out.println("\n-------------------------------------------------");
-
-            while(results.next())
-            {
-                //int id = results.getInt(1);
-                String restName = results.getString(2);
-                String cityName = results.getString(3);
-                System.out.println(id + "\t\t" + restName + "\t\t" + cityName);
+            while (results.next()) {
+            	output.setId(results.getLong(1));
+            	output.setName(results.getString(2));
             }
             results.close();
             stmt.close();
+        } catch (SQLException sqlExcept) {
+            sqlExcept.printStackTrace();
         }
-        catch (SQLException sqlExcept)
-        {
+        return output;
+    }
+    
+    public ArrayList<Category> getCategories() {
+    	ArrayList<Category> output = new ArrayList<Category>();
+        try {
+            stmt = conn.createStatement();
+            
+            String query = "select * from " + categoryTable;
+            
+            ResultSet results = stmt.executeQuery(query);
+            while (results.next()) {
+                Category c = new Category();
+                c.setId(results.getLong(1));
+                c.setName(results.getString(2));
+                output.add(c);
+            }
+            results.close();
+            stmt.close();
+        } catch (SQLException sqlExcept) {
+            sqlExcept.printStackTrace();
+        }
+        return output;
+    }
+    
+    // ENTITIES
+    public void insertEntity(Entity e) {
+        try {
+            stmt = conn.createStatement();
+            
+            long id = e.getId();
+            long categoryId = e.getCategoryId();
+            String author = e.getAuthor();
+            String title = e.getTitle();
+            String technique = e.getTechnique();
+            String measures = e.getMeasures();
+            String buyYear = e.getBuyYear();
+            String price = e.getPrice();
+            String paymentType = e.getPaymentType();
+            String originalPlace = e.getOriginalPlace();
+            String actualPlace = e.getActualPlace();
+            String currentValue = e.getCurrentValue();
+            String currentValueDate = e.getCurrentValueDate();
+            String notes = e.getNotes();
+            String sold = e.getSold();
+            
+            String insert = "Insert into " + entityTable + " (id, categoryId, author, title, technique, measures, buyYear, price, paymentType, originalPlace, actualPlace, currentValue, currentValueDate, notes, sold) VALUES";
+            insert += "(" + id + ", '" + categoryId + "', '" + author + "', '" + title + "', '" + technique + "', '" + measures + "', '" + buyYear + "', '" + price + "', '" + paymentType + "', '" + originalPlace + "', '" + actualPlace + "', '" + currentValue + "', '" + currentValueDate + "', '" + notes + "', '" + sold + "')";
+            
+            stmt.execute(insert);
+            stmt.close();
+        } catch (SQLException sqlExcept) {
             sqlExcept.printStackTrace();
         }
     }
     
-    public void shutdown()
-    {
-        try
-        {
-            if (stmt != null)
-            {
+    public void deleteEntity(long id) {
+    	try {
+            stmt = conn.createStatement();
+            
+            String delete = "delete from " + entityTable + " where id = '" + id + "'";
+            
+            stmt.execute(delete);
+            stmt.close();
+        } catch (SQLException sqlExcept) {
+            sqlExcept.printStackTrace();
+        }
+    }
+    
+    public Entity getEntity(long id) {
+    	Entity output = new Entity();
+        try {
+            stmt = conn.createStatement();
+            
+            String query = "select * from " + entityTable + " where id = '" + id + "'";
+            
+            ResultSet results = stmt.executeQuery(query);
+            while (results.next()) {
+            	output.setId(results.getLong(1));
+            	output.setCategoryId(results.getLong(2));
+            	output.setAuthor(results.getString(3));
+            	output.setTitle(results.getString(4));
+            	output.setTechnique(results.getString(5));
+            	output.setMeasures(results.getString(6));
+            	output.setBuyYear(results.getString(7));
+            	output.setPrice(results.getString(8));
+            	output.setPaymentType(results.getString(9));
+            	output.setOriginalPlace(results.getString(10));
+            	output.setActualPlace(results.getString(11));
+            	output.setCurrentValue(results.getString(12));
+            	output.setCurrentValueDate(results.getString(13));
+            	output.setNotes(results.getString(14));
+            	output.setSold(results.getString(15));
+            }
+            results.close();
+            stmt.close();
+        } catch (SQLException sqlExcept) {
+            sqlExcept.printStackTrace();
+        }
+        return output;
+    }
+    
+    public ArrayList<Entity> getEntities() {
+    	ArrayList<Entity> output = new ArrayList<Entity>();
+        try {
+            stmt = conn.createStatement();
+            
+            String query = "select * from " + entityTable;
+            
+            ResultSet results = stmt.executeQuery(query);
+            while (results.next()) {
+            	Entity e = new Entity();
+                e.setId(results.getLong(1));
+                e.setCategoryId(results.getLong(2));
+            	e.setAuthor(results.getString(3));
+            	e.setTitle(results.getString(4));
+            	e.setTechnique(results.getString(5));
+            	e.setMeasures(results.getString(6));
+            	e.setBuyYear(results.getString(7));
+            	e.setPrice(results.getString(8));
+            	e.setPaymentType(results.getString(9));
+            	e.setOriginalPlace(results.getString(10));
+            	e.setActualPlace(results.getString(11));
+            	e.setCurrentValue(results.getString(12));
+            	e.setCurrentValueDate(results.getString(13));
+            	e.setNotes(results.getString(14));
+            	e.setSold(results.getString(15));
+                output.add(e);
+            }
+            results.close();
+            stmt.close();
+        } catch (SQLException sqlExcept) {
+            sqlExcept.printStackTrace();
+        }
+        return output;
+    }
+    
+    public void shutdown() {
+        try {
+            if (stmt != null) {
                 stmt.close();
             }
-            if (conn != null)
-            {
+            if (conn != null) {
                 DriverManager.getConnection(dbURL + ";shutdown=true");
                 conn.close();
-            }           
-        }
-        catch (SQLException sqlExcept)
-        {
-            
-        }
-
+            }
+        } catch (SQLException sqlExcept) {}
     }
 
 }

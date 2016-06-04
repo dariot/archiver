@@ -9,12 +9,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowEvent;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -27,7 +22,6 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
-import dao.CategoryDAO;
 import dto.Category;
 import dto.Entity;
 
@@ -221,7 +215,7 @@ public class Antics implements ActionListener {
 		listCategories = new ArrayList<Category>();
 		
 		try {
-			// TODO
+			listCategories = db.getCategories();
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(frame, MSG_PROBLEM_LOAD_CATEGORIES + ":\n\n" + e.getMessage());
 			e.printStackTrace();
@@ -459,7 +453,7 @@ public class Antics implements ActionListener {
     			if (event.getClickCount() == 1) {
     				
     				frameDettaglioEntity = new JFrame("Dettaglio");
-    				frameDettaglioEntity.setLayout(new GridLayout(15, 3, 10, 10));
+    				frameDettaglioEntity.setLayout(new GridLayout(14, 2, 10, 10));
     				
     				int row = tableEntities.getSelectedRow();
     				int convertedRow = tableEntities.convertRowIndexToModel(row);
@@ -611,7 +605,7 @@ public class Antics implements ActionListener {
 	
 	public static void showPanelDettaglioEntity() {
 		frameDettaglioEntity = new JFrame("DETTAGLIO");
-		frameDettaglioEntity.setLayout(new GridLayout(13, 2, 10, 10));
+		frameDettaglioEntity.setLayout(new GridLayout(14, 2, 10, 10));
 		
 		categoryLabel = new JLabel("Categoria dell'oggetto");
 		frameDettaglioEntity.add(categoryLabel);
@@ -832,7 +826,7 @@ public class Antics implements ActionListener {
 				listCategories.remove(i);
 			}
 		}
-		writeCategoriesToFile();
+		db.deleteCategory(category.getId());
 	}
 	
 	public static void updateCategory(Category category) {
@@ -847,8 +841,7 @@ public class Antics implements ActionListener {
 				break;
 			}
 		}
-		// salva le modifiche su disco
-		writeCategoriesToFile();
+		db.updateCategory(category);
 	}
 	
 	public static void addCategory(String c) {
@@ -856,7 +849,8 @@ public class Antics implements ActionListener {
 		
 		Category newCategory = new Category(id, c);
 		listCategories.add(newCategory);
-		CategoryDAO.insertCategory(db, newCategory);
+		
+		db.insertCategory(newCategory);
 	}
 	
 	public static void writeEntitiesToFile() {
