@@ -91,6 +91,12 @@ public class Antics implements ActionListener {
 	private static JFrame frameDettaglioEntity;
 	private static JButton salvaEntityBtn;
 	private static JButton rimuoviEntityBtn;
+	private static JPanel panelPictures;
+	private static JButton addPictureBtn;
+	private static JButton removePictureBtn;
+	private static JPanel panelDocuments;
+	private static JButton addDocumentBtn;
+	private static JButton removeDocumentBtn;
 	
 	private static ArrayList<Category> listCategories = new ArrayList<Category>();
 	private static ArrayList<Entity> listEntities = new ArrayList<Entity>();
@@ -105,6 +111,12 @@ public class Antics implements ActionListener {
 	private static final String CD_BTN_SALVA_ENTITY = "Salva oggetto";
 	private static final String CD_BTN_RIMUOVI_ENTITY = "Rimuovi oggetto";
 	
+	private static final String CD_BTN_ADD_PICTURE = "Aggiungi immagine";
+	private static final String CD_BTN_REMOVE_PICTURE = "Rimuovi immagine";
+	
+	private static final String CD_BTN_ADD_DOCUMENT = "Aggiungi documento";
+	private static final String CD_BTN_REMOVE_DOCUMENT = "Rimuovi documento";
+	
 	private static final String MSG_PROBLEM_LOAD_CATEGORIES = "Si e' verificato un problema nel caricamento delle categorie";
 	private static final String MSG_PROBLEM_LOAD_ENTITIES = "Si e' verificato un problema nel caricamento degli oggetti";
 	
@@ -117,6 +129,16 @@ public class Antics implements ActionListener {
 	private static final String MSG_SALVA_ENTITY_KO = "Si e' verificato un problema nel salvataggio dell''oggetto.";
 	private static final String MSG_AGGIORNA_ENTITY_OK = "Oggetto aggiornato correttamente.";
 	private static final String MSG_RIMUOVI_ENTITY_OK = "Oggetto rimosso correttamente.";
+	
+	private static final String MSG_ADD_PICTURE_OK = "Immagine salvata correttamente.";
+	private static final String MSG_ADD_PICTURE_KO = "Si e' verificato un problema nel salvataggio dell''immagine.";
+	private static final String MSG_REMOVE_PICTURE_OK = "Immagine rimossa correttamente.";
+	private static final String MSG_REMOVE_PICTURE_KO = "Si e' verificato un problema nella rimozione dell''immagine.";
+	
+	private static final String MSG_ADD_DOCUMENT_OK = "Documento salvato correttamente.";
+	private static final String MSG_ADD_DOCUMENT_KO = "Si e' verificato un problema nel salvataggio del documento.";
+	private static final String MSG_REMOVE_DOCUMENT_OK = "Documento rimosso correttamente.";
+	private static final String MSG_REMOVE_DOCUMENT_KO = "Si e' verificato un problema nella rimozione del documento.";
 	
 	private static void createWindow() {
 		frame = new JFrame("ANTICS");
@@ -513,6 +535,29 @@ public class Antics implements ActionListener {
     				});
     				frameDettaglioEntity.getContentPane().add(rimuoviEntityBtn);
     				
+    				// pictures
+    				panelPictures = new JPanel();
+    				
+    				addPictureBtn = new JButton(CD_BTN_ADD_PICTURE);
+    				addPictureBtn.setSize(100, 40);
+    				addPictureBtn.addActionListener(new ActionListener() {
+    					public void actionPerformed(ActionEvent e) {
+    						//framePictures.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
+    						JOptionPane.showMessageDialog(frame, MSG_ADD_PICTURE_OK);
+    					}
+    				});
+    				panelPictures.add(addPictureBtn);
+    				
+    				removePictureBtn = new JButton(CD_BTN_REMOVE_PICTURE);
+    				removePictureBtn.setSize(100, 40);
+    				removePictureBtn.addActionListener(new ActionListener() {
+    					public void actionPerformed(ActionEvent e) {
+    						//framePictures.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
+    						JOptionPane.showMessageDialog(frame, MSG_REMOVE_PICTURE_OK);
+    					}
+    				});
+    				panelPictures.add(removePictureBtn);
+    				
     				frameDettaglioEntity.setSize(600, 600);
     				frameDettaglioEntity.setLocationRelativeTo(null);
     				frameDettaglioEntity.setVisible(true);
@@ -605,7 +650,7 @@ public class Antics implements ActionListener {
 	
 	public static void showPanelDettaglioEntity() {
 		frameDettaglioEntity = new JFrame("DETTAGLIO");
-		frameDettaglioEntity.setLayout(new GridLayout(14, 2, 10, 10));
+		frameDettaglioEntity.setLayout(new GridLayout(15, 2, 10, 10));
 		
 		categoryLabel = new JLabel("Categoria dell'oggetto");
 		frameDettaglioEntity.add(categoryLabel);
