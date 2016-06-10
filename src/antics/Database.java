@@ -11,6 +11,7 @@ import org.apache.derby.drda.NetworkServerControl;
 
 import dto.Category;
 import dto.Entity;
+import dto.Picture;
 
 public class Database {
 	
@@ -235,6 +236,82 @@ public class Database {
             	e.setNotes(results.getString(14));
             	e.setSold(results.getString(15));
                 output.add(e);
+            }
+            results.close();
+            stmt.close();
+        } catch (SQLException sqlExcept) {
+            sqlExcept.printStackTrace();
+        }
+        return output;
+    }
+    
+    // PICTURES
+    public void insertPicture(Picture p) {
+        try {
+            stmt = conn.createStatement();
+            
+            long id = p.getId();
+            String entityId = p.getEntityId();
+            byte[] data = p.getData();
+            
+            String insert = "Insert into " + pictureTable + " (id, entityId, data) VALUES";
+            insert += "(" + id + ", '" + entityId + "', " + data + ")";
+            
+            stmt.execute(insert);
+            stmt.close();
+        } catch (SQLException sqlExcept) {
+            sqlExcept.printStackTrace();
+        }
+    }
+    
+    public void deletePicture(long id) {
+    	try {
+            stmt = conn.createStatement();
+            
+            String delete = "delete from " + pictureTable + " where id = '" + id + "'";
+            
+            stmt.execute(delete);
+            stmt.close();
+        } catch (SQLException sqlExcept) {
+            sqlExcept.printStackTrace();
+        }
+    }
+    
+    public Picture getPicture(long id) {
+    	Picture output = new Picture();
+        try {
+            stmt = conn.createStatement();
+            
+            String query = "select * from " + pictureTable + " where id = '" + id + "'";
+            
+            ResultSet results = stmt.executeQuery(query);
+            while (results.next()) {
+            	output.setId(results.getLong(1));
+            	output.setEntityId(results.getString(2));
+            	output.setData(results.getBytes(3));
+            }
+            results.close();
+            stmt.close();
+        } catch (SQLException sqlExcept) {
+            sqlExcept.printStackTrace();
+        }
+        return output;
+    }
+    
+    public ArrayList<Picture> getPicture() {
+    	ArrayList<Picture> output = new ArrayList<Picture>();
+        try {
+            stmt = conn.createStatement();
+            
+            String query = "select * from " + pictureTable;
+            
+            ResultSet results = stmt.executeQuery(query);
+            while (results.next()) {
+            	Picture p = new Picture();
+                p.setId(results.getLong(1));
+                p.setEntityId(results.getString(2));
+                p.setData(results.getBytes(3));
+                output.add(p);
             }
             results.close();
             stmt.close();

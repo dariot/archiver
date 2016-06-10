@@ -3,10 +3,13 @@ package antics;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+
+import dto.Picture;
 
 public class PictureFactory {
 	
@@ -27,10 +30,14 @@ public class PictureFactory {
 	private static final String MSG_REMOVE_PICTURE_OK = "Immagine rimossa correttamente.";
 	private static final String MSG_REMOVE_PICTURE_KO = "Si e' verificato un problema nella rimozione dell''immagine.";
 	
-	public PictureFactory() {
+	private ArrayList<Picture> pictures = new ArrayList<Picture>();
+	
+	public PictureFactory(Database db, Long id) {
 		mainFrame = new JFrame("Immagini");
-		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mainFrame.setLayout(new BorderLayout());
+		
+		JPanel panelPictures = new JPanel();
+		
 		
 		JPanel panelButtons = new JPanel();
 		

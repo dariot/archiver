@@ -1,14 +1,14 @@
-Fri Jun 10 08:23:35 CEST 2016 : Server di rete Apache Derby: 10.12.1.1 - (1704137) avviato e pronto ad accettare connessioni sulla porta 1527
+Fri Jun 10 18:07:44 CEST 2016 : Server di rete Apache Derby: 10.12.1.1 - (1704137) avviato e pronto ad accettare connessioni sulla porta 1527
 ----------------------------------------------------------------
-Fri Jun 10 08:23:35 CEST 2016:
-Avvio della versione di Derby The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): istanza a816c00e-0155-38fa-e6aa-0000030ca888
-sulla directory di database /Users/dario/Documents/workspace/archiver/antics con caricatore classi sun.misc.Launcher$AppClassLoader@23137792 
-Caricato da file:/Users/dario/Documents/workspace/archiver/lib/derby.jar
+Fri Jun 10 18:07:44 CEST 2016:
+Avvio della versione di Derby The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): istanza a816c00e-0155-3b11-b75c-000002eda0d8
+sulla directory di database C:\Users\dariot\workspace\antics\antics con caricatore classi sun.misc.Launcher$AppClassLoader@4e0e2f2a 
+Caricato da file:/C:/Users/dariot/workspace/antics/lib/derby.jar
 java.vendor=Oracle Corporation
-java.runtime.version=1.7.0_45-b18
-user.dir=/Users/dario/Documents/workspace/archiver
-os.name=Mac OS X
-os.arch=x86_64
-os.version=10.11.1
+java.runtime.version=1.8.0_73-b02
+user.dir=C:\Users\dariot\workspace\antics
+os.name=Windows 8
+os.arch=amd64
+os.version=6.2
 derby.system.home=null
 Programma di caricamento classe database avviato - derby.database.classpath=''

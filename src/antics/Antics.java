@@ -531,7 +531,7 @@ public class Antics implements ActionListener {
     				picturesBtn.setSize(100, 40);
     				picturesBtn.addActionListener(new ActionListener() {
     					public void actionPerformed(ActionEvent e) {
-    						PictureFactory pic = new PictureFactory();
+    						PictureFactory pic = new PictureFactory(db, id);
     					}
     				});
     				frameDettaglioEntity.getContentPane().add(picturesBtn);
@@ -730,7 +730,7 @@ public class Antics implements ActionListener {
 		picturesBtn.setSize(100, 40);
 		picturesBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				PictureFactory pic = new PictureFactory();
+				PictureFactory pic = new PictureFactory(db, null);
 			}
 		});
 		frameDettaglioEntity.getContentPane().add(picturesBtn);
