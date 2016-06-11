@@ -1,13 +1,21 @@
 package antics;
 
 import java.awt.BorderLayout;
+import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 
+import javax.imageio.ImageIO;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import dto.Picture;
 
@@ -19,6 +27,8 @@ public class PictureFactory {
 	private static JButton removePictureBtn;
 	private static JButton nextPictureBtn;
 	private static JButton prevPictureBtn;
+	
+	private JFileChooser chooser;
 	
 	private static final String CD_BTN_ADD_PICTURE = "Aggiungi immagine";
 	private static final String CD_BTN_REMOVE_PICTURE = "Rimuovi immagine";
@@ -32,11 +42,32 @@ public class PictureFactory {
 	
 	private ArrayList<Picture> pictures = new ArrayList<Picture>();
 	
-	public PictureFactory(Database db, Long id) {
+	private byte[] getBytesFromFile(File f) {
+		byte[] bFile = new byte[(int) f.length()];
+        
+        try {
+		    FileInputStream fileInputStream = new FileInputStream(f);
+		    fileInputStream.read(bFile);
+		    fileInputStream.close();
+        } catch(Exception e) {
+        	e.printStackTrace();
+        }
+        
+        return bFile;
+	}
+	
+	public PictureFactory(Database db, long entityId) {
 		mainFrame = new JFrame("Immagini");
 		mainFrame.setLayout(new BorderLayout());
 		
-		JPanel panelPictures = new JPanel();
+		final Database thisDb = db;
+		final long thisEntityId = entityId;
+		
+		FileNameExtensionFilter filter = new FileNameExtensionFilter("Image Files", "jpg", "png", "gif", "jpeg", "pdf");
+		chooser = new JFileChooser();
+		chooser.setFileFilter(filter);
+		
+		final JPanel panelPictures = new JPanel();
 		
 		
 		JPanel panelButtons = new JPanel();
@@ -45,7 +76,22 @@ public class PictureFactory {
 		addPictureBtn.setSize(100, 40);
 		addPictureBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// TODO
+				int returnVal = chooser.showOpenDialog(mainFrame);
+				if (returnVal == JFileChooser.APPROVE_OPTION) {
+					File file = chooser.getSelectedFile();
+					byte[] bytes = getBytesFromFile(file);
+					
+					Picture p = new Picture();
+					p.setEntityId(thisEntityId);
+					thisDb.insertPicture(p);
+					
+					try {
+						BufferedImage image = ImageIO.read(file);
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
+					
+				}
 			}
 		});
 		panelButtons.add(addPictureBtn);
@@ -66,7 +112,6 @@ public class PictureFactory {
 				// TODO
 			}
 		});
-		panelButtons.add(prevPictureBtn);
 		
 		nextPictureBtn = new JButton(CD_BTN_NEXT_PICTURE);
 		nextPictureBtn.setSize(100, 40);
@@ -75,9 +120,10 @@ public class PictureFactory {
 				// TODO
 			}
 		});
-		panelButtons.add(nextPictureBtn);
 		
-		mainFrame.getContentPane().add(panelButtons, BorderLayout.PAGE_START);
+		mainFrame.getContentPane().add(prevPictureBtn, BorderLayout.LINE_START);
+		mainFrame.getContentPane().add(nextPictureBtn, BorderLayout.LINE_END);
+		mainFrame.getContentPane().add(panelButtons, BorderLayout.PAGE_END);
 		
 		mainFrame.setSize(500, 500);
 		mainFrame.setLocationRelativeTo(null);

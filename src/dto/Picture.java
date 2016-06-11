@@ -3,7 +3,7 @@ package dto;
 public class Picture {
 
 	private long id = 0;
-	private String entityId = "";
+	private long entityId = 0;
 	private byte[] data;
 	
 	public Picture() {}
@@ -12,7 +12,7 @@ public class Picture {
 		return data;
 	}
 
-	public String getEntityId() {
+	public long getEntityId() {
 		return entityId;
 	}
 
@@ -20,15 +20,11 @@ public class Picture {
 		return id;
 	}
 
-	public String getObjectId() {
-		return entityId;
-	}
-
 	public void setData(byte[] data) {
 		this.data = data;
 	}
 
-	public void setEntityId(String entityId) {
+	public void setEntityId(long entityId) {
 		this.entityId = entityId;
 	}
 

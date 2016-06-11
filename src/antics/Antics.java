@@ -730,7 +730,7 @@ public class Antics implements ActionListener {
 		picturesBtn.setSize(100, 40);
 		picturesBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				PictureFactory pic = new PictureFactory(db, null);
+				PictureFactory pic = new PictureFactory(db, 0);
 			}
 		});
 		frameDettaglioEntity.getContentPane().add(picturesBtn);

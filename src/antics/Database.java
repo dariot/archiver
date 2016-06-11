@@ -251,7 +251,7 @@ public class Database {
             stmt = conn.createStatement();
             
             long id = p.getId();
-            String entityId = p.getEntityId();
+            long entityId = p.getEntityId();
             byte[] data = p.getData();
             
             String insert = "Insert into " + pictureTable + " (id, entityId, data) VALUES";
@@ -287,7 +287,7 @@ public class Database {
             ResultSet results = stmt.executeQuery(query);
             while (results.next()) {
             	output.setId(results.getLong(1));
-            	output.setEntityId(results.getString(2));
+            	output.setEntityId(results.getLong(2));
             	output.setData(results.getBytes(3));
             }
             results.close();
@@ -309,7 +309,7 @@ public class Database {
             while (results.next()) {
             	Picture p = new Picture();
                 p.setId(results.getLong(1));
-                p.setEntityId(results.getString(2));
+                p.setEntityId(results.getLong(2));
                 p.setData(results.getBytes(3));
                 output.add(p);
             }
