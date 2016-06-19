@@ -1,5 +1,6 @@
 package antics;
 
+import java.sql.Clob;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -154,8 +155,8 @@ public class Database {
             String notes = e.getNotes();
             String sold = e.getSold();
             
-            String insert = "Insert into " + entityTable + " (id, categoryId, author, title, technique, measures, buyYear, price, paymentType, originalPlace, actualPlace, currentValue, currentValueDate, notes, sold) VALUES";
-            insert += "(" + id + ", '" + categoryId + "', '" + author + "', '" + title + "', '" + technique + "', '" + measures + "', '" + buyYear + "', '" + price + "', '" + paymentType + "', '" + originalPlace + "', '" + actualPlace + "', '" + currentValue + "', '" + currentValueDate + "', '" + notes + "', '" + sold + "')";
+            String insert = "Insert into " + entityTable + " (id, category_id, author, title, technique, measures, buy_year, price, payment_type, original_place, actual_place, current_value, current_value_date, notes, sold) VALUES";
+            insert += "(" + id + ", " + categoryId + ", '" + author + "', '" + title + "', '" + technique + "', '" + measures + "', '" + buyYear + "', '" + price + "', '" + paymentType + "', '" + originalPlace + "', '" + actualPlace + "', '" + currentValue + "', '" + currentValueDate + "', '" + notes + "', '" + sold + "')";
             
             stmt.execute(insert);
             stmt.close();
@@ -254,8 +255,8 @@ public class Database {
             long entityId = p.getEntityId();
             byte[] data = p.getData();
             
-            String insert = "Insert into " + pictureTable + " (id, entityId, data) VALUES";
-            insert += "(" + id + ", '" + entityId + "', " + data + ")";
+            String insert = "Insert into " + pictureTable + " (id, entity_id, data) VALUES";
+            insert += "(" + id + ", " + entityId + ", '" + data + "')";
             
             stmt.execute(insert);
             stmt.close();
@@ -298,12 +299,12 @@ public class Database {
         return output;
     }
     
-    public ArrayList<Picture> getPicture() {
+    public ArrayList<Picture> getPicturesFromEntityId(long entityId) {
     	ArrayList<Picture> output = new ArrayList<Picture>();
         try {
             stmt = conn.createStatement();
             
-            String query = "select * from " + pictureTable;
+            String query = "select * from " + pictureTable + " where entity_id = '" + entityId + "'";
             
             ResultSet results = stmt.executeQuery(query);
             while (results.next()) {

@@ -1,19 +1,20 @@
 package antics;
 
 import java.awt.BorderLayout;
-import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
+import java.sql.Clob;
 import java.util.ArrayList;
 
-import javax.imageio.ImageIO;
+import javax.sql.rowset.serial.SerialClob;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -28,7 +29,10 @@ public class PictureFactory {
 	private static JButton nextPictureBtn;
 	private static JButton prevPictureBtn;
 	
-	private JFileChooser chooser;
+	private static JPanel panelPictures;
+	private static JLabel labelPictures;
+	
+	private static JFileChooser chooser;
 	
 	private static final String CD_BTN_ADD_PICTURE = "Aggiungi immagine";
 	private static final String CD_BTN_REMOVE_PICTURE = "Rimuovi immagine";
@@ -67,8 +71,8 @@ public class PictureFactory {
 		chooser = new JFileChooser();
 		chooser.setFileFilter(filter);
 		
-		final JPanel panelPictures = new JPanel();
-		
+		panelPictures = new JPanel();
+		panelPictures.setSize(200, 200);
 		
 		JPanel panelButtons = new JPanel();
 		
@@ -83,14 +87,17 @@ public class PictureFactory {
 					
 					Picture p = new Picture();
 					p.setEntityId(thisEntityId);
+					p.setData(bytes);
 					thisDb.insertPicture(p);
 					
-					try {
-						BufferedImage image = ImageIO.read(file);
-					} catch (IOException e1) {
-						e1.printStackTrace();
-					}
+					ImageIcon imageIcon = new ImageIcon(bytes);
+					Image image = imageIcon.getImage();
+					image = image.getScaledInstance(300, 300, Image.SCALE_SMOOTH);
+					imageIcon = new ImageIcon(image);
+					labelPictures = new JLabel(imageIcon);
 					
+					panelPictures.add(labelPictures);
+					panelPictures.revalidate();
 				}
 			}
 		});
@@ -122,6 +129,7 @@ public class PictureFactory {
 		});
 		
 		mainFrame.getContentPane().add(prevPictureBtn, BorderLayout.LINE_START);
+		mainFrame.getContentPane().add(panelPictures, BorderLayout.CENTER);
 		mainFrame.getContentPane().add(nextPictureBtn, BorderLayout.LINE_END);
 		mainFrame.getContentPane().add(panelButtons, BorderLayout.PAGE_END);
 		

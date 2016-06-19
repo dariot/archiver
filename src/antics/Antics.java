@@ -218,7 +218,7 @@ public class Antics implements ActionListener {
 		listEntities = new ArrayList<Entity>();
 		
 		try {
-			// TODO
+			listEntities = db.getEntities();
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(frame, MSG_PROBLEM_LOAD_ENTITIES + ":\n\n" + e.getMessage());
 			e.printStackTrace();
@@ -467,7 +467,7 @@ public class Antics implements ActionListener {
     			if (event.getClickCount() == 1) {
     				
     				frameDettaglioEntity = new JFrame("Dettaglio");
-    				frameDettaglioEntity.setLayout(new GridLayout(14, 2, 10, 10));
+    				frameDettaglioEntity.setLayout(new GridLayout(15, 2, 10, 10));
     				
     				int row = tableEntities.getSelectedRow();
     				int convertedRow = tableEntities.convertRowIndexToModel(row);
@@ -634,7 +634,7 @@ public class Antics implements ActionListener {
 	
 	public static void addEntity(Entity e) {
 		listEntities.add(e);
-		writeEntitiesToFile();
+		db.insertEntity(e);
 	}
 	
 	public static Category findCategoryByName(String n) {
@@ -726,14 +726,14 @@ public class Antics implements ActionListener {
 		notesTF = new JTextField();
 		frameDettaglioEntity.add(notesTF);
 		
-		picturesBtn = new JButton(CD_BTN_PICTURES);
-		picturesBtn.setSize(100, 40);
-		picturesBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				PictureFactory pic = new PictureFactory(db, 0);
-			}
-		});
-		frameDettaglioEntity.getContentPane().add(picturesBtn);
+//		picturesBtn = new JButton(CD_BTN_PICTURES);
+//		picturesBtn.setSize(100, 40);
+//		picturesBtn.addActionListener(new ActionListener() {
+//			public void actionPerformed(ActionEvent e) {
+//				PictureFactory pic = new PictureFactory(db, 0);
+//			}
+//		});
+//		frameDettaglioEntity.getContentPane().add(picturesBtn);
 		
 		salvaEntityBtn = new JButton(CD_BTN_SALVA_ENTITY);
 		salvaEntityBtn.setSize(100, 40);
