@@ -1,5 +1,6 @@
 package antics;
 
+import java.io.IOException;
 import java.sql.Clob;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -8,6 +9,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.derby.drda.NetworkServerControl;
 
 import dto.Category;
@@ -304,14 +306,19 @@ public class Database {
         try {
             stmt = conn.createStatement();
             
-            String query = "select * from " + pictureTable + " where entity_id = '" + entityId + "'";
+            String query = "select * from " + pictureTable + " where entity_id = " + entityId;
             
             ResultSet results = stmt.executeQuery(query);
             while (results.next()) {
             	Picture p = new Picture();
                 p.setId(results.getLong(1));
                 p.setEntityId(results.getLong(2));
-                p.setData(results.getBytes(3));
+                Clob clob = results.getClob(3);
+                try {
+					p.setData(IOUtils.toByteArray(clob.getAsciiStream()));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
                 output.add(p);
             }
             results.close();

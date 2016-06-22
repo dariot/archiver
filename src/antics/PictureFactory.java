@@ -60,6 +60,18 @@ public class PictureFactory {
         return bFile;
 	}
 	
+	private long getMaxPictureId(Database db, long entityId) {
+		ArrayList<Picture> pictures = db.getPicturesFromEntityId(entityId);
+		long max = 0;
+		for (int i = 0; i < pictures.size(); i++) {
+			Picture p = pictures.get(i);
+			if (p.getId() > max) {
+				max = p.getId();
+			}
+		}
+		return max;
+	}
+	
 	public PictureFactory(Database db, long entityId) {
 		mainFrame = new JFrame("Immagini");
 		mainFrame.setLayout(new BorderLayout());
@@ -85,7 +97,10 @@ public class PictureFactory {
 					File file = chooser.getSelectedFile();
 					byte[] bytes = getBytesFromFile(file);
 					
+					long id = getMaxPictureId(thisDb, thisEntityId) + 1;
+					
 					Picture p = new Picture();
+					p.setId(id);
 					p.setEntityId(thisEntityId);
 					p.setData(bytes);
 					thisDb.insertPicture(p);
