@@ -72,6 +72,11 @@ public class PictureFactory {
 		return max;
 	}
 	
+	private ArrayList<Picture> loadPictures(Database db, long entityId) {
+		ArrayList<Picture> pictures = db.getPicturesFromEntityId(entityId);
+		return pictures;
+	}
+	
 	public PictureFactory(Database db, long entityId) {
 		mainFrame = new JFrame("Immagini");
 		mainFrame.setLayout(new BorderLayout());
@@ -142,6 +147,8 @@ public class PictureFactory {
 				// TODO
 			}
 		});
+		
+		ArrayList<Picture> pictures = loadPictures(thisDb, thisEntityId);
 		
 		mainFrame.getContentPane().add(prevPictureBtn, BorderLayout.LINE_START);
 		mainFrame.getContentPane().add(panelPictures, BorderLayout.CENTER);
