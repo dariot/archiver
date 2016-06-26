@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.sql.Clob;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import javax.sql.rowset.serial.SerialClob;
 import javax.swing.ImageIcon;
@@ -46,6 +47,8 @@ public class PictureFactory {
 	
 	private ArrayList<Picture> pictures = new ArrayList<Picture>();
 	
+	int currentPictureIdx = 0;
+	
 	private byte[] getBytesFromFile(File f) {
 		byte[] bFile = new byte[(int) f.length()];
         
@@ -77,6 +80,18 @@ public class PictureFactory {
 		return pictures;
 	}
 	
+	private void showPicture(byte[] bytes) {
+		ImageIcon imageIcon = new ImageIcon(bytes);
+		Image image = imageIcon.getImage();
+		image = image.getScaledInstance(300, 300, Image.SCALE_SMOOTH);
+		imageIcon = new ImageIcon(image);
+		labelPictures = new JLabel(imageIcon);
+		
+		panelPictures.removeAll();
+		panelPictures.add(labelPictures);
+		panelPictures.revalidate();
+	}
+	
 	public PictureFactory(Database db, long entityId) {
 		mainFrame = new JFrame("Immagini");
 		mainFrame.setLayout(new BorderLayout());
@@ -92,6 +107,8 @@ public class PictureFactory {
 		panelPictures.setSize(200, 200);
 		
 		JPanel panelButtons = new JPanel();
+		
+		final ArrayList<Picture> pictures = loadPictures(thisDb, thisEntityId);
 		
 		addPictureBtn = new JButton(CD_BTN_ADD_PICTURE);
 		addPictureBtn.setSize(100, 40);
@@ -110,14 +127,7 @@ public class PictureFactory {
 					p.setData(bytes);
 					thisDb.insertPicture(p);
 					
-					ImageIcon imageIcon = new ImageIcon(bytes);
-					Image image = imageIcon.getImage();
-					image = image.getScaledInstance(300, 300, Image.SCALE_SMOOTH);
-					imageIcon = new ImageIcon(image);
-					labelPictures = new JLabel(imageIcon);
-					
-					panelPictures.add(labelPictures);
-					panelPictures.revalidate();
+					showPicture(bytes);
 				}
 			}
 		});
@@ -127,7 +137,9 @@ public class PictureFactory {
 		removePictureBtn.setSize(100, 40);
 		removePictureBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// TODO
+				if (pictures.size() > 0) {
+					thisDb.deletePicture(pictures.get(currentPictureIdx).getId());
+				}
 			}
 		});
 		panelButtons.add(removePictureBtn);
@@ -136,7 +148,10 @@ public class PictureFactory {
 		prevPictureBtn.setSize(100, 40);
 		prevPictureBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// TODO
+				if (pictures.size() > 0) {
+					currentPictureIdx = (currentPictureIdx - 1) % pictures.size();
+					showPicture(pictures.get(currentPictureIdx).getData());
+				}
 			}
 		});
 		
@@ -144,11 +159,12 @@ public class PictureFactory {
 		nextPictureBtn.setSize(100, 40);
 		nextPictureBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// TODO
+				if (pictures.size() > 0) {
+					currentPictureIdx = (currentPictureIdx + 1) % pictures.size();
+					showPicture(pictures.get(currentPictureIdx).getData());
+				}
 			}
 		});
-		
-		ArrayList<Picture> pictures = loadPictures(thisDb, thisEntityId);
 		
 		mainFrame.getContentPane().add(prevPictureBtn, BorderLayout.LINE_START);
 		mainFrame.getContentPane().add(panelPictures, BorderLayout.CENTER);
@@ -158,6 +174,11 @@ public class PictureFactory {
 		mainFrame.setSize(500, 500);
 		mainFrame.setLocationRelativeTo(null);
 		mainFrame.setVisible(true);
+		
+		if (pictures.size() > 0) {
+			Picture firstPicture = pictures.get(0);
+			showPicture(firstPicture.getData());
+		}
 	}
 
 }

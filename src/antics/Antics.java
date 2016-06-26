@@ -467,7 +467,7 @@ public class Antics implements ActionListener {
     			if (event.getClickCount() == 1) {
     				
     				frameDettaglioEntity = new JFrame("Dettaglio");
-    				frameDettaglioEntity.setLayout(new GridLayout(15, 2, 10, 10));
+    				frameDettaglioEntity.setLayout(new GridLayout(16, 2, 10, 10));
     				
     				int row = tableEntities.getSelectedRow();
     				int convertedRow = tableEntities.convertRowIndexToModel(row);
@@ -505,6 +505,16 @@ public class Antics implements ActionListener {
     				
     				createDettaglioEntity(entity);
     				
+    				// pictures
+    				picturesBtn = new JButton(CD_BTN_PICTURES);
+    				picturesBtn.setSize(100, 40);
+    				picturesBtn.addActionListener(new ActionListener() {
+    					public void actionPerformed(ActionEvent e) {
+    						PictureFactory pic = new PictureFactory(db, id);
+    					}
+    				});
+    				frameDettaglioEntity.getContentPane().add(picturesBtn);
+    				
     				salvaEntityBtn = new JButton(CD_BTN_SALVA_ENTITY);
     				salvaEntityBtn.setSize(100, 40);
     				salvaEntityBtn.addActionListener(new ActionListener() {
@@ -526,38 +536,6 @@ public class Antics implements ActionListener {
     					}
     				});
     				frameDettaglioEntity.getContentPane().add(rimuoviEntityBtn);
-    				
-    				picturesBtn = new JButton(CD_BTN_PICTURES);
-    				picturesBtn.setSize(100, 40);
-    				picturesBtn.addActionListener(new ActionListener() {
-    					public void actionPerformed(ActionEvent e) {
-    						PictureFactory pic = new PictureFactory(db, id);
-    					}
-    				});
-    				frameDettaglioEntity.getContentPane().add(picturesBtn);
-    				
-    				// pictures
-//    				panelPictures = new JPanel();
-//    				
-//    				addPictureBtn = new JButton(CD_BTN_ADD_PICTURE);
-//    				addPictureBtn.setSize(100, 40);
-//    				addPictureBtn.addActionListener(new ActionListener() {
-//    					public void actionPerformed(ActionEvent e) {
-//    						//framePictures.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
-//    						JOptionPane.showMessageDialog(frame, MSG_ADD_PICTURE_OK);
-//    					}
-//    				});
-//    				panelPictures.add(addPictureBtn);
-//    				
-//    				removePictureBtn = new JButton(CD_BTN_REMOVE_PICTURE);
-//    				removePictureBtn.setSize(100, 40);
-//    				removePictureBtn.addActionListener(new ActionListener() {
-//    					public void actionPerformed(ActionEvent e) {
-//    						//framePictures.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
-//    						JOptionPane.showMessageDialog(frame, MSG_REMOVE_PICTURE_OK);
-//    					}
-//    				});
-//    				panelPictures.add(removePictureBtn);
     				
     				frameDettaglioEntity.setSize(600, 600);
     				frameDettaglioEntity.setLocationRelativeTo(null);

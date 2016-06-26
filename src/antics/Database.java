@@ -1,14 +1,18 @@
 package antics;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.sql.Clob;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Arrays;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 import org.apache.derby.drda.NetworkServerControl;
 
@@ -25,6 +29,7 @@ public class Database {
     // jdbc Connection
     private static Connection conn = null;
     private static Statement stmt = null;
+    private static PreparedStatement ps = null;
 
     public void startServer() {
     	NetworkServerControl serverControl;
@@ -251,17 +256,30 @@ public class Database {
     // PICTURES
     public void insertPicture(Picture p) {
         try {
-            stmt = conn.createStatement();
+            ps = conn.prepareStatement("Insert into " + pictureTable + " (id, entity_id, data) VALUES (?, ?, ?)");
             
             long id = p.getId();
             long entityId = p.getEntityId();
             byte[] data = p.getData();
+            String encoded = Base64.encodeBase64String(data);
+            encoded = Arrays.toString(data);
             
-            String insert = "Insert into " + pictureTable + " (id, entity_id, data) VALUES";
-            insert += "(" + id + ", " + entityId + ", '" + data + "')";
+            Clob clob = conn.createClob();
+            OutputStream out = (OutputStream) clob.setAsciiStream(1);
+            try {
+	            out.write(data);
+	            out.flush();
+	            out.close();
+            } catch (IOException e) {
+            	e.printStackTrace();
+            }
             
-            stmt.execute(insert);
-            stmt.close();
+            ps.setLong(1, id);
+            ps.setLong(2, entityId);
+            ps.setClob(3, clob);
+            
+            ps.execute();
+            ps.close();
         } catch (SQLException sqlExcept) {
             sqlExcept.printStackTrace();
         }
