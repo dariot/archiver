@@ -23,7 +23,5 @@
 	<classpathentry kind="lib" path="lib/derbyrun.jar"/>
 	<classpathentry kind="lib" path="lib/derbytools.jar"/>
 	<classpathentry kind="lib" path="lib/commons-io-2.5.jar"/>
-	<classpathentry kind="lib" path="lib/commons-codec-1.10.jar"/>
-	<classpathentry kind="lib" path="lib/mybatis-3.3.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

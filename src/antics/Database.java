@@ -10,9 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Arrays;
 
-import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 import org.apache.derby.drda.NetworkServerControl;
 
@@ -261,8 +259,6 @@ public class Database {
             long id = p.getId();
             long entityId = p.getEntityId();
             byte[] data = p.getData();
-            String encoded = Base64.encodeBase64String(data);
-            encoded = Arrays.toString(data);
             
             Clob clob = conn.createClob();
             OutputStream out = (OutputStream) clob.setAsciiStream(1);
