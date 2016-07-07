@@ -92,6 +92,7 @@ public class Antics implements ActionListener {
 	private static JButton salvaEntityBtn;
 	private static JButton rimuoviEntityBtn;
 	private static JButton picturesBtn;
+	private static JButton documentsBtn;
 	private static JPanel panelDocuments;
 	private static JButton addDocumentBtn;
 	private static JButton removeDocumentBtn;
@@ -113,6 +114,7 @@ public class Antics implements ActionListener {
 	private static final String CD_BTN_REMOVE_DOCUMENT = "Rimuovi documento";
 	
 	private static final String CD_BTN_PICTURES = "Immagini";
+	private static final String CD_BTN_DOCUMENTS = "Documenti";
 	
 	private static final String MSG_PROBLEM_LOAD_CATEGORIES = "Si e' verificato un problema nel caricamento delle categorie";
 	private static final String MSG_PROBLEM_LOAD_ENTITIES = "Si e' verificato un problema nel caricamento degli oggetti";
@@ -514,6 +516,16 @@ public class Antics implements ActionListener {
     					}
     				});
     				frameDettaglioEntity.getContentPane().add(picturesBtn);
+    				
+    				// documents
+    				documentsBtn = new JButton(CD_BTN_DOCUMENTS);
+    				documentsBtn.setSize(100, 40);
+    				documentsBtn.addActionListener(new ActionListener() {
+    					public void actionPerformed(ActionEvent e) {
+    						DocumentFactory pic = new DocumentFactory(db, id);
+    					}
+    				});
+    				frameDettaglioEntity.getContentPane().add(documentsBtn);
     				
     				salvaEntityBtn = new JButton(CD_BTN_SALVA_ENTITY);
     				salvaEntityBtn.setSize(100, 40);
