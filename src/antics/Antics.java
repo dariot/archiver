@@ -837,6 +837,8 @@ public class Antics implements ActionListener {
 			Category current = listCategories.get(i);
 			if (current.getId() == category.getId()) {
 				listCategories.remove(i);
+				dtmCategories.removeRow(i);
+				break;
 			}
 		}
 		db.deleteCategory(category.getId());

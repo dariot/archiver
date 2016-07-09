@@ -91,7 +91,7 @@ public class Database {
     	try {
             stmt = conn.createStatement();
             
-            String delete = "delete from " + categoryTable + " where id = '" + id + "'";
+            String delete = "delete from " + categoryTable + " where id = " + id;
             
             stmt.execute(delete);
             stmt.close();
