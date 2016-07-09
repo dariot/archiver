@@ -1,20 +1,17 @@
 package antics;
 
 import java.awt.BorderLayout;
-import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
 
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.filechooser.FileNameExtensionFilter;
 
 import dto.Document;
 import dto.Picture;
@@ -25,8 +22,6 @@ public class DocumentFactory {
 	
 	private static JButton addDocumentBtn;
 	private static JButton removeDocumentBtn;
-	private static JButton nextDocumentBtn;
-	private static JButton prevDocumentBtn;
 	
 	private static JPanel panelDocuments;
 	private static JLabel labelDocuments;
@@ -88,7 +83,7 @@ public class DocumentFactory {
 		
 		JPanel panelButtons = new JPanel();
 		
-		final ArrayList<Picture> pictures = loadDocuments(thisDb, thisEntityId);
+		final ArrayList<Document> documents = loadDocuments(thisDb, thisEntityId);
 		
 		addDocumentBtn = new JButton(CD_BTN_ADD_DOCUMENT);
 		addDocumentBtn.setSize(100, 40);
@@ -111,52 +106,22 @@ public class DocumentFactory {
 		});
 		panelButtons.add(addDocumentBtn);
 		
-		removePictureBtn = new JButton(CD_BTN_REMOVE_PICTURE);
-		removePictureBtn.setSize(100, 40);
-		removePictureBtn.addActionListener(new ActionListener() {
+		removeDocumentBtn = new JButton(CD_BTN_REMOVE_DOCUMENT);
+		removeDocumentBtn.setSize(100, 40);
+		removeDocumentBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (pictures.size() > 0) {
-					thisDb.deletePicture(pictures.get(currentPictureIdx).getId());
+				if (documents.size() > 0) {
+					//thisDb.deleteDocument();
 				}
 			}
 		});
-		panelButtons.add(removePictureBtn);
+		panelButtons.add(removeDocumentBtn);
 		
-		prevPictureBtn = new JButton(CD_BTN_PREV_PICTURE);
-		prevPictureBtn.setSize(100, 40);
-		prevPictureBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (pictures.size() > 0) {
-					currentPictureIdx = (currentPictureIdx - 1) % pictures.size();
-					showPicture(pictures.get(currentPictureIdx).getData());
-				}
-			}
-		});
-		
-		nextPictureBtn = new JButton(CD_BTN_NEXT_PICTURE);
-		nextPictureBtn.setSize(100, 40);
-		nextPictureBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (pictures.size() > 0) {
-					currentPictureIdx = (currentPictureIdx + 1) % pictures.size();
-					showPicture(pictures.get(currentPictureIdx).getData());
-				}
-			}
-		});
-		
-		mainFrame.getContentPane().add(prevPictureBtn, BorderLayout.LINE_START);
-		mainFrame.getContentPane().add(panelPictures, BorderLayout.CENTER);
-		mainFrame.getContentPane().add(nextPictureBtn, BorderLayout.LINE_END);
 		mainFrame.getContentPane().add(panelButtons, BorderLayout.PAGE_END);
 		
 		mainFrame.setSize(500, 500);
 		mainFrame.setLocationRelativeTo(null);
 		mainFrame.setVisible(true);
-		
-		if (pictures.size() > 0) {
-			Picture firstPicture = pictures.get(0);
-			showPicture(firstPicture.getData());
-		}
 	}
 
 }

@@ -522,7 +522,7 @@ public class Antics implements ActionListener {
     				documentsBtn.setSize(100, 40);
     				documentsBtn.addActionListener(new ActionListener() {
     					public void actionPerformed(ActionEvent e) {
-    						DocumentFactory pic = new DocumentFactory(db, id);
+    						DocumentFactory doc = new DocumentFactory(db, id);
     					}
     				});
     				frameDettaglioEntity.getContentPane().add(documentsBtn);

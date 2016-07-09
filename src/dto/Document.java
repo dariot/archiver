@@ -5,10 +5,10 @@ public class Document {
 	private long id = 0;
 	private long entityId = 0;
 	private String name = "";
-	private byte[] content;
+	private byte[] data;
 
-	public byte[] getContent() {
-		return content;
+	public byte[] getData() {
+		return data;
 	}
 
 	public long getEntityId() {
@@ -23,8 +23,8 @@ public class Document {
 		return name;
 	}
 
-	public void setContent(byte[] content) {
-		this.content = content;
+	public void setData(byte[] data) {
+		this.data = data;
 	}
 
 	public void setEntityId(long entityId) {

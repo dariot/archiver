@@ -15,6 +15,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.derby.drda.NetworkServerControl;
 
 import dto.Category;
+import dto.Document;
 import dto.Entity;
 import dto.Picture;
 
@@ -24,6 +25,8 @@ public class Database {
     private static String categoryTable = "category";
     private static String entityTable = "entity";
     private static String pictureTable = "picture";
+    private static String documentTable = "document";
+    
     // jdbc Connection
     private static Connection conn = null;
     private static Statement stmt = null;
@@ -334,6 +337,98 @@ public class Database {
 					e.printStackTrace();
 				}
                 output.add(p);
+            }
+            results.close();
+            stmt.close();
+        } catch (SQLException sqlExcept) {
+            sqlExcept.printStackTrace();
+        }
+        return output;
+    }
+    
+    // DOCUMENTS
+    public void insertDocument(Document d) {
+        try {
+            ps = conn.prepareStatement("Insert into " + documentTable + " (id, entity_id, data) VALUES (?, ?, ?)");
+            
+            long id = d.getId();
+            long entityId = d.getEntityId();
+            byte[] data = d.getData();
+            
+            Clob clob = conn.createClob();
+            OutputStream out = (OutputStream) clob.setAsciiStream(1);
+            try {
+	            out.write(data);
+	            out.flush();
+	            out.close();
+            } catch (IOException e) {
+            	e.printStackTrace();
+            }
+            
+            ps.setLong(1, id);
+            ps.setLong(2, entityId);
+            ps.setClob(3, clob);
+            
+            ps.execute();
+            ps.close();
+        } catch (SQLException sqlExcept) {
+            sqlExcept.printStackTrace();
+        }
+    }
+    
+    public void deleteDocument(long id) {
+    	try {
+            stmt = conn.createStatement();
+            
+            String delete = "delete from " + documentTable + " where id = '" + id + "'";
+            
+            stmt.execute(delete);
+            stmt.close();
+        } catch (SQLException sqlExcept) {
+            sqlExcept.printStackTrace();
+        }
+    }
+    
+    public Document getDocument(long id) {
+    	Document output = new Document();
+        try {
+            stmt = conn.createStatement();
+            
+            String query = "select * from " + documentTable + " where id = '" + id + "'";
+            
+            ResultSet results = stmt.executeQuery(query);
+            while (results.next()) {
+            	output.setId(results.getLong(1));
+            	output.setEntityId(results.getLong(2));
+            	output.setData(results.getBytes(3));
+            }
+            results.close();
+            stmt.close();
+        } catch (SQLException sqlExcept) {
+            sqlExcept.printStackTrace();
+        }
+        return output;
+    }
+    
+    public ArrayList<Document> getDocumentsFromEntityId(long entityId) {
+    	ArrayList<Document> output = new ArrayList<Document>();
+        try {
+            stmt = conn.createStatement();
+            
+            String query = "select * from " + documentTable + " where entity_id = " + entityId;
+            
+            ResultSet results = stmt.executeQuery(query);
+            while (results.next()) {
+            	Document d = new Document();
+                d.setId(results.getLong(1));
+                d.setEntityId(results.getLong(2));
+                Clob clob = results.getClob(3);
+                try {
+					d.setData(IOUtils.toByteArray(clob.getAsciiStream()));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+                output.add(d);
             }
             results.close();
             stmt.close();
