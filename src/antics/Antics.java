@@ -385,8 +385,6 @@ public class Antics implements ActionListener {
 				break;
 			}
 		}
-		// salva le modifiche su disco
-		writeEntitiesToFile();
 	}
 	
 	public static void removeEntity(long id) {
@@ -399,8 +397,6 @@ public class Antics implements ActionListener {
 				break;
 			}
 		}
-		// salva le modifiche su disco
-		writeEntitiesToFile();
 	}
 	
 	public static Entity getEntityFromUI(long id) {
@@ -896,22 +892,6 @@ public class Antics implements ActionListener {
 		listCategories.add(newCategory);
 		
 		db.insertCategory(newCategory);
-	}
-	
-	public static void writeEntitiesToFile() {
-		try {
-			// TODO
-		} catch (Exception e) {
-			JOptionPane.showMessageDialog(frame, MSG_SALVA_ENTITY_KO);
-		}
-	}
-	
-	public static void writeCategoriesToFile() {
-		try {
-			// TODO
-		} catch (Exception e) {
-			JOptionPane.showMessageDialog(frame, MSG_PROBLEM_SAVE_CATEGORY);
-		}
 	}
 	
 	public void actionPerformed(ActionEvent e) {

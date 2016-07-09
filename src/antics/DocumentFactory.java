@@ -1,8 +1,12 @@
 package antics;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
@@ -12,6 +16,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
@@ -30,7 +35,7 @@ public class DocumentFactory {
 	
 	private static DefaultTableModel dtmDocuments;
 	private static JTable tableDocuments;
-	private static String[] documentsColumns = {"ID", "Nome"};
+	private static String[] documentsColumns = {"ID", "Documento"};
 	
 	private static JFileChooser chooser;
 	
@@ -75,6 +80,33 @@ public class DocumentFactory {
 		return documents;
 	}
 	
+	private void showTableDocuments() {
+    	for (int i = 0; i < documents.size(); i++) {
+    		Document current = documents.get(i);
+    		dtmDocuments.addRow(new Object[] {current.getId(), current.getName()});
+    	}
+    	
+    	tableDocuments.setPreferredScrollableViewportSize(new Dimension(500, 130));
+    	tableDocuments.setFillsViewportHeight(true);
+    	
+    	tableDocuments.addMouseListener(new MouseAdapter() {
+    		public void mouseClicked(MouseEvent event) {
+    			if (event.getClickCount() == 1) {
+    				// TODO
+    			}
+    		}
+    	});
+    	
+    	JScrollPane scrollPane = new JScrollPane(tableDocuments);
+    	mainFrame.getContentPane().add(scrollPane, BorderLayout.CENTER);
+	}
+	
+	public static String getFileNameFromPath(String path) {
+		String name = "";
+		
+		return name;
+	}
+	
 	public DocumentFactory(Database db, long entityId) {
 		mainFrame = new JFrame("Documenti");
 		mainFrame.setLayout(new BorderLayout());
@@ -107,11 +139,15 @@ public class DocumentFactory {
 					
 					long id = getMaxDocumentId(thisDb, thisEntityId) + 1;
 					
-					Picture p = new Picture();
-					p.setId(id);
-					p.setEntityId(thisEntityId);
-					p.setData(bytes);
-					thisDb.insertPicture(p);
+					String name = getFileNameFromPath(file.getPath());
+					
+					Document d = new Document();
+					d.setId(id);
+					d.setEntityId(thisEntityId);
+					d.setData(bytes);
+					thisDb.insertDocument(d);
+					
+					dtmDocuments.addRow(new Object[] {d.getId(), d.getName()});
 				}
 			}
 		});
@@ -128,6 +164,7 @@ public class DocumentFactory {
 		});
 		panelButtons.add(removeDocumentBtn);
 		
+		showTableDocuments();
 		mainFrame.getContentPane().add(panelButtons, BorderLayout.PAGE_END);
 		
 		mainFrame.setSize(500, 500);
