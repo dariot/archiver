@@ -75,6 +75,10 @@ public class PictureFactory {
 		return max;
 	}
 	
+	private long getMaxPictureId(Database db) {
+		return db.getMaxPicturesId();
+	}
+	
 	private ArrayList<Picture> loadPictures(Database db, long entityId) {
 		ArrayList<Picture> pictures = db.getPicturesFromEntityId(entityId);
 		return pictures;
@@ -119,7 +123,7 @@ public class PictureFactory {
 					File file = chooser.getSelectedFile();
 					byte[] bytes = getBytesFromFile(file);
 					
-					long id = getMaxPictureId(thisDb, thisEntityId) + 1;
+					long id = getMaxPictureId(thisDb) + 1;
 					
 					Picture p = new Picture();
 					p.setId(id);

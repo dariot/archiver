@@ -346,6 +346,27 @@ public class Database {
         return output;
     }
     
+    public long getMaxPicturesId() {
+    	long max = 0;
+    	try {
+            stmt = conn.createStatement();
+            
+            String query = "select max(id) from " + pictureTable;
+            
+            ResultSet results = stmt.executeQuery(query);
+            while (results.next()) {
+            	if (max < results.getLong(1)) {
+            		max = results.getLong(1);
+            	}
+            }
+            results.close();
+            stmt.close();
+        } catch (SQLException sqlExcept) {
+            sqlExcept.printStackTrace();
+        }
+    	return max;
+    }
+    
     // DOCUMENTS
     public void insertDocument(Document d) {
         try {

@@ -20,14 +20,12 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.table.DefaultTableModel;
 
 import dto.Category;
+import dto.CommonTableModel;
 import dto.Entity;
 
 public class Antics implements ActionListener {
-	
-	private static String SEPARATOR = System.getProperty("line.separator");
 	
 	private static Antics ref = new Antics();
 	
@@ -50,8 +48,8 @@ public class Antics implements ActionListener {
 	private static String[] entitiesColumns = {"ID", "Categoria", "Autore", "Titolo",
 			"Tecnica usata", "Misure", "Anno di acquisizione", "Importo pagato",
 			"Provenienza", "Localizzazione", "Valore odierno"};
-	private static DefaultTableModel dtmCategories;
-	private static DefaultTableModel dtmEntities;
+	private static CommonTableModel dtmCategories;
+	private static CommonTableModel dtmEntities;
 	
 	// dettaglio categoria
 	private static JFrame frameDettaglioCategoria;
@@ -205,13 +203,13 @@ public class Antics implements ActionListener {
 	public static void defineTables() {
 		// tabella categorie
 		tableCategories = new JTable();
-		dtmCategories = new DefaultTableModel(0, 0);
+		dtmCategories = new CommonTableModel();
     	dtmCategories.setColumnIdentifiers(categoriesColumns);
     	tableCategories.setModel(dtmCategories);
     	
-    	// tabella entit�
+    	// tabella entita'
     	tableEntities = new JTable();
-		dtmEntities = new DefaultTableModel(0, 0);
+		dtmEntities = new CommonTableModel();
     	dtmEntities.setColumnIdentifiers(entitiesColumns);
     	tableEntities.setModel(dtmEntities);
 	}
@@ -799,7 +797,7 @@ public class Antics implements ActionListener {
 				Category newCategory = new Category(newId, categoryName);
 				
 				addCategory(categoryName);
-				DefaultTableModel dtm = (DefaultTableModel) tableCategories.getModel();
+				CommonTableModel dtm = (CommonTableModel) tableCategories.getModel();
 				dtm.addRow(new Object[] {newCategory.getId(), newCategory.getName()});
 				
 				nuovaCategoriaTF.setText("");
@@ -812,32 +810,6 @@ public class Antics implements ActionListener {
 		frameAmministrazione.setSize(600, 400);
         frameAmministrazione.setLocationRelativeTo(null);
 		frameAmministrazione.setVisible(true);
-	}
-	
-	private static ArrayList<Category> readCategories() {
-		ArrayList<Category> categories = new ArrayList<Category>();
-		
-		try {
-			// TODO
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return categories;
-	}
-	
-	private static long getMaxIdFromFile(String filename) {
-		long max = 0;
-		
-		ArrayList<Category> categories = readCategories();
-		for (int i = 0; i < categories.size(); i++) {
-			long id = categories.get(i).getId();
-			if (id > max) {
-				max = id;
-			}
-		}
-		
-		return max;
 	}
 	
 	private static long getMaxIdCategories() {
