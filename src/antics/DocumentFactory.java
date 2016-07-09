@@ -12,6 +12,8 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 
 import dto.Document;
 import dto.Picture;
@@ -25,6 +27,10 @@ public class DocumentFactory {
 	
 	private static JPanel panelDocuments;
 	private static JLabel labelDocuments;
+	
+	private static DefaultTableModel dtmDocuments;
+	private static JTable tableDocuments;
+	private static String[] documentsColumns = {"ID", "Nome"};
 	
 	private static JFileChooser chooser;
 	
@@ -82,6 +88,11 @@ public class DocumentFactory {
 		panelDocuments.setSize(200, 200);
 		
 		JPanel panelButtons = new JPanel();
+		
+		tableDocuments = new JTable();
+		dtmDocuments = new DefaultTableModel(0, 0);
+		dtmDocuments.setColumnIdentifiers(documentsColumns);
+		tableDocuments.setModel(dtmDocuments);
 		
 		final ArrayList<Document> documents = loadDocuments(thisDb, thisEntityId);
 		
