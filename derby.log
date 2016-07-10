@@ -1,8 +1,8 @@
-Sat Jul 09 22:34:22 CEST 2016 : Server di rete Apache Derby: 10.12.1.1 - (1704137) avviato e pronto ad accettare connessioni sulla porta 1527
+Sun Jul 10 12:51:34 CEST 2016 : Server di rete Apache Derby: 10.12.1.1 - (1704137) avviato e pronto ad accettare connessioni sulla porta 1527
 ----------------------------------------------------------------
-Sat Jul 09 22:34:22 CEST 2016:
-Avvio della versione di Derby The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): istanza a816c00e-0155-d15e-3d73-0000030c6ea8
-sulla directory di database /Users/dario/Documents/workspace/archiver/antics con caricatore classi sun.misc.Launcher$AppClassLoader@23137792 
+Sun Jul 10 12:51:34 CEST 2016:
+Avvio della versione di Derby The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): istanza a816c00e-0155-d46f-0a18-0000030c0ca8
+sulla directory di database /Users/dario/Documents/workspace/archiver/antics con caricatore classi sun.misc.Launcher$AppClassLoader@5a74b10b 
 Caricato da file:/Users/dario/Documents/workspace/archiver/lib/derby.jar
 java.vendor=Oracle Corporation
 java.runtime.version=1.7.0_45-b18

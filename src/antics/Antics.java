@@ -555,6 +555,7 @@ public class Antics implements ActionListener {
 	}
 	
 	private void showTableCategories() {
+		dtmCategories.setRowCount(0);
     	for (int i = 0; i < listCategories.size(); i++) {
     		Category current = listCategories.get(i);
     		dtmCategories.addRow(new Object[] {current.getId(), current.getName()});
@@ -600,7 +601,6 @@ public class Antics implements ActionListener {
     					public void actionPerformed(ActionEvent e) {
     						deleteCategory(c);
     						frameDettaglioCategoria.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
-    						JOptionPane.showMessageDialog(frame, MSG_RIMUOVI_CATEGORIA_OK);
     					}
     				});
     				frameDettaglioCategoria.getContentPane().add(rimuoviCategoriaBtn);
