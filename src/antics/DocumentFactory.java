@@ -1,14 +1,17 @@
 package antics;
 
 import java.awt.BorderLayout;
+import java.awt.Desktop;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -18,14 +21,15 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
 
+import dto.CommonTableModel;
 import dto.Document;
-import dto.Picture;
 
 public class DocumentFactory {
 	
 	public static JFrame mainFrame;
+	
+	public final Database thisDb;
 	
 	private static JButton addDocumentBtn;
 	private static JButton removeDocumentBtn;
@@ -33,7 +37,7 @@ public class DocumentFactory {
 	private static JPanel panelDocuments;
 	private static JLabel labelDocuments;
 	
-	private static DefaultTableModel dtmDocuments;
+	private static CommonTableModel dtmDocuments;
 	private static JTable tableDocuments;
 	private static String[] documentsColumns = {"ID", "Documento"};
 	
@@ -63,21 +67,26 @@ public class DocumentFactory {
         return bFile;
 	}
 	
-	private long getMaxDocumentId(Database db, long entityId) {
-		ArrayList<Document> documents = db.getDocumentsFromEntityId(entityId);
-		long max = 0;
-		for (int i = 0; i < documents.size(); i++) {
-			Document d = documents.get(i);
-			if (d.getId() > max) {
-				max = d.getId();
-			}
-		}
-		return max;
+	private long getMaxDocumentId(Database db) {
+		return db.getMaxDocumentsId();
 	}
 	
 	private ArrayList<Document> loadDocuments(Database db, long entityId) {
 		ArrayList<Document> documents = db.getDocumentsFromEntityId(entityId);
 		return documents;
+	}
+	
+	private void openDocumentFromByteArray(byte[] data, String name) throws IOException {
+		if (Desktop.isDesktopSupported()) {
+			Desktop desktop = Desktop.getDesktop();
+			
+			FileOutputStream fos = new FileOutputStream(name);
+			fos.write(data);
+			fos.close();
+			
+			File file = new File(name);
+			desktop.open(file);
+		}
 	}
 	
 	private void showTableDocuments() {
@@ -92,7 +101,19 @@ public class DocumentFactory {
     	tableDocuments.addMouseListener(new MouseAdapter() {
     		public void mouseClicked(MouseEvent event) {
     			if (event.getClickCount() == 1) {
-    				// TODO
+    				int row = tableDocuments.getSelectedRow();
+    				if (row >= 0) {
+	    				int convertedRow = tableDocuments.convertRowIndexToModel(row);
+	    				final long id = (Long) tableDocuments.getValueAt(convertedRow, 0);
+	    				String name = (String) tableDocuments.getValueAt(convertedRow, 1);
+	    				
+	    				Document d = thisDb.getDocument(id);
+	    				try {
+							openDocumentFromByteArray(d.getData(), name);
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+    				}
     			}
     		}
     	});
@@ -103,7 +124,8 @@ public class DocumentFactory {
 	
 	public static String getFileNameFromPath(String path) {
 		String name = "";
-		
+		String[] splitted = path.split("\\" + File.separator);
+		name = splitted[splitted.length - 1];
 		return name;
 	}
 	
@@ -111,7 +133,7 @@ public class DocumentFactory {
 		mainFrame = new JFrame("Documenti");
 		mainFrame.setLayout(new BorderLayout());
 		
-		final Database thisDb = db;
+		thisDb = db;
 		final long thisEntityId = entityId;
 		
 		chooser = new JFileChooser();
@@ -122,7 +144,7 @@ public class DocumentFactory {
 		JPanel panelButtons = new JPanel();
 		
 		tableDocuments = new JTable();
-		dtmDocuments = new DefaultTableModel(0, 0);
+		dtmDocuments = new CommonTableModel();
 		dtmDocuments.setColumnIdentifiers(documentsColumns);
 		tableDocuments.setModel(dtmDocuments);
 		
@@ -137,13 +159,14 @@ public class DocumentFactory {
 					File file = chooser.getSelectedFile();
 					byte[] bytes = getBytesFromFile(file);
 					
-					long id = getMaxDocumentId(thisDb, thisEntityId) + 1;
+					long id = getMaxDocumentId(thisDb) + 1;
 					
 					String name = getFileNameFromPath(file.getPath());
 					
 					Document d = new Document();
 					d.setId(id);
 					d.setEntityId(thisEntityId);
+					d.setName(name);
 					d.setData(bytes);
 					thisDb.insertDocument(d);
 					

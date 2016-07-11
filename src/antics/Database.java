@@ -288,7 +288,7 @@ public class Database {
     	try {
             stmt = conn.createStatement();
             
-            String delete = "delete from " + pictureTable + " where id = '" + id + "'";
+            String delete = "delete from " + pictureTable + " where id = " + id;
             
             stmt.execute(delete);
             stmt.close();
@@ -302,7 +302,7 @@ public class Database {
         try {
             stmt = conn.createStatement();
             
-            String query = "select * from " + pictureTable + " where id = '" + id + "'";
+            String query = "select * from " + pictureTable + " where id = " + id;
             
             ResultSet results = stmt.executeQuery(query);
             while (results.next()) {
@@ -401,7 +401,7 @@ public class Database {
     	try {
             stmt = conn.createStatement();
             
-            String delete = "delete from " + documentTable + " where id = '" + id + "'";
+            String delete = "delete from " + documentTable + " where id = " + id;
             
             stmt.execute(delete);
             stmt.close();
@@ -415,13 +415,18 @@ public class Database {
         try {
             stmt = conn.createStatement();
             
-            String query = "select * from " + documentTable + " where id = '" + id + "'";
+            String query = "select * from " + documentTable + " where id = " + id;
             
             ResultSet results = stmt.executeQuery(query);
             while (results.next()) {
             	output.setId(results.getLong(1));
             	output.setEntityId(results.getLong(2));
-            	output.setData(results.getBytes(3));
+            	Clob clob = results.getClob(3);
+                try {
+					output.setData(IOUtils.toByteArray(clob.getAsciiStream()));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
             }
             results.close();
             stmt.close();
@@ -457,6 +462,27 @@ public class Database {
             sqlExcept.printStackTrace();
         }
         return output;
+    }
+    
+    public long getMaxDocumentsId() {
+    	long max = 0;
+    	try {
+            stmt = conn.createStatement();
+            
+            String query = "select max(id) from " + documentTable;
+            
+            ResultSet results = stmt.executeQuery(query);
+            while (results.next()) {
+            	if (max < results.getLong(1)) {
+            		max = results.getLong(1);
+            	}
+            }
+            results.close();
+            stmt.close();
+        } catch (SQLException sqlExcept) {
+            sqlExcept.printStackTrace();
+        }
+    	return max;
     }
     
     public void shutdown() {
