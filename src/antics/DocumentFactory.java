@@ -9,7 +9,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -100,7 +99,7 @@ public class DocumentFactory {
     	
     	tableDocuments.addMouseListener(new MouseAdapter() {
     		public void mouseClicked(MouseEvent event) {
-    			if (event.getClickCount() == 1) {
+    			if (event.getClickCount() == 2) {
     				int row = tableDocuments.getSelectedRow();
     				if (row >= 0) {
 	    				int convertedRow = tableDocuments.convertRowIndexToModel(row);
@@ -179,9 +178,17 @@ public class DocumentFactory {
 		removeDocumentBtn = new JButton(CD_BTN_REMOVE_DOCUMENT);
 		removeDocumentBtn.setSize(100, 40);
 		removeDocumentBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent event) {
 				if (documents.size() > 0) {
-					//thisDb.deleteDocument();
+					int row = tableDocuments.getSelectedRow();
+    				if (row >= 0 && row <= documents.size() - 1) {
+	    				int convertedRow = tableDocuments.convertRowIndexToModel(row);
+	    				final long id = (Long) tableDocuments.getValueAt(convertedRow, 0);
+	    				
+	    				thisDb.deleteDocument(id);
+	    				
+	    				dtmDocuments.removeRow(row);
+    				}
 				}
 			}
 		});
