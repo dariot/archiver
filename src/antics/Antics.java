@@ -37,6 +37,9 @@ public class Antics implements ActionListener {
 	private static JButton newEntityBtn;
 	private static JButton cercaBtn;
 	private static JComboBox<String> comboCategoria;
+	private static JComboBox<String> comboAutore;
+	private static JComboBox<String> comboLocalizzazione;
+	private static JComboBox<String> comboProvenienza;
 	private static JComboBox<String> comboCategoriaDettaglioEntity;
 	private static JTextField nuovaCategoriaTF;
 	private static JPanel panelTableEntities;
@@ -160,6 +163,30 @@ public class Antics implements ActionListener {
         }
         panelButtons.add(comboCategoria);
         
+        // combo autore
+        ArrayList<String> listAuthors = db.getListAuthors();
+        comboAutore = new JComboBox<String>();
+        for (int i = 0; i < listAuthors.size(); i++) {
+        	comboAutore.insertItemAt(listAuthors.get(i), i);
+        }
+        panelButtons.add(comboAutore);
+        
+        // combo localizzazione
+        ArrayList<String> listLocations = db.getListLocations();
+        comboLocalizzazione = new JComboBox<String>();
+        for (int i = 0; i < listLocations.size(); i++) {
+        	comboLocalizzazione.insertItemAt(listLocations.get(i), i);
+        }
+        panelButtons.add(comboLocalizzazione);
+        
+        // combo provenienza
+        ArrayList<String> listOriginalPlaces = db.getListOriginalPlaces();
+        comboProvenienza = new JComboBox<String>();
+        for (int i = 0; i < listOriginalPlaces.size(); i++) {
+        	comboProvenienza.insertItemAt(listOriginalPlaces.get(i), i);
+        }
+        panelButtons.add(comboProvenienza);
+        
         // pulsante "Cerca"
         cercaBtn = new JButton(CD_BTN_CERCA);
         cercaBtn.setSize(100, 40);
@@ -167,7 +194,12 @@ public class Antics implements ActionListener {
 			public void actionPerformed(ActionEvent e) {
 				String categoryName = (String) comboCategoria.getSelectedItem();
 				Category c = findCategoryByName(categoryName);
-				filterTableEntities(c);
+				
+				String author = (String) comboAutore.getSelectedItem();
+				String location = (String) comboLocalizzazione.getSelectedItem();
+				String originalPlace = (String) comboProvenienza.getSelectedItem();
+				
+				filterTableEntities(c, author, location, originalPlace);
 			}
 		});
         panelButtons.add(cercaBtn);
@@ -320,26 +352,36 @@ public class Antics implements ActionListener {
 		}
 	}
 	
-	private static void filterTableEntities(Category c) {
+	private static void filterTableEntities(Category c, String author, String location, String originalPlace) {
 		clearTableEntities();
 		dtmEntities.fireTableDataChanged();
+		
+		ArrayList<Entity> filteredEntities = db.searchEntities(c, author, location, originalPlace);
 
-    	for (int i = 0; i < listEntities.size(); i++) {
-    		Entity current = listEntities.get(i);
-    		if (c != null) {
-    			if (current.getCategoryId() == c.getId()) {
-        			dtmEntities.addRow(new Object[] {current.getId(), current.getCategoryId(), current.getAuthor(),
-        					current.getTitle(), current.getTechnique(), current.getMeasures(), current.getBuyYear(),
-        					current.getPrice(), current.getOriginalPlace(), current.getActualPlace(),
-        					current.getCurrentValue()});
-    			}
-    		} else {
-    			dtmEntities.addRow(new Object[] {current.getId(), current.getCategoryId(), current.getAuthor(),
-    					current.getTitle(), current.getTechnique(), current.getMeasures(), current.getBuyYear(),
-    					current.getPrice(), current.getOriginalPlace(), current.getActualPlace(),
-    					current.getCurrentValue()});
-    		}
-    	}
+//    	for (int i = 0; i < listEntities.size(); i++) {
+//    		Entity current = listEntities.get(i);
+//    		if (c != null) {
+//    			if (current.getCategoryId() == c.getId()) {
+//        			dtmEntities.addRow(new Object[] {current.getId(), current.getCategoryId(), current.getAuthor(),
+//        					current.getTitle(), current.getTechnique(), current.getMeasures(), current.getBuyYear(),
+//        					current.getPrice(), current.getOriginalPlace(), current.getActualPlace(),
+//        					current.getCurrentValue()});
+//    			}
+//    		} else {
+//    			dtmEntities.addRow(new Object[] {current.getId(), current.getCategoryId(), current.getAuthor(),
+//    					current.getTitle(), current.getTechnique(), current.getMeasures(), current.getBuyYear(),
+//    					current.getPrice(), current.getOriginalPlace(), current.getActualPlace(),
+//    					current.getCurrentValue()});
+//    		}
+//    	}
+		for (int i = 0; i < filteredEntities.size(); i++) {
+			Entity current = filteredEntities.get(i);
+			dtmEntities.addRow(new Object[] {current.getId(), current.getCategoryId(), current.getAuthor(),
+					current.getTitle(), current.getTechnique(), current.getMeasures(), current.getBuyYear(),
+					current.getPrice(), current.getOriginalPlace(), current.getActualPlace(),
+					current.getCurrentValue()});
+		}
+		
     	dtmEntities.fireTableDataChanged();
 	}
 	

@@ -219,6 +219,27 @@ public class Database {
         return output;
     }
     
+    private Entity getEntityFromResultSet(ResultSet results) throws SQLException {
+    	Entity e = new Entity();
+        e.setId(results.getLong(1));
+        e.setCategoryId(results.getLong(2));
+    	e.setAuthor(results.getString(3));
+    	e.setTitle(results.getString(4));
+    	e.setTechnique(results.getString(5));
+    	e.setMeasures(results.getString(6));
+    	e.setBuyYear(results.getString(7));
+    	e.setPrice(results.getString(8));
+    	e.setPaymentType(results.getString(9));
+    	e.setOriginalPlace(results.getString(10));
+    	e.setActualPlace(results.getString(11));
+    	e.setCurrentValue(results.getString(12));
+    	e.setCurrentValueDate(results.getString(13));
+    	e.setNotes(results.getString(14));
+    	e.setSold(results.getString(15));
+    	
+    	return e;
+    }
+    
     public ArrayList<Entity> getEntities() {
     	ArrayList<Entity> output = new ArrayList<Entity>();
         try {
@@ -228,22 +249,7 @@ public class Database {
             
             ResultSet results = stmt.executeQuery(query);
             while (results.next()) {
-            	Entity e = new Entity();
-                e.setId(results.getLong(1));
-                e.setCategoryId(results.getLong(2));
-            	e.setAuthor(results.getString(3));
-            	e.setTitle(results.getString(4));
-            	e.setTechnique(results.getString(5));
-            	e.setMeasures(results.getString(6));
-            	e.setBuyYear(results.getString(7));
-            	e.setPrice(results.getString(8));
-            	e.setPaymentType(results.getString(9));
-            	e.setOriginalPlace(results.getString(10));
-            	e.setActualPlace(results.getString(11));
-            	e.setCurrentValue(results.getString(12));
-            	e.setCurrentValueDate(results.getString(13));
-            	e.setNotes(results.getString(14));
-            	e.setSold(results.getString(15));
+            	Entity e = getEntityFromResultSet(results);
                 output.add(e);
             }
             results.close();
@@ -483,6 +489,103 @@ public class Database {
             sqlExcept.printStackTrace();
         }
     	return max;
+    }
+    
+    public ArrayList<String> getListAuthors() {
+    	ArrayList<String> authors = new ArrayList<String>();
+    	try {
+            stmt = conn.createStatement();
+            
+            String query = "select distinct author from " + entityTable;
+            
+            ResultSet results = stmt.executeQuery(query);
+            while (results.next()) {
+            	authors.add(results.getString(1));
+            }
+            results.close();
+            stmt.close();
+        } catch (SQLException sqlExcept) {
+            sqlExcept.printStackTrace();
+        }
+    	return authors;
+    }
+    
+    public ArrayList<String> getListLocations() {
+    	ArrayList<String> locations = new ArrayList<String>();
+    	try {
+            stmt = conn.createStatement();
+            
+            String query = "select distinct actual_place from " + entityTable;
+            
+            ResultSet results = stmt.executeQuery(query);
+            while (results.next()) {
+            	locations.add(results.getString(1));
+            }
+            results.close();
+            stmt.close();
+        } catch (SQLException sqlExcept) {
+            sqlExcept.printStackTrace();
+        }
+    	return locations;
+    }
+    
+    public ArrayList<String> getListOriginalPlaces() {
+    	ArrayList<String> originalPlaces = new ArrayList<String>();
+    	try {
+            stmt = conn.createStatement();
+            
+            String query = "select distinct original_place from " + entityTable;
+            
+            ResultSet results = stmt.executeQuery(query);
+            while (results.next()) {
+            	originalPlaces.add(results.getString(1));
+            }
+            results.close();
+            stmt.close();
+        } catch (SQLException sqlExcept) {
+            sqlExcept.printStackTrace();
+        }
+    	return originalPlaces;
+    }
+    
+    public ArrayList<Entity> searchEntities(Category c, String author, String location, String originalPlace) {
+    	ArrayList<Entity> listEntities = new ArrayList<Entity>();
+    	
+    	try {
+            stmt = conn.createStatement();
+            
+            String query = "select * from " + entityTable;
+            
+            if (c != null || author != null || location != null || originalPlace != null) {
+            	query += " where";
+            	if (c != null) {
+            		query += " category_id = " + c.getId() + " and";
+            	}
+            	if (author != null && !author.trim().isEmpty()) {
+            		query += " author = '" + author + "' and";
+            	}
+            	if (location != null && !location.trim().isEmpty()) {
+            		query += " actual_place = '" + location + "' and";
+            	}
+            	if (originalPlace != null && !originalPlace.trim().isEmpty()) {
+            		query += " original_place = '" + originalPlace + "' and";
+            	}
+            	query = query.substring(0, query.length() - 4);
+            }
+            System.out.println(query);
+            
+            ResultSet results = stmt.executeQuery(query);
+            while (results.next()) {
+            	Entity e = getEntityFromResultSet(results);
+            	listEntities.add(e);
+            }
+            results.close();
+            stmt.close();
+        } catch (SQLException sqlExcept) {
+            sqlExcept.printStackTrace();
+        }
+    	
+    	return listEntities;
     }
     
     public void shutdown() {
