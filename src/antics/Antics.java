@@ -38,6 +38,10 @@ public class Antics implements ActionListener {
 	private static JButton adminBtn;
 	private static JButton newEntityBtn;
 	private static JButton cercaBtn;
+	private static JLabel labelCategoria;
+	private static JLabel labelAutore;
+	private static JLabel labelLocalizzazione;
+	private static JLabel labelProvenienza;
 	private static JComboBox<String> comboCategoria;
 	private static JComboBox<String> comboAutore;
 	private static JComboBox<String> comboLocalizzazione;
@@ -162,34 +166,42 @@ public class Antics implements ActionListener {
         adminBtn.addActionListener(ref);
         panelButtons.add(adminBtn);
         
+        labelCategoria = new JLabel("Categoria");
         comboCategoria = new JComboBox<String>();
         for (int i = 0; i < listCategories.size(); i++) {
         	comboCategoria.insertItemAt(listCategories.get(i).getName(), i);
         }
+        panelButtons.add(labelCategoria);
         panelButtons.add(comboCategoria);
         
         // combo autore
+        labelAutore = new JLabel("Autore");
         ArrayList<String> listAuthors = db.getListAuthors();
         comboAutore = new JComboBox<String>();
         for (int i = 0; i < listAuthors.size(); i++) {
         	comboAutore.insertItemAt(listAuthors.get(i), i);
         }
+        panelButtons.add(labelAutore);
         panelButtons.add(comboAutore);
         
         // combo localizzazione
+        labelLocalizzazione = new JLabel("Localizzazione");
         ArrayList<String> listLocations = db.getListLocations();
         comboLocalizzazione = new JComboBox<String>();
         for (int i = 0; i < listLocations.size(); i++) {
         	comboLocalizzazione.insertItemAt(listLocations.get(i), i);
         }
+        panelButtons.add(labelLocalizzazione);
         panelButtons.add(comboLocalizzazione);
         
         // combo provenienza
+        labelProvenienza = new JLabel("Provenienza");
         ArrayList<String> listOriginalPlaces = db.getListOriginalPlaces();
         comboProvenienza = new JComboBox<String>();
         for (int i = 0; i < listOriginalPlaces.size(); i++) {
         	comboProvenienza.insertItemAt(listOriginalPlaces.get(i), i);
         }
+        panelButtons.add(labelProvenienza);
         panelButtons.add(comboProvenienza);
         
         // pulsante "Cerca"
@@ -680,6 +692,45 @@ public class Antics implements ActionListener {
 		return res;
 	}
 	
+	private static void setAutocomplete(JTextField tf, String column) {
+		ArrayList<String> keywords = db.getKeywords(column);
+		tf.setFocusTraversalKeysEnabled(false);
+		Autocomplete autoComplete = new Autocomplete(tf, keywords);
+		tf.getDocument().addDocumentListener(autoComplete);
+		tf.getInputMap().put(KeyStroke.getKeyStroke("TAB"), COMMIT_ACTION);
+		tf.getActionMap().put(COMMIT_ACTION, autoComplete.new CommitAction());
+	}
+	
+	private static void refreshComboAutore() {
+        ArrayList<String> listAuthors = db.getListAuthors();
+        comboAutore.removeAllItems();
+        for (int i = 0; i < listAuthors.size(); i++) {
+        	comboAutore.insertItemAt(listAuthors.get(i), i);
+        }
+	}
+	
+	private static void refreshComboLocalizzazione() {
+        ArrayList<String> listLocations = db.getListLocations();
+        comboLocalizzazione.removeAllItems();
+        for (int i = 0; i < listLocations.size(); i++) {
+        	comboLocalizzazione.insertItemAt(listLocations.get(i), i);
+        }
+	}
+	
+	private static void refreshComboProvenienza() {
+        ArrayList<String> listOriginalPlaces = db.getListOriginalPlaces();
+        comboProvenienza.removeAllItems();
+        for (int i = 0; i < listOriginalPlaces.size(); i++) {
+        	comboProvenienza.insertItemAt(listOriginalPlaces.get(i), i);
+        }
+	}
+	
+	private static void onEntityChanged() {
+		refreshComboAutore();
+		refreshComboLocalizzazione();
+		refreshComboProvenienza();
+	}
+	
 	public static void showPanelDettaglioEntity() {
 		frameDettaglioEntity = new JFrame("DETTAGLIO");
 		frameDettaglioEntity.setLayout(new GridLayout(15, 2, 10, 10));
@@ -695,6 +746,7 @@ public class Antics implements ActionListener {
 		authorLabel = new JLabel("Autore");
 		frameDettaglioEntity.add(authorLabel);
 		authorTF = new JTextField();
+		setAutocomplete(authorTF, "AUTHOR");
 		frameDettaglioEntity.add(authorTF);
 		
 		titleLabel = new JLabel("Titolo o descrizione dell'oggetto");
@@ -705,22 +757,7 @@ public class Antics implements ActionListener {
 		techniqueLabel = new JLabel("Tecnica usata");
 		frameDettaglioEntity.add(techniqueLabel);
 		techniqueTF = new JTextField();
-		// Without this, cursor always leaves text field
-		techniqueTF.setFocusTraversalKeysEnabled(false);
-		// Our words to complete
-		ArrayList<String> keywords = new ArrayList<String>(5);
-        keywords.add("example");
-        keywords.add("exit");
-        keywords.add("autocomplete");
-        keywords.add("stackabuse");
-        keywords.add("java");
-		Autocomplete autoComplete = new Autocomplete(techniqueTF, keywords);
-		techniqueTF.getDocument().addDocumentListener(autoComplete);
-
-		// Maps the tab key to the commit action, which finishes the autocomplete
-		// when given a suggestion
-		techniqueTF.getInputMap().put(KeyStroke.getKeyStroke("TAB"), COMMIT_ACTION);
-		techniqueTF.getActionMap().put(COMMIT_ACTION, autoComplete.new CommitAction());
+		setAutocomplete(techniqueTF, "TECHNIQUE");
 		frameDettaglioEntity.add(techniqueTF);
 		
 		measuresLabel = new JLabel("Misure");
@@ -741,6 +778,7 @@ public class Antics implements ActionListener {
 		paymentTypeLabel = new JLabel("Modalita' di pagamento");
 		frameDettaglioEntity.add(paymentTypeLabel);
 		paymentTypeTF = new JTextField();
+		setAutocomplete(paymentTypeTF, "PAYMENT_TYPE");
 		frameDettaglioEntity.add(paymentTypeTF);
 		
 		originalPlaceLabel = new JLabel("Provenienza");
@@ -751,6 +789,7 @@ public class Antics implements ActionListener {
 		actualPlaceLabel = new JLabel("Localizzazione dell'oggetto");
 		frameDettaglioEntity.add(actualPlaceLabel);
 		actualPlaceTF = new JTextField();
+		setAutocomplete(actualPlaceTF, "ACTUAL_PLACE");
 		frameDettaglioEntity.add(actualPlaceTF);
 		
 		currentValueLabel = new JLabel("Valore odierno");
@@ -828,6 +867,7 @@ public class Antics implements ActionListener {
 						newEntity.getPrice(), newEntity.getOriginalPlace(), newEntity.getActualPlace(),
 						newEntity.getCurrentValue(), newEntity.getCurrentValueDate(), newEntity.getSold()  
 				});
+				onEntityChanged();
 				frameDettaglioEntity.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
 				JOptionPane.showMessageDialog(frame, MSG_SALVA_ENTITY_OK);
 			}

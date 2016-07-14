@@ -572,7 +572,6 @@ public class Database {
             	}
             	query = query.substring(0, query.length() - 4);
             }
-            System.out.println(query);
             
             ResultSet results = stmt.executeQuery(query);
             while (results.next()) {
@@ -586,6 +585,27 @@ public class Database {
         }
     	
     	return listEntities;
+    }
+    
+    public ArrayList<String> getKeywords(String column) {
+    	ArrayList<String> keywords = new ArrayList<String>();
+    	
+    	try {
+            stmt = conn.createStatement();
+            
+            String query = "select distinct " + column + " from " + entityTable;
+            
+            ResultSet results = stmt.executeQuery(query);
+            while (results.next()) {
+            	keywords.add(results.getString(1));
+            }
+            results.close();
+            stmt.close();
+        } catch (SQLException sqlExcept) {
+            sqlExcept.printStackTrace();
+        }
+    	
+    	return keywords;
     }
     
     public void shutdown() {
