@@ -585,6 +585,7 @@ public class Antics implements ActionListener {
     				salvaEntityBtn.addActionListener(new ActionListener() {
     					public void actionPerformed(ActionEvent e) {
     						updateEntity(id, getEntityFromUI(id));
+    						onEntityChanged();
     						frameDettaglioEntity.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
     						JOptionPane.showMessageDialog(frame, MSG_AGGIORNA_ENTITY_OK);
     					}
@@ -596,6 +597,7 @@ public class Antics implements ActionListener {
     				rimuoviEntityBtn.addActionListener(new ActionListener() {
     					public void actionPerformed(ActionEvent e) {
     						removeEntity(id);
+    						onEntityChanged();
     						frameDettaglioEntity.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
     						JOptionPane.showMessageDialog(frame, MSG_RIMUOVI_ENTITY_OK);
     					}
