@@ -21,7 +21,7 @@ import dto.Picture;
 
 public class Database {
 	
-	private static String dbURL = "jdbc:derby:antics;create=true";
+	private static String dbURL = "jdbc:derby:NON_TOCCARE;create=true";
     private static String categoryTable = "category";
     private static String entityTable = "entity";
     private static String pictureTable = "picture";
@@ -57,7 +57,7 @@ public class Database {
     }
     
     // CATEGORIES
-    public void insertCategory(Category c) {
+    public void insertCategory(Category c) throws SQLException {
         try {
             stmt = conn.createStatement();
             
@@ -68,7 +68,7 @@ public class Database {
             stmt.execute(insert);
             stmt.close();
         } catch (SQLException sqlExcept) {
-            sqlExcept.printStackTrace();
+            throw sqlExcept;
         }
     }
     

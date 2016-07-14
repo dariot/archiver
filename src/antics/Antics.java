@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowEvent;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -20,6 +21,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 
 import dto.Category;
 import dto.CommonTableModel;
@@ -100,6 +102,9 @@ public class Antics implements ActionListener {
 	
 	private static ArrayList<Category> listCategories = new ArrayList<Category>();
 	private static ArrayList<Entity> listEntities = new ArrayList<Entity>();
+	
+	// autocomplete commit string
+	private static final String COMMIT_ACTION = "commit";
 	
 	private static final String CD_BTN_AMMINISTRAZIONE = "Amministrazione";
 	private static final String CD_BTN_CERCA = "Cerca";
@@ -700,6 +705,22 @@ public class Antics implements ActionListener {
 		techniqueLabel = new JLabel("Tecnica usata");
 		frameDettaglioEntity.add(techniqueLabel);
 		techniqueTF = new JTextField();
+		// Without this, cursor always leaves text field
+		techniqueTF.setFocusTraversalKeysEnabled(false);
+		// Our words to complete
+		ArrayList<String> keywords = new ArrayList<String>(5);
+        keywords.add("example");
+        keywords.add("exit");
+        keywords.add("autocomplete");
+        keywords.add("stackabuse");
+        keywords.add("java");
+		Autocomplete autoComplete = new Autocomplete(techniqueTF, keywords);
+		techniqueTF.getDocument().addDocumentListener(autoComplete);
+
+		// Maps the tab key to the commit action, which finishes the autocomplete
+		// when given a suggestion
+		techniqueTF.getInputMap().put(KeyStroke.getKeyStroke("TAB"), COMMIT_ACTION);
+		techniqueTF.getActionMap().put(COMMIT_ACTION, autoComplete.new CommitAction());
 		frameDettaglioEntity.add(techniqueTF);
 		
 		measuresLabel = new JLabel("Misure");
@@ -907,7 +928,11 @@ public class Antics implements ActionListener {
 		Category newCategory = new Category(id, c);
 		listCategories.add(newCategory);
 		
-		db.insertCategory(newCategory);
+		try {
+			db.insertCategory(newCategory);
+		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(frame, e.getMessage());
+		}
 	}
 	
 	public void actionPerformed(ActionEvent e) {
