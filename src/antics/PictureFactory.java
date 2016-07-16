@@ -47,7 +47,7 @@ public class PictureFactory {
 	private static final String MSG_REMOVE_PICTURE_OK = "Immagine rimossa correttamente.";
 	private static final String MSG_REMOVE_PICTURE_KO = "Si e' verificato un problema nella rimozione dell''immagine.";
 	
-	private ArrayList<Picture> pictures = new ArrayList<Picture>();
+	private static ArrayList<Picture> pictures = new ArrayList<Picture>();
 	
 	int currentPictureIdx = 0;
 	
@@ -114,7 +114,7 @@ public class PictureFactory {
 		
 		JPanel panelButtons = new JPanel();
 		
-		final ArrayList<Picture> pictures = loadPictures(thisDb, thisEntityId);
+		pictures = loadPictures(thisDb, thisEntityId);
 		
 		addPictureBtn = new JButton(CD_BTN_ADD_PICTURE);
 		addPictureBtn.setSize(100, 40);
@@ -184,8 +184,13 @@ public class PictureFactory {
 		prevPictureBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (pictures.size() > 0) {
-					currentPictureIdx = Math.abs((currentPictureIdx - 1) % pictures.size());
-					showPicture(pictures.get(currentPictureIdx).getData());
+					currentPictureIdx--;
+					if (currentPictureIdx < 0) {
+						currentPictureIdx = pictures.size() - Math.abs(currentPictureIdx);
+					}
+					Picture current = pictures.get(currentPictureIdx);
+					checkbox.setSelected("S".equals(current.getIsMainPic()));
+					showPicture(current.getData());
 				}
 			}
 		});
@@ -196,7 +201,9 @@ public class PictureFactory {
 			public void actionPerformed(ActionEvent e) {
 				if (pictures.size() > 0) {
 					currentPictureIdx = (currentPictureIdx + 1) % pictures.size();
-					showPicture(pictures.get(currentPictureIdx).getData());
+					Picture current = pictures.get(currentPictureIdx);
+					checkbox.setSelected("S".equals(current.getIsMainPic()));
+					showPicture(current.getData());
 				}
 			}
 		});
