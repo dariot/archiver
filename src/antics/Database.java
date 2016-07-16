@@ -403,6 +403,34 @@ public class Database {
         return output;
     }
     
+    public Picture getMainPictureFromEntityId(long entityId) {
+    	Picture output = null;
+        try {
+            stmt = conn.createStatement();
+            
+            String query = "select * from " + pictureTable + " where entity_id = " + entityId + " and is_main_pic = 'S'";
+            
+            ResultSet results = stmt.executeQuery(query);
+            while (results.next()) {
+            	output = new Picture();
+            	output.setId(results.getLong(1));
+            	output.setEntityId(results.getLong(2));
+            	Clob clob = results.getClob(3);
+                try {
+					output.setData(IOUtils.toByteArray(clob.getAsciiStream()));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+            	output.setIsMainPic(results.getString(4));
+            }
+            results.close();
+            stmt.close();
+        } catch (SQLException sqlExcept) {
+            sqlExcept.printStackTrace();
+        }
+        return output;
+    }
+    
     public long getMaxPicturesId() {
     	long max = 0;
     	try {

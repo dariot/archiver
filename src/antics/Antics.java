@@ -402,7 +402,9 @@ public class Antics implements ActionListener {
 		ArrayList<Entity> filteredEntities = db.searchEntities(c, author, location, originalPlace);
 		for (int i = 0; i < filteredEntities.size(); i++) {
 			Entity current = filteredEntities.get(i);
-			dtmEntities.addRow(new Object[] {new ImageIcon(), current.getId(), current.getCategoryId(), current.getAuthor(),
+			ImageIcon icon = getIconFromEntityId(current.getId());
+			Category category = findCategoryById(current.getCategoryId());
+			dtmEntities.addRow(new Object[] {icon, current.getId(), category.getName(), current.getAuthor(),
 					current.getTitle(), current.getTechnique(), current.getMeasures(), current.getBuyYear(),
 					current.getPrice(), current.getOriginalPlace(), current.getActualPlace(),
 					current.getCurrentValue()});
@@ -435,23 +437,11 @@ public class Antics implements ActionListener {
 		return res;
 	}
 	
-	public static Picture getMainPicture(ArrayList<Picture> pictures) {
-		Picture mainPic = null;
-		for (int i = 0; i < pictures.size(); i++) {
-			Picture current = pictures.get(i);
-			if ("S".equals(current.getIsMainPic())) {
-				mainPic = current;
-				break;
-			}
-		}
-		return mainPic;
-	}
-	
 	public static ImageIcon getIconFromEntityId(long id) {
 		ArrayList<Picture> pictures = db.getPicturesFromEntityId(id);
 		ImageIcon icon = new ImageIcon();
 		if (pictures.size() > 0) {
-			Picture mainPic = getMainPicture(pictures);
+			Picture mainPic = db.getMainPictureFromEntityId(id);
 			if (mainPic != null) {
 				icon = new ImageIcon(mainPic.getData());
 			} else {
@@ -479,9 +469,10 @@ public class Antics implements ActionListener {
 				dtmEntities.removeRow(i);
 				
 				ImageIcon icon = getIconFromEntityId(id);
+				Category category = findCategoryById(e.getCategoryId());
 				dtmEntities.addRow(new Object[] {
 						icon,
-						e.getId(), e.getCategoryId(), e.getAuthor(),
+						e.getId(), category.getName(), e.getAuthor(),
     					e.getTitle(), e.getTechnique(), e.getMeasures(), e.getBuyYear(),
     					e.getPrice(), e.getOriginalPlace(), e.getActualPlace(),
     					e.getCurrentValue()
@@ -551,13 +542,14 @@ public class Antics implements ActionListener {
     		ImageIcon icon = getIconFromEntityId(current.getId());
     		if (c != null) {
     			if (current.getCategoryId() == c.getId()) {
-        			dtmEntities.addRow(new Object[] {icon, current.getId(), current.getCategoryId(), current.getAuthor(),
+        			dtmEntities.addRow(new Object[] {icon, current.getId(), c.getName(), current.getAuthor(),
         					current.getTitle(), current.getTechnique(), current.getMeasures(), current.getBuyYear(),
         					current.getPrice(), current.getOriginalPlace(), current.getActualPlace(),
         					current.getCurrentValue()});
     			}
     		} else {
-    			dtmEntities.addRow(new Object[] {icon, current.getId(), current.getCategoryId(), current.getAuthor(),
+    			Category category = findCategoryById(current.getCategoryId());
+    			dtmEntities.addRow(new Object[] {icon, current.getId(), category.getName(), current.getAuthor(),
     					current.getTitle(), current.getTechnique(), current.getMeasures(), current.getBuyYear(),
     					current.getPrice(), current.getOriginalPlace(), current.getActualPlace(),
     					current.getCurrentValue()});
@@ -930,8 +922,9 @@ public class Antics implements ActionListener {
 				addEntity(newEntity);
 				
 				ImageIcon icon = getIconFromEntityId(id);
+				Category category = findCategoryById(newEntity.getCategoryId());
 				dtmEntities.addRow(new Object[] {
-						icon, newEntity.getId(), newEntity.getCategoryId(), newEntity.getAuthor(),
+						icon, newEntity.getId(), category.getName(), newEntity.getAuthor(),
 						newEntity.getTitle(), newEntity.getTechnique(), newEntity.getMeasures(), newEntity.getBuyYear(),
 						newEntity.getPrice(), newEntity.getOriginalPlace(), newEntity.getActualPlace(),
 						newEntity.getCurrentValue(), newEntity.getCurrentValueDate(), newEntity.getSold()  
