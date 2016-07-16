@@ -1,12 +1,12 @@
 package dto;
 
-
 public class Picture {
 
 	private long id = 0;
+	private String isMainPic = "N";
 	private long entityId = 0;
 	private byte[] data;
-	
+
 	public Picture() {}
 
 	public byte[] getData() {
@@ -21,6 +21,10 @@ public class Picture {
 		return id;
 	}
 
+	public String getIsMainPic() {
+		return isMainPic;
+	}
+
 	public void setData(byte[] data) {
 		this.data = data;
 	}
@@ -31,6 +35,10 @@ public class Picture {
 
 	public void setId(long id) {
 		this.id = id;
+	}
+
+	public void setIsMainPic(String isMainPic) {
+		this.isMainPic = isMainPic;
 	}
 
 }

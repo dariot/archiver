@@ -437,11 +437,28 @@ public class Antics implements ActionListener {
 		return res;
 	}
 	
+	public static Picture getMainPicture(ArrayList<Picture> pictures) {
+		Picture mainPic = null;
+		for (int i = 0; i < pictures.size(); i++) {
+			Picture current = pictures.get(i);
+			if ("S".equals(current.getIsMainPic())) {
+				mainPic = current;
+				break;
+			}
+		}
+		return mainPic;
+	}
+	
 	public static ImageIcon getIconFromEntityId(long id) {
 		ArrayList<Picture> pictures = db.getPicturesFromEntityId(id);
 		ImageIcon icon = new ImageIcon();
 		if (pictures.size() > 0) {
-			icon = new ImageIcon(pictures.get(0).getData());
+			Picture mainPic = getMainPicture(pictures);
+			if (mainPic != null) {
+				icon = new ImageIcon(mainPic.getData());
+			} else {
+				icon = new ImageIcon(pictures.get(0).getData());
+			}
 			icon = resizeIcon(icon, 80, 80);
 		}
 		return icon;

@@ -4,15 +4,15 @@ import java.awt.BorderLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.io.File;
 import java.io.FileInputStream;
-import java.sql.Clob;
 import java.util.ArrayList;
-import java.util.Arrays;
 
-import javax.sql.rowset.serial.SerialClob;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -29,6 +29,8 @@ public class PictureFactory {
 	private static JButton removePictureBtn;
 	private static JButton nextPictureBtn;
 	private static JButton prevPictureBtn;
+	private static JCheckBox checkbox;
+	private static JLabel cboxLabel;
 	
 	private static JPanel panelPictures;
 	private static JLabel labelPictures;
@@ -87,7 +89,7 @@ public class PictureFactory {
 	private void showPicture(byte[] bytes) {
 		ImageIcon imageIcon = new ImageIcon(bytes);
 		Image image = imageIcon.getImage();
-		image = image.getScaledInstance(300, 300, Image.SCALE_SMOOTH);
+		image = image.getScaledInstance(400, 300, Image.SCALE_SMOOTH);
 		imageIcon = new ImageIcon(image);
 		labelPictures = new JLabel(imageIcon);
 		
@@ -139,6 +141,33 @@ public class PictureFactory {
 		});
 		panelButtons.add(addPictureBtn);
 		
+		checkbox = new JCheckBox();
+		checkbox.addItemListener(new ItemListener() {
+		    @Override
+		    public void itemStateChanged(ItemEvent e) {
+		    	if (pictures.size() > 0) {
+			        if (e.getStateChange() == ItemEvent.SELECTED) {
+			        	for (int i = 0; i < pictures.size(); i++) {
+			        		Picture current = pictures.get(i);
+			        		current.setIsMainPic("N");
+			        		thisDb.updatePicture(current);
+			        	}
+			        	
+			            Picture p = pictures.get(currentPictureIdx);
+			            p.setIsMainPic("S");
+			            thisDb.updatePicture(p);
+			        } else {
+			        	Picture p = pictures.get(currentPictureIdx);
+			            p.setIsMainPic("N");
+			            thisDb.updatePicture(p);
+			        }
+		    	}
+		    }
+		});
+		cboxLabel = new JLabel("Immagine principale");
+		panelButtons.add(checkbox);
+		panelButtons.add(cboxLabel);
+		
 		removePictureBtn = new JButton(CD_BTN_REMOVE_PICTURE);
 		removePictureBtn.setSize(100, 40);
 		removePictureBtn.addActionListener(new ActionListener() {
@@ -177,7 +206,7 @@ public class PictureFactory {
 		mainFrame.getContentPane().add(nextPictureBtn, BorderLayout.LINE_END);
 		mainFrame.getContentPane().add(panelButtons, BorderLayout.PAGE_END);
 		
-		mainFrame.setSize(500, 500);
+		mainFrame.setSize(600, 500);
 		mainFrame.setLocationRelativeTo(null);
 		mainFrame.setVisible(true);
 		

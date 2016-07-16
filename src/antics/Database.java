@@ -337,6 +337,21 @@ public class Database {
         }
     }
     
+    public void updatePicture(Picture p) {
+    	try {
+            stmt = conn.createStatement();
+            
+            long id = p.getId();
+            String isMainPic = p.getIsMainPic();
+            String update = "update " + pictureTable + " set is_main_pic = '" + isMainPic + "' where id = " + id;
+            
+            stmt.execute(update);
+            stmt.close();
+        } catch (SQLException sqlExcept) {
+            sqlExcept.printStackTrace();
+        }
+    }
+    
     public Picture getPicture(long id) {
     	Picture output = new Picture();
         try {
@@ -349,6 +364,7 @@ public class Database {
             	output.setId(results.getLong(1));
             	output.setEntityId(results.getLong(2));
             	output.setData(results.getBytes(3));
+            	output.setIsMainPic(results.getString(4));
             }
             results.close();
             stmt.close();
@@ -376,6 +392,7 @@ public class Database {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
+                p.setIsMainPic(results.getString(4));
                 output.add(p);
             }
             results.close();
