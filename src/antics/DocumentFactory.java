@@ -30,6 +30,8 @@ public class DocumentFactory {
 	
 	public final Database thisDb;
 	
+	public static final String FILE_PATH = "NON_TOCCARE/tempFiles/";
+	
 	private static JButton addDocumentBtn;
 	private static JButton removeDocumentBtn;
 	
@@ -79,11 +81,11 @@ public class DocumentFactory {
 		if (Desktop.isDesktopSupported()) {
 			Desktop desktop = Desktop.getDesktop();
 			
-			FileOutputStream fos = new FileOutputStream(name);
+			FileOutputStream fos = new FileOutputStream(FILE_PATH + name);
 			fos.write(data);
 			fos.close();
 			
-			File file = new File(name);
+			File file = new File(FILE_PATH + name);
 			desktop.open(file);
 		}
 	}

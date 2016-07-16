@@ -9,6 +9,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowEvent;
+import java.io.File;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -24,6 +26,8 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
+
+import org.apache.commons.io.FileUtils;
 
 import dto.Category;
 import dto.CommonTableModel;
@@ -149,6 +153,19 @@ public class Antics implements ActionListener {
 	private static void createWindow() {
 		frame = new JFrame("ANTICS");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+		// files saved in the temporary folder are deleted when the program is exiting
+		frame.addWindowListener(new java.awt.event.WindowAdapter() {
+		    @Override
+		    public void windowClosing(WindowEvent event) {
+		    	try {
+					FileUtils.cleanDirectory(new File(DocumentFactory.FILE_PATH));
+				} catch (IOException e) {
+					JOptionPane.showMessageDialog(frame, e.getMessage());
+				}
+		    }
+		});
+		
 		frame.setLayout(new BorderLayout());
 		
 		JPanel panelButtons = new JPanel();
