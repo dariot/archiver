@@ -3,12 +3,15 @@ package antics;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Graphics;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowEvent;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -32,6 +35,7 @@ import org.apache.commons.io.FileUtils;
 import dto.Category;
 import dto.CommonTableModel;
 import dto.Entity;
+import dto.Picture;
 
 public class Antics implements ActionListener {
 	
@@ -280,6 +284,7 @@ public class Antics implements ActionListener {
 		dtmEntities = new CommonTableModel();
     	dtmEntities.setColumnIdentifiers(entitiesColumns);
     	tableEntities.setModel(dtmEntities);
+    	tableEntities.setRowHeight(80);
 	}
 	
 	private static void loadEntities() {
@@ -432,6 +437,22 @@ public class Antics implements ActionListener {
 		return res;
 	}
 	
+	public static ImageIcon getIconFromEntityId(long id) {
+		ArrayList<Picture> pictures = db.getPicturesFromEntityId(id);
+		ImageIcon icon = new ImageIcon();
+		if (pictures.size() > 0) {
+			icon = new ImageIcon(pictures.get(0).getData());
+			icon = resizeIcon(icon, 80, 80);
+		}
+		return icon;
+	}
+	
+	public static ImageIcon resizeIcon(ImageIcon icon, int width, int height) {
+		Image img = icon.getImage();
+		Image resized = img.getScaledInstance(width, height,  java.awt.Image.SCALE_SMOOTH);
+		return new ImageIcon(resized);
+	}
+	
 	public static void updateEntity(long id, Entity e) {
 		db.updateEntity(e);
 		
@@ -441,8 +462,10 @@ public class Antics implements ActionListener {
 				listEntities.set(i, e);
 				// aggiorna l'oggetto nel tableModel
 				dtmEntities.removeRow(i);
+				
+				ImageIcon icon = getIconFromEntityId(id);
 				dtmEntities.addRow(new Object[] {
-						new ImageIcon(),
+						icon,
 						e.getId(), e.getCategoryId(), e.getAuthor(),
     					e.getTitle(), e.getTechnique(), e.getMeasures(), e.getBuyYear(),
     					e.getPrice(), e.getOriginalPlace(), e.getActualPlace(),
@@ -505,19 +528,21 @@ public class Antics implements ActionListener {
 		return newEntity;
 	}
 	
-	// la lista delle entit� riceve in input la categoria per cui devono essere filtrate
+	// la lista delle entita' riceve in input la categoria per cui devono essere filtrate
 	private static void showTableEntities(Category c) {
     	for (int i = 0; i < listEntities.size(); i++) {
     		Entity current = listEntities.get(i);
+    		
+    		ImageIcon icon = getIconFromEntityId(current.getId());
     		if (c != null) {
     			if (current.getCategoryId() == c.getId()) {
-        			dtmEntities.addRow(new Object[] {new ImageIcon(), current.getId(), current.getCategoryId(), current.getAuthor(),
+        			dtmEntities.addRow(new Object[] {icon, current.getId(), current.getCategoryId(), current.getAuthor(),
         					current.getTitle(), current.getTechnique(), current.getMeasures(), current.getBuyYear(),
         					current.getPrice(), current.getOriginalPlace(), current.getActualPlace(),
         					current.getCurrentValue()});
     			}
     		} else {
-    			dtmEntities.addRow(new Object[] {new ImageIcon(), current.getId(), current.getCategoryId(), current.getAuthor(),
+    			dtmEntities.addRow(new Object[] {icon, current.getId(), current.getCategoryId(), current.getAuthor(),
     					current.getTitle(), current.getTechnique(), current.getMeasures(), current.getBuyYear(),
     					current.getPrice(), current.getOriginalPlace(), current.getActualPlace(),
     					current.getCurrentValue()});
