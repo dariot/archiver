@@ -131,6 +131,8 @@ public class PictureFactory {
 					p.setData(bytes);
 					thisDb.insertPicture(p);
 					
+					pictures.add(p);
+					
 					showPicture(bytes);
 				}
 			}
@@ -153,7 +155,7 @@ public class PictureFactory {
 		prevPictureBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (pictures.size() > 0) {
-					currentPictureIdx = (currentPictureIdx - 1) % pictures.size();
+					currentPictureIdx = Math.abs((currentPictureIdx - 1) % pictures.size());
 					showPicture(pictures.get(currentPictureIdx).getData());
 				}
 			}

@@ -12,6 +12,7 @@ import java.awt.event.WindowEvent;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -20,6 +21,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 
@@ -54,7 +56,7 @@ public class Antics implements ActionListener {
 	private static JTable tableCategories;
 	private static String[] categoriesColumns = {"ID", "Categoria"};
 	private static JTable tableEntities;
-	private static String[] entitiesColumns = {"ID", "Categoria", "Autore", "Titolo",
+	private static String[] entitiesColumns = {"Immagine", "ID", "Categoria", "Autore", "Titolo",
 			"Tecnica usata", "Misure", "Anno di acquisizione", "Importo pagato",
 			"Provenienza", "Localizzazione", "Valore odierno"};
 	private static CommonTableModel dtmCategories;
@@ -86,13 +88,13 @@ public class Antics implements ActionListener {
 	private static JTextField measuresTF;
 	private static JTextField buyYearTF;
 	private static JTextField priceTF;
-	private static JTextField paymentTypeTF;
+	private static JTextArea paymentTypeTA;
 	private static JTextField originalPlaceTF;
 	private static JTextField actualPlaceTF;
 	private static JTextField currentValueTF;
 	private static JTextField currentValueDateTF;
 	private static JTextField soldTF;
-	private static JTextField notesTF;
+	private static JTextArea notesTA;
 	
 	// dettaglio oggetto
 	private static JFrame frameDettaglioEntity;
@@ -328,8 +330,10 @@ public class Antics implements ActionListener {
 		
 		paymentTypeLabel = new JLabel("Modalita' di pagamento");
 		frameDettaglioEntity.add(paymentTypeLabel);
-		paymentTypeTF = new JTextField(e.getPaymentType());
-		frameDettaglioEntity.add(paymentTypeTF);
+		paymentTypeTA = new JTextArea(e.getPaymentType());
+		paymentTypeTA.setSize(15, 20);
+		JScrollPane scrollPanePaymentType = new JScrollPane(paymentTypeTA);
+		frameDettaglioEntity.add(scrollPanePaymentType);
 		
 		originalPlaceLabel = new JLabel("Provenienza");
 		frameDettaglioEntity.add(originalPlaceLabel);
@@ -358,8 +362,10 @@ public class Antics implements ActionListener {
 		
 		notesLabel = new JLabel("Annotazioni varie");
 		frameDettaglioEntity.add(notesLabel);
-		notesTF = new JTextField(e.getNotes());
-		frameDettaglioEntity.add(notesTF);
+		notesTA = new JTextArea(e.getNotes());
+		notesTA.setSize(15, 20);
+		JScrollPane scrollPaneNotes = new JScrollPane(notesTA);
+		frameDettaglioEntity.add(scrollPaneNotes);
 	}
 	
 	private static void clearTableEntities() {
@@ -374,26 +380,9 @@ public class Antics implements ActionListener {
 		dtmEntities.fireTableDataChanged();
 		
 		ArrayList<Entity> filteredEntities = db.searchEntities(c, author, location, originalPlace);
-
-//    	for (int i = 0; i < listEntities.size(); i++) {
-//    		Entity current = listEntities.get(i);
-//    		if (c != null) {
-//    			if (current.getCategoryId() == c.getId()) {
-//        			dtmEntities.addRow(new Object[] {current.getId(), current.getCategoryId(), current.getAuthor(),
-//        					current.getTitle(), current.getTechnique(), current.getMeasures(), current.getBuyYear(),
-//        					current.getPrice(), current.getOriginalPlace(), current.getActualPlace(),
-//        					current.getCurrentValue()});
-//    			}
-//    		} else {
-//    			dtmEntities.addRow(new Object[] {current.getId(), current.getCategoryId(), current.getAuthor(),
-//    					current.getTitle(), current.getTechnique(), current.getMeasures(), current.getBuyYear(),
-//    					current.getPrice(), current.getOriginalPlace(), current.getActualPlace(),
-//    					current.getCurrentValue()});
-//    		}
-//    	}
 		for (int i = 0; i < filteredEntities.size(); i++) {
 			Entity current = filteredEntities.get(i);
-			dtmEntities.addRow(new Object[] {current.getId(), current.getCategoryId(), current.getAuthor(),
+			dtmEntities.addRow(new Object[] {new ImageIcon(), current.getId(), current.getCategoryId(), current.getAuthor(),
 					current.getTitle(), current.getTechnique(), current.getMeasures(), current.getBuyYear(),
 					current.getPrice(), current.getOriginalPlace(), current.getActualPlace(),
 					current.getCurrentValue()});
@@ -427,6 +416,8 @@ public class Antics implements ActionListener {
 	}
 	
 	public static void updateEntity(long id, Entity e) {
+		db.updateEntity(e);
+		
 		// aggiorna l'oggetto nella lista degli oggetti
 		for (int i = 0; i < listEntities.size(); i++) {
 			if (listEntities.get(i).getId() == id) {
@@ -434,6 +425,7 @@ public class Antics implements ActionListener {
 				// aggiorna l'oggetto nel tableModel
 				dtmEntities.removeRow(i);
 				dtmEntities.addRow(new Object[] {
+						new ImageIcon(),
 						e.getId(), e.getCategoryId(), e.getAuthor(),
     					e.getTitle(), e.getTechnique(), e.getMeasures(), e.getBuyYear(),
     					e.getPrice(), e.getOriginalPlace(), e.getActualPlace(),
@@ -445,6 +437,8 @@ public class Antics implements ActionListener {
 	}
 	
 	public static void removeEntity(long id) {
+		db.deleteEntity(id);
+		
 		// rimuovi l'oggetto dalla lista degli oggetti
 		for (int i = 0; i < listEntities.size(); i++) {
 			if (listEntities.get(i).getId() == id) {
@@ -464,13 +458,13 @@ public class Antics implements ActionListener {
 		String measures = measuresTF.getText();
 		String buyYear = buyYearTF.getText();
 		String price = priceTF.getText();
-		String paymentType = paymentTypeTF.getText();
+		String paymentType = paymentTypeTA.getText();
 		String originalPlace = originalPlaceTF.getText();
 		String actualPlace = actualPlaceTF.getText();
 		String currentValue = currentValueTF.getText();
 		String currentValueDate = currentValueDateTF.getText();
 		String sold = soldTF.getText();
-		String notes = notesTF.getText();
+		String notes = notesTA.getText();
 		
 		Entity newEntity = new Entity();
 		newEntity.setActualPlace(actualPlace);
@@ -500,13 +494,13 @@ public class Antics implements ActionListener {
     		Entity current = listEntities.get(i);
     		if (c != null) {
     			if (current.getCategoryId() == c.getId()) {
-        			dtmEntities.addRow(new Object[] {current.getId(), current.getCategoryId(), current.getAuthor(),
+        			dtmEntities.addRow(new Object[] {new ImageIcon(), current.getId(), current.getCategoryId(), current.getAuthor(),
         					current.getTitle(), current.getTechnique(), current.getMeasures(), current.getBuyYear(),
         					current.getPrice(), current.getOriginalPlace(), current.getActualPlace(),
         					current.getCurrentValue()});
     			}
     		} else {
-    			dtmEntities.addRow(new Object[] {current.getId(), current.getCategoryId(), current.getAuthor(),
+    			dtmEntities.addRow(new Object[] {new ImageIcon(), current.getId(), current.getCategoryId(), current.getAuthor(),
     					current.getTitle(), current.getTechnique(), current.getMeasures(), current.getBuyYear(),
     					current.getPrice(), current.getOriginalPlace(), current.getActualPlace(),
     					current.getCurrentValue()});
@@ -519,7 +513,7 @@ public class Antics implements ActionListener {
     	
     	tableEntities.addMouseListener(new MouseAdapter() {
     		public void mouseClicked(MouseEvent event) {
-    			if (event.getClickCount() == 1) {
+    			if (event.getClickCount() == 2) {
     				
     				frameDettaglioEntity = new JFrame("Dettaglio");
     				frameDettaglioEntity.setLayout(new GridLayout(16, 2, 10, 10));
@@ -527,17 +521,17 @@ public class Antics implements ActionListener {
     				int row = tableEntities.getSelectedRow();
     				int convertedRow = tableEntities.convertRowIndexToModel(row);
     				
-    				final long id = (Long) tableEntities.getValueAt(convertedRow, 0);
-    				long categoryId = (Long) tableEntities.getValueAt(convertedRow, 1);
-    				String author = (String) tableEntities.getValueAt(row, 2);
-    				String title = (String) tableEntities.getValueAt(row, 3);
-    				String technique = (String) tableEntities.getValueAt(row, 4);
-    				String measures = (String) tableEntities.getValueAt(row, 5);
-    				String buyYear = (String) tableEntities.getValueAt(row, 6);
-    				String price = (String) tableEntities.getValueAt(row, 7);
-    				String originalPlace = (String) tableEntities.getValueAt(row, 8);
-    				String actualPlace = (String) tableEntities.getValueAt(row, 9);
-    				String currentValue = (String) tableEntities.getValueAt(row, 10);
+    				final long id = (Long) tableEntities.getValueAt(convertedRow, 1);
+    				long categoryId = (Long) tableEntities.getValueAt(convertedRow, 2);
+    				String author = (String) tableEntities.getValueAt(row, 3);
+    				String title = (String) tableEntities.getValueAt(row, 4);
+    				String technique = (String) tableEntities.getValueAt(row, 5);
+    				String measures = (String) tableEntities.getValueAt(row, 6);
+    				String buyYear = (String) tableEntities.getValueAt(row, 7);
+    				String price = (String) tableEntities.getValueAt(row, 8);
+    				String originalPlace = (String) tableEntities.getValueAt(row, 9);
+    				String actualPlace = (String) tableEntities.getValueAt(row, 10);
+    				String currentValue = (String) tableEntities.getValueAt(row, 11);
     				
     				Entity originalEntity = findEntityById(id);
     				String paymentType = originalEntity.getPaymentType();
@@ -604,7 +598,7 @@ public class Antics implements ActionListener {
     				});
     				frameDettaglioEntity.getContentPane().add(rimuoviEntityBtn);
     				
-    				frameDettaglioEntity.setSize(600, 600);
+    				frameDettaglioEntity.setSize(600, 750);
     				frameDettaglioEntity.setLocationRelativeTo(null);
     				frameDettaglioEntity.setVisible(true);
     			}
@@ -779,9 +773,10 @@ public class Antics implements ActionListener {
 		
 		paymentTypeLabel = new JLabel("Modalita' di pagamento");
 		frameDettaglioEntity.add(paymentTypeLabel);
-		paymentTypeTF = new JTextField();
-		setAutocomplete(paymentTypeTF, "PAYMENT_TYPE");
-		frameDettaglioEntity.add(paymentTypeTF);
+		paymentTypeTA = new JTextArea(15, 20);
+		//setAutocomplete(paymentTypeTA, "PAYMENT_TYPE");
+		JScrollPane scrollPanePaymentType = new JScrollPane(paymentTypeTA);
+		frameDettaglioEntity.add(scrollPanePaymentType);
 		
 		originalPlaceLabel = new JLabel("Provenienza");
 		frameDettaglioEntity.add(originalPlaceLabel);
@@ -811,8 +806,9 @@ public class Antics implements ActionListener {
 		
 		notesLabel = new JLabel("Annotazioni varie");
 		frameDettaglioEntity.add(notesLabel);
-		notesTF = new JTextField();
-		frameDettaglioEntity.add(notesTF);
+		notesTA = new JTextArea(15, 20);
+		JScrollPane scrollPaneNotes = new JScrollPane(notesTA);
+		frameDettaglioEntity.add(scrollPaneNotes);
 		
 //		picturesBtn = new JButton(CD_BTN_PICTURES);
 //		picturesBtn.setSize(100, 40);
@@ -834,12 +830,12 @@ public class Antics implements ActionListener {
 				String measures = measuresTF.getText();
 				String buyYear = buyYearTF.getText();
 				String price = priceTF.getText();
-				String paymentType = paymentTypeTF.getText();
+				String paymentType = paymentTypeTA.getText();
 				String originalPlace = originalPlaceTF.getText();
 				String actualPlace = actualPlaceTF.getText();
 				String currentValue = currentValueTF.getText();
 				String currentValueDate = currentValueDateTF.getText();
-				String notes = notesTF.getText();
+				String notes = notesTA.getText();
 				String sold = soldTF.getText();
 				long id = getMaxIdEntities() + 1;
 				
@@ -864,7 +860,7 @@ public class Antics implements ActionListener {
 				
 				addEntity(newEntity);
 				dtmEntities.addRow(new Object[] {
-						newEntity.getId(), newEntity.getCategoryId(), newEntity.getAuthor(),
+						new ImageIcon(), newEntity.getId(), newEntity.getCategoryId(), newEntity.getAuthor(),
 						newEntity.getTitle(), newEntity.getTechnique(), newEntity.getMeasures(), newEntity.getBuyYear(),
 						newEntity.getPrice(), newEntity.getOriginalPlace(), newEntity.getActualPlace(),
 						newEntity.getCurrentValue(), newEntity.getCurrentValueDate(), newEntity.getSold()  
@@ -876,7 +872,7 @@ public class Antics implements ActionListener {
 		});
 		frameDettaglioEntity.add(salvaEntityBtn);
 		
-		frameDettaglioEntity.setSize(600, 600);
+		frameDettaglioEntity.setSize(600, 650);
 		frameDettaglioEntity.setLocationRelativeTo(null);
 		frameDettaglioEntity.setVisible(true);
 	}

@@ -173,6 +173,40 @@ public class Database {
         }
     }
     
+    public void updateEntity(Entity e) {
+        try {
+            stmt = conn.createStatement();
+            
+            long id = e.getId();
+            long categoryId = e.getCategoryId();
+            String author = e.getAuthor();
+            String title = e.getTitle();
+            String technique = e.getTechnique();
+            String measures = e.getMeasures();
+            String buyYear = e.getBuyYear();
+            String price = e.getPrice();
+            String paymentType = e.getPaymentType();
+            String originalPlace = e.getOriginalPlace();
+            String actualPlace = e.getActualPlace();
+            String currentValue = e.getCurrentValue();
+            String currentValueDate = e.getCurrentValueDate();
+            String notes = e.getNotes();
+            String sold = e.getSold();
+            
+            String insert = "Update " + entityTable + " set category_id = " + categoryId + ",";
+            insert += "author = '" + author + "', title = '" + title + "', technique = '" + technique + "',";
+            insert += "measures = '" + measures + "', buy_year = '" + buyYear + "', price = '" + price + "', payment_type = '" + paymentType + "',";
+            insert += "original_place = '" + originalPlace + "', actual_place = '" + actualPlace + "', current_value = '" + currentValue + "',";
+            insert += "current_value_date = '" + currentValueDate +"', notes = '" + notes + "', sold = '" + sold + "'";
+            insert += "where id = " + id;
+            
+            stmt.execute(insert);
+            stmt.close();
+        } catch (SQLException sqlExcept) {
+            sqlExcept.printStackTrace();
+        }
+    }
+    
     public void deleteEntity(long id) {
     	try {
             stmt = conn.createStatement();
