@@ -3,7 +3,6 @@ package antics;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
@@ -11,7 +10,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowEvent;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -788,7 +786,7 @@ public class Antics implements ActionListener {
 	
 	public static void showPanelDettaglioEntity() {
 		frameDettaglioEntity = new JFrame("DETTAGLIO");
-		frameDettaglioEntity.setLayout(new GridLayout(15, 2, 10, 10));
+		frameDettaglioEntity.setLayout(new GridLayout(17, 2, 10, 10));
 		
 		categoryLabel = new JLabel("Categoria dell'oggetto");
 		frameDettaglioEntity.add(categoryLabel);
@@ -869,14 +867,27 @@ public class Antics implements ActionListener {
 		JScrollPane scrollPaneNotes = new JScrollPane(notesTA);
 		frameDettaglioEntity.add(scrollPaneNotes);
 		
-//		picturesBtn = new JButton(CD_BTN_PICTURES);
-//		picturesBtn.setSize(100, 40);
-//		picturesBtn.addActionListener(new ActionListener() {
-//			public void actionPerformed(ActionEvent e) {
-//				PictureFactory pic = new PictureFactory(db, 0);
-//			}
-//		});
-//		frameDettaglioEntity.getContentPane().add(picturesBtn);
+		final long id = getMaxIdEntities() + 1;
+		
+		// pictures
+		picturesBtn = new JButton(CD_BTN_PICTURES);
+		picturesBtn.setSize(100, 40);
+		picturesBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				PictureFactory pic = new PictureFactory(db, id);
+			}
+		});
+		frameDettaglioEntity.getContentPane().add(picturesBtn);
+		
+		// documents
+		documentsBtn = new JButton(CD_BTN_DOCUMENTS);
+		documentsBtn.setSize(100, 40);
+		documentsBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				DocumentFactory doc = new DocumentFactory(db, id);
+			}
+		});
+		frameDettaglioEntity.getContentPane().add(documentsBtn);
 		
 		salvaEntityBtn = new JButton(CD_BTN_SALVA_ENTITY);
 		salvaEntityBtn.setSize(100, 40);
@@ -896,7 +907,6 @@ public class Antics implements ActionListener {
 				String currentValueDate = currentValueDateTF.getText();
 				String notes = notesTA.getText();
 				String sold = soldTF.getText();
-				long id = getMaxIdEntities() + 1;
 				
 				Entity newEntity = new Entity();
 				newEntity.setActualPlace(actualPlace);
@@ -918,8 +928,10 @@ public class Antics implements ActionListener {
 				newEntity.setSold(sold);
 				
 				addEntity(newEntity);
+				
+				ImageIcon icon = getIconFromEntityId(id);
 				dtmEntities.addRow(new Object[] {
-						new ImageIcon(), newEntity.getId(), newEntity.getCategoryId(), newEntity.getAuthor(),
+						icon, newEntity.getId(), newEntity.getCategoryId(), newEntity.getAuthor(),
 						newEntity.getTitle(), newEntity.getTechnique(), newEntity.getMeasures(), newEntity.getBuyYear(),
 						newEntity.getPrice(), newEntity.getOriginalPlace(), newEntity.getActualPlace(),
 						newEntity.getCurrentValue(), newEntity.getCurrentValueDate(), newEntity.getSold()  
