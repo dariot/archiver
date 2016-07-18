@@ -25,6 +25,7 @@ public class Database {
     private static String categoryTable = "category";
     private static String entityTable = "entity";
     private static String pictureTable = "picture";
+    private static String pictureThumbnailsTable = "picture_thumbnails";
     private static String documentTable = "document";
     
     // jdbc Connection
@@ -297,7 +298,7 @@ public class Database {
     // PICTURES
     public void insertPicture(Picture p) {
         try {
-            ps = conn.prepareStatement("Insert into " + pictureTable + " (id, entity_id, data) VALUES (?, ?, ?)");
+            ps = conn.prepareStatement("Insert into " + pictureTable + " (id, entity_id, data, is_main_pic) VALUES (?, ?, ?, 'N')");
             
             long id = p.getId();
             long entityId = p.getEntityId();
@@ -450,6 +451,143 @@ public class Database {
             sqlExcept.printStackTrace();
         }
     	return max;
+    }
+    
+    // PICTURES THUMBNAILS
+    public void insertPictureThumbnail(Picture p) {
+        try {
+            ps = conn.prepareStatement("Insert into " + pictureThumbnailsTable + " (id, entity_id, data, is_main_pic) VALUES (?, ?, ?, 'N')");
+            
+            long id = p.getId();
+            long entityId = p.getEntityId();
+            byte[] data = p.getData();
+            
+            Clob clob = conn.createClob();
+            OutputStream out = (OutputStream) clob.setAsciiStream(1);
+            try {
+	            out.write(data);
+	            out.flush();
+	            out.close();
+            } catch (IOException e) {
+            	e.printStackTrace();
+            }
+            
+            ps.setLong(1, id);
+            ps.setLong(2, entityId);
+            ps.setClob(3, clob);
+            
+            ps.execute();
+            ps.close();
+        } catch (SQLException sqlExcept) {
+            sqlExcept.printStackTrace();
+        }
+    }
+    
+    public void deletePictureThumbnail(long id) {
+    	try {
+            stmt = conn.createStatement();
+            
+            String delete = "delete from " + pictureThumbnailsTable + " where id = " + id;
+            
+            stmt.execute(delete);
+            stmt.close();
+        } catch (SQLException sqlExcept) {
+            sqlExcept.printStackTrace();
+        }
+    }
+    
+    public void updatePictureThumbnail(Picture p) {
+    	try {
+            stmt = conn.createStatement();
+            
+            long id = p.getId();
+            String isMainPic = p.getIsMainPic();
+            String update = "update " + pictureThumbnailsTable + " set is_main_pic = '" + isMainPic + "' where id = " + id;
+            
+            stmt.execute(update);
+            stmt.close();
+        } catch (SQLException sqlExcept) {
+            sqlExcept.printStackTrace();
+        }
+    }
+    
+    public Picture getPictureThumbnail(long id) {
+    	Picture output = new Picture();
+        try {
+            stmt = conn.createStatement();
+            
+            String query = "select * from " + pictureThumbnailsTable + " where id = " + id;
+            
+            ResultSet results = stmt.executeQuery(query);
+            while (results.next()) {
+            	output.setId(results.getLong(1));
+            	output.setEntityId(results.getLong(2));
+            	output.setData(results.getBytes(3));
+            	output.setIsMainPic(results.getString(4));
+            }
+            results.close();
+            stmt.close();
+        } catch (SQLException sqlExcept) {
+            sqlExcept.printStackTrace();
+        }
+        return output;
+    }
+    
+    public Picture getMainPictureThumbnailFromEntityId(long entityId) {
+    	Picture output = null;
+        try {
+            stmt = conn.createStatement();
+            
+            String query = "select * from " + pictureThumbnailsTable + " where entity_id = " + entityId + " and is_main_pic = 'S'";
+            
+            ResultSet results = stmt.executeQuery(query);
+            while (results.next()) {
+            	output = new Picture();
+            	output.setId(results.getLong(1));
+            	output.setEntityId(results.getLong(2));
+            	Clob clob = results.getClob(3);
+                try {
+					output.setData(IOUtils.toByteArray(clob.getAsciiStream()));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+            	output.setIsMainPic(results.getString(4));
+            }
+            results.close();
+            stmt.close();
+        } catch (SQLException sqlExcept) {
+            sqlExcept.printStackTrace();
+        }
+        return output;
+    }
+    
+    public ArrayList<Picture> getThumbnailsFromEntityId(long entityId) {
+    	ArrayList<Picture> output = new ArrayList<Picture>();
+        try {
+            stmt = conn.createStatement();
+            
+            String query = "select * from " + pictureThumbnailsTable + " where entity_id = " + entityId;
+            
+            ResultSet results = stmt.executeQuery(query);
+            while (results.next()) {
+            	Picture p = new Picture();
+                p.setId(results.getLong(1));
+                p.setEntityId(results.getLong(2));
+                Clob clob = results.getClob(3);
+                try {
+					p.setData(IOUtils.toByteArray(clob.getAsciiStream()));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+                p.setIsMainPic(results.getString(4));
+                output.add(p);
+            }
+            results.close();
+            stmt.close();
+        } catch (SQLException sqlExcept) {
+            sqlExcept.printStackTrace();
+        }
+        return output;
     }
     
     // DOCUMENTS

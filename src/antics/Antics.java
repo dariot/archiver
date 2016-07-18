@@ -438,16 +438,15 @@ public class Antics implements ActionListener {
 	}
 	
 	public static ImageIcon getIconFromEntityId(long id) {
-		ArrayList<Picture> pictures = db.getPicturesFromEntityId(id);
+		ArrayList<Picture> pictures = db.getThumbnailsFromEntityId(id);
 		ImageIcon icon = new ImageIcon();
 		if (pictures.size() > 0) {
-			Picture mainPic = db.getMainPictureFromEntityId(id);
+			Picture mainPic = db.getMainPictureThumbnailFromEntityId(id);
 			if (mainPic != null) {
 				icon = new ImageIcon(mainPic.getData());
 			} else {
 				icon = new ImageIcon(pictures.get(0).getData());
 			}
-			icon = resizeIcon(icon, 80, 80);
 		}
 		return icon;
 	}
@@ -534,6 +533,17 @@ public class Antics implements ActionListener {
 		return newEntity;
 	}
 	
+	private static long getCategoryIdFromName(String name) {
+		long id = -1;
+		for (int i = 0; i < listCategories.size(); i++) {
+			if (name.equals(listCategories.get(i).getName())) {
+				id = listCategories.get(i).getId();
+				break;
+			}
+		}
+		return id;
+	}
+	
 	// la lista delle entita' riceve in input la categoria per cui devono essere filtrate
 	private static void showTableEntities(Category c) {
     	for (int i = 0; i < listEntities.size(); i++) {
@@ -571,7 +581,7 @@ public class Antics implements ActionListener {
     				int convertedRow = tableEntities.convertRowIndexToModel(row);
     				
     				final long id = (Long) tableEntities.getValueAt(convertedRow, 1);
-    				long categoryId = (Long) tableEntities.getValueAt(convertedRow, 2);
+    				long categoryId = getCategoryIdFromName((String) tableEntities.getValueAt(convertedRow, 2));
     				String author = (String) tableEntities.getValueAt(row, 3);
     				String title = (String) tableEntities.getValueAt(row, 4);
     				String technique = (String) tableEntities.getValueAt(row, 5);

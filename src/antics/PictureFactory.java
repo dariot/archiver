@@ -1,15 +1,20 @@
 package antics;
 
 import java.awt.BorderLayout;
+import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -98,6 +103,39 @@ public class PictureFactory {
 		panelPictures.revalidate();
 	}
 	
+	public static ImageIcon resizeIcon(ImageIcon icon, int width, int height) {
+		Image img = icon.getImage();
+		Image resized = img.getScaledInstance(width, height,  java.awt.Image.SCALE_SMOOTH);
+		return new ImageIcon(resized);
+	}
+	
+	private static BufferedImage getRenderedImage(Image in) {
+        int w = in.getWidth(null);
+        int h = in.getHeight(null);
+        int type = BufferedImage.TYPE_INT_RGB;
+        BufferedImage out = new BufferedImage(w, h, type);
+        Graphics2D g2 = out.createGraphics();
+        g2.drawImage(in, 0, 0, null);
+        g2.dispose();
+        return out;
+    }
+	
+	public static String getFileNameFromPath(String path) {
+		String name = "";
+		String[] splitted = path.split("\\" + File.separator);
+		name = splitted[splitted.length - 1];
+		return name;
+	}
+	
+	private static String getFileExtension(String filename) {
+		String ext = "";
+		String[] splitted = filename.split("\\.");
+		if (splitted.length > 0) {
+			ext = splitted[splitted.length - 1];
+		}
+		return ext;
+	}
+	
 	public PictureFactory(Database db, long entityId) {
 		mainFrame = new JFrame("Immagini");
 		mainFrame.setLayout(new BorderLayout());
@@ -133,6 +171,22 @@ public class PictureFactory {
 					p.setData(bytes);
 					thisDb.insertPicture(p);
 					
+					ImageIcon icon = new ImageIcon(bytes);
+					icon = resizeIcon(icon, 80, 80);
+					Picture thumbnail = new Picture();
+					thumbnail.setId(id);
+					thumbnail.setEntityId(thisEntityId);
+					
+					ByteArrayOutputStream os = new ByteArrayOutputStream();
+					String extension = getFileExtension(getFileNameFromPath(file.getAbsolutePath()));
+					try {
+						ImageIO.write(getRenderedImage(icon.getImage()), extension, os);
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
+					thumbnail.setData(os.toByteArray());
+					thisDb.insertPictureThumbnail(thumbnail);
+					
 					pictures.add(p);
 					
 					showPicture(bytes);
@@ -151,15 +205,18 @@ public class PictureFactory {
 			        		Picture current = pictures.get(i);
 			        		current.setIsMainPic("N");
 			        		thisDb.updatePicture(current);
+			        		thisDb.updatePictureThumbnail(current);
 			        	}
 			        	
 			            Picture p = pictures.get(currentPictureIdx);
 			            p.setIsMainPic("S");
 			            thisDb.updatePicture(p);
+			            thisDb.updatePictureThumbnail(p);
 			        } else {
 			        	Picture p = pictures.get(currentPictureIdx);
 			            p.setIsMainPic("N");
 			            thisDb.updatePicture(p);
+			            thisDb.updatePictureThumbnail(p);
 			        }
 		    	}
 		    }
@@ -173,7 +230,9 @@ public class PictureFactory {
 		removePictureBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (pictures.size() > 0) {
-					thisDb.deletePicture(pictures.get(currentPictureIdx).getId());
+					Picture p = pictures.get(currentPictureIdx);
+					thisDb.deletePicture(p.getId());
+					thisDb.deletePictureThumbnail(p.getId());
 				}
 			}
 		});
