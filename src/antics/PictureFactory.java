@@ -70,18 +70,6 @@ public class PictureFactory {
         return bFile;
 	}
 	
-	private long getMaxPictureId(Database db, long entityId) {
-		ArrayList<Picture> pictures = db.getPicturesFromEntityId(entityId);
-		long max = 0;
-		for (int i = 0; i < pictures.size(); i++) {
-			Picture p = pictures.get(i);
-			if (p.getId() > max) {
-				max = p.getId();
-			}
-		}
-		return max;
-	}
-	
 	private long getMaxPictureId(Database db) {
 		return db.getMaxPicturesId();
 	}
