@@ -464,18 +464,25 @@ public class Antics implements ActionListener {
 		for (int i = 0; i < listEntities.size(); i++) {
 			if (listEntities.get(i).getId() == id) {
 				listEntities.set(i, e);
+				break;
+			}
+		}
+		for (int i = 0; i < dtmEntities.getRowCount(); i++) {
+			if (dtmEntities.getValueAt(i, 1).equals(id)) {
 				// aggiorna l'oggetto nel tableModel
-				dtmEntities.removeRow(i);
-				
 				ImageIcon icon = getIconFromEntityId(id);
 				Category category = findCategoryById(e.getCategoryId());
-				dtmEntities.addRow(new Object[] {
+				Object[] o = new Object[] {
 						icon,
 						e.getId(), category.getName(), e.getAuthor(),
     					e.getTitle(), e.getTechnique(), e.getMeasures(), e.getBuyYear(),
     					e.getPrice(), e.getOriginalPlace(), e.getActualPlace(),
     					e.getCurrentValue()
-				});
+				};
+				
+				for (int j = 0; j < o.length; j++) {
+					dtmEntities.setValueAt(o[j], i, j);
+				}
 				break;
 			}
 		}
@@ -758,25 +765,40 @@ public class Antics implements ActionListener {
 	
 	private static void refreshComboAutore() {
         ArrayList<String> listAuthors = db.getListAuthors();
+        String selectedAuthor = (String) comboAutore.getSelectedItem();
+
         comboAutore.removeAllItems();
         for (int i = 0; i < listAuthors.size(); i++) {
         	comboAutore.insertItemAt(listAuthors.get(i), i);
+        	if (listAuthors.get(i) != null && selectedAuthor.equals(listAuthors.get(i))) {
+        		comboAutore.setSelectedIndex(i);
+        	}
         }
 	}
 	
 	private static void refreshComboLocalizzazione() {
         ArrayList<String> listLocations = db.getListLocations();
+        String selectedLocation = (String) comboLocalizzazione.getSelectedItem();
+        
         comboLocalizzazione.removeAllItems();
         for (int i = 0; i < listLocations.size(); i++) {
         	comboLocalizzazione.insertItemAt(listLocations.get(i), i);
+        	if (listLocations.get(i) != null && selectedLocation.equals(listLocations.get(i))) {
+        		comboLocalizzazione.setSelectedIndex(i);
+        	}
         }
 	}
 	
 	private static void refreshComboProvenienza() {
         ArrayList<String> listOriginalPlaces = db.getListOriginalPlaces();
+        String selectedOriginalPlace = (String) comboProvenienza.getSelectedItem();
+        
         comboProvenienza.removeAllItems();
         for (int i = 0; i < listOriginalPlaces.size(); i++) {
         	comboProvenienza.insertItemAt(listOriginalPlaces.get(i), i);
+        	if (listOriginalPlaces.get(i) != null && selectedOriginalPlace.equals(listOriginalPlaces.get(i))) {
+        		comboProvenienza.setSelectedIndex(i);
+        	}
         }
 	}
 	
