@@ -770,7 +770,7 @@ public class Antics implements ActionListener {
         comboAutore.removeAllItems();
         for (int i = 0; i < listAuthors.size(); i++) {
         	comboAutore.insertItemAt(listAuthors.get(i), i);
-        	if (listAuthors.get(i) != null && selectedAuthor.equals(listAuthors.get(i))) {
+        	if (listAuthors.get(i).equals(selectedAuthor)) {
         		comboAutore.setSelectedIndex(i);
         	}
         }
@@ -783,7 +783,7 @@ public class Antics implements ActionListener {
         comboLocalizzazione.removeAllItems();
         for (int i = 0; i < listLocations.size(); i++) {
         	comboLocalizzazione.insertItemAt(listLocations.get(i), i);
-        	if (listLocations.get(i) != null && selectedLocation.equals(listLocations.get(i))) {
+        	if (listLocations.get(i).equals(selectedLocation)) {
         		comboLocalizzazione.setSelectedIndex(i);
         	}
         }
@@ -796,7 +796,7 @@ public class Antics implements ActionListener {
         comboProvenienza.removeAllItems();
         for (int i = 0; i < listOriginalPlaces.size(); i++) {
         	comboProvenienza.insertItemAt(listOriginalPlaces.get(i), i);
-        	if (listOriginalPlaces.get(i) != null && selectedOriginalPlace.equals(listOriginalPlaces.get(i))) {
+        	if (listOriginalPlaces.get(i).equals(selectedOriginalPlace)) {
         		comboProvenienza.setSelectedIndex(i);
         	}
         }
