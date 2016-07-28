@@ -79,7 +79,7 @@ public class Database {
             
             long id = c.getId();
             String name = c.getName();
-            String update = "update" + categoryTable + " set name = '" + name + "' where id = '" + id + "'";
+            String update = "update " + categoryTable + " set name = '" + name + "' where id = " + id;
             
             stmt.execute(update);
             stmt.close();
@@ -141,6 +141,32 @@ public class Database {
             sqlExcept.printStackTrace();
         }
         return output;
+    }
+    
+    public boolean isUsedCategory(Category c) {
+    	boolean isUsedCategory = false;
+    	try {
+            stmt = conn.createStatement();
+            
+            String query = "select * from " + entityTable + " where category_id = " + c.getId();
+            
+            ResultSet results = stmt.executeQuery(query);
+            int count = 0;
+            while (results.next()) {
+                count++;
+            }
+            results.close();
+            stmt.close();
+            
+            if (count > 0) {
+            	isUsedCategory = true;
+            } else {
+            	isUsedCategory = false;
+            }
+        } catch (SQLException sqlExcept) {
+            sqlExcept.printStackTrace();
+        }
+    	return isUsedCategory;
     }
     
     // ENTITIES

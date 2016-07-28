@@ -422,6 +422,7 @@ public class Antics implements ActionListener {
 				break;
 			}
 		}
+		
 		return res;
 	}
 	
@@ -566,10 +567,12 @@ public class Antics implements ActionListener {
     			}
     		} else {
     			Category category = findCategoryById(current.getCategoryId());
-    			dtmEntities.addRow(new Object[] {icon, current.getId(), category.getName(), current.getAuthor(),
-    					current.getTitle(), current.getTechnique(), current.getMeasures(), current.getBuyYear(),
-    					current.getPrice(), current.getOriginalPlace(), current.getActualPlace(),
-    					current.getCurrentValue()});
+    			if (category != null) {
+	    			dtmEntities.addRow(new Object[] {icon, current.getId(), category.getName(), current.getAuthor(),
+	    					current.getTitle(), current.getTechnique(), current.getMeasures(), current.getBuyYear(),
+	    					current.getPrice(), current.getOriginalPlace(), current.getActualPlace(),
+	    					current.getCurrentValue()});
+    			}
     		}
     	}
     	dtmEntities.fireTableDataChanged();
@@ -709,7 +712,8 @@ public class Antics implements ActionListener {
     				salvaCategoriaBtn.setSize(100, 40);
     				salvaCategoriaBtn.addActionListener(new ActionListener() {
     					public void actionPerformed(ActionEvent e) {
-    						updateCategory(c);
+    						Category newCat = new Category(c.getId(), categoriaTF.getText());
+    						updateCategory(newCat);
     						frameDettaglioCategoria.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
     						JOptionPane.showMessageDialog(frame, MSG_AGGIORNA_CATEGORIA_OK);
     					}
@@ -1029,16 +1033,25 @@ public class Antics implements ActionListener {
 		return max;
 	}
 	
+	public static boolean isUsedCategory(Category c) {
+		boolean isUsedCategory = db.isUsedCategory(c);
+		return isUsedCategory;
+	}
+	
 	public static void deleteCategory(Category category) {
-		for (int i = 0; i < listCategories.size(); i++) {
-			Category current = listCategories.get(i);
-			if (current.getId() == category.getId()) {
-				listCategories.remove(i);
-				dtmCategories.removeRow(i);
-				break;
+		if (isUsedCategory(category)) {
+			JOptionPane.showMessageDialog(frameAmministrazione, "Categoria in uso, impossibile eliminarla.");
+		} else {
+			for (int i = 0; i < listCategories.size(); i++) {
+				Category current = listCategories.get(i);
+				if (current.getId() == category.getId()) {
+					listCategories.remove(i);
+					dtmCategories.removeRow(i);
+					break;
+				}
 			}
+			db.deleteCategory(category.getId());
 		}
-		db.deleteCategory(category.getId());
 	}
 	
 	public static void updateCategory(Category category) {
