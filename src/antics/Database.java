@@ -238,7 +238,7 @@ public class Database {
     	try {
             stmt = conn.createStatement();
             
-            String delete = "delete from " + entityTable + " where id = '" + id + "'";
+            String delete = "delete from " + entityTable + " where id = " + id;
             
             stmt.execute(delete);
             stmt.close();
@@ -252,7 +252,7 @@ public class Database {
         try {
             stmt = conn.createStatement();
             
-            String query = "select * from " + entityTable + " where id = '" + id + "'";
+            String query = "select * from " + entityTable + " where id = " + id;
             
             ResultSet results = stmt.executeQuery(query);
             while (results.next()) {
