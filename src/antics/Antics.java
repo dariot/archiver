@@ -118,7 +118,7 @@ public class Antics implements ActionListener {
 	// autocomplete commit string
 	private static final String COMMIT_ACTION = "commit";
 	
-	private static final String CD_BTN_AMMINISTRAZIONE = "Amministrazione";
+	private static final String CD_BTN_AMMINISTRAZIONE = "Categorie";
 	private static final String CD_BTN_CERCA = "Cerca";
 	private static final String CD_BTN_AGGIUNGI_CATEGORIA = "Aggiungi categoria";
 	private static final String CD_BTN_SALVA_CATEGORIA = "Salva categoria";
@@ -377,7 +377,7 @@ public class Antics implements ActionListener {
 		
 		soldLabel = new JLabel("Oggetto venduto");
 		frameDettaglioEntity.add(soldLabel);
-		soldTF = new JTextField(e.getCurrentValueDate());
+		soldTF = new JTextField(e.getSold());
 		frameDettaglioEntity.add(soldTF);
 		
 		notesLabel = new JLabel("Annotazioni varie");
@@ -537,6 +537,7 @@ public class Antics implements ActionListener {
 		newEntity.setTechnique(technique);
 		newEntity.setTitle(title);
 		newEntity.setSold(sold);
+		newEntity.setNotes(notes);
 		
 		return newEntity;
 	}
@@ -715,7 +716,6 @@ public class Antics implements ActionListener {
     						Category newCat = new Category(c.getId(), categoriaTF.getText());
     						updateCategory(newCat);
     						frameDettaglioCategoria.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
-    						JOptionPane.showMessageDialog(frame, MSG_AGGIORNA_CATEGORIA_OK);
     					}
     				});
     				frameDettaglioCategoria.getContentPane().add(salvaCategoriaBtn);
@@ -765,6 +765,19 @@ public class Antics implements ActionListener {
 		tf.getDocument().addDocumentListener(autoComplete);
 		tf.getInputMap().put(KeyStroke.getKeyStroke("TAB"), COMMIT_ACTION);
 		tf.getActionMap().put(COMMIT_ACTION, autoComplete.new CommitAction());
+	}
+	
+	private static void refreshComboCategoria() {
+        ArrayList<Category> listCategories = db.getListCategories();
+        String selectedCategory = (String) comboCategoria.getSelectedItem();
+
+        comboCategoria.removeAllItems();
+        for (int i = 0; i < listCategories.size(); i++) {
+        	comboCategoria.insertItemAt(listCategories.get(i).getName(), i);
+        	if (listCategories.get(i).equals(selectedCategory)) {
+        		comboCategoria.setSelectedIndex(i);
+        	}
+        }
 	}
 	
 	private static void refreshComboAutore() {
@@ -1055,18 +1068,43 @@ public class Antics implements ActionListener {
 	}
 	
 	public static void updateCategory(Category category) {
+		db.updateCategory(category);
+		
+		long id = category.getId();
+		String name = category.getName();
+		String oldCategoryName = "";
+		
 		// aggiorna la categoria nella lista delle categorie
 		for (int i = 0; i < listCategories.size(); i++) {
 			Category current = listCategories.get(i);
-			if (current.getId() == category.getId()) {
+			if (current.getId() == id) {
+				oldCategoryName = current.getName();
 				listCategories.set(i, category);
-				// aggiorna la categoria nel tableModel
-				dtmCategories.removeRow(i);
-				dtmCategories.addRow(new Object[] {category.getId(), category.getName()});
 				break;
 			}
 		}
-		db.updateCategory(category);
+		
+		// aggiorna la categoria nel tableModel
+		for (int i = 0; i < dtmCategories.getRowCount(); i++) {
+			if (dtmCategories.getValueAt(i, 0).equals(id)) {
+				Object[] o = new Object[] {id, name};
+				for (int j = 0; j < o.length; j++) {
+					dtmCategories.setValueAt(o[j], i, j);
+				}
+				break;
+			}
+		}
+				
+		// aggiorna nel tableModel delle entita' la categoria per tutte le
+		// entita' che la possiedono
+		for (int i = 0; i < dtmEntities.getRowCount(); i++) {
+			String entityCatName = (String) dtmEntities.getValueAt(i, 2);
+			if (entityCatName.equals(oldCategoryName)) {
+				dtmEntities.setValueAt(name, i, 2);
+			}
+		}
+		
+		refreshComboCategoria();
 	}
 	
 	public static void addCategory(String c) {

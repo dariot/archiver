@@ -220,14 +220,16 @@ public class Database {
             String notes = e.getNotes();
             String sold = e.getSold();
             
-            String insert = "Update " + entityTable + " set category_id = " + categoryId + ",";
-            insert += "author = '" + author + "', title = '" + title + "', technique = '" + technique + "',";
-            insert += "measures = '" + measures + "', buy_year = '" + buyYear + "', price = '" + price + "', payment_type = '" + paymentType + "',";
-            insert += "original_place = '" + originalPlace + "', actual_place = '" + actualPlace + "', current_value = '" + currentValue + "',";
-            insert += "current_value_date = '" + currentValueDate +"', notes = '" + notes + "', sold = '" + sold + "'";
-            insert += "where id = " + id;
+            String update = "Update " + entityTable + " set category_id = " + categoryId + ",";
+            update += "author = '" + author + "', title = '" + title + "', technique = '" + technique + "',";
+            update += "measures = '" + measures + "', buy_year = '" + buyYear + "', price = '" + price + "', payment_type = '" + paymentType + "',";
+            update += "original_place = '" + originalPlace + "', actual_place = '" + actualPlace + "', current_value = '" + currentValue + "',";
+            update += "current_value_date = '" + currentValueDate +"', notes = '" + notes + "', sold = '" + sold + "'";
+            update += "where id = " + id;
             
-            stmt.execute(insert);
+            System.out.println(update);
+            
+            stmt.execute(update);
             stmt.close();
         } catch (SQLException sqlExcept) {
             sqlExcept.printStackTrace();
@@ -732,6 +734,28 @@ public class Database {
             sqlExcept.printStackTrace();
         }
     	return max;
+    }
+    
+    public ArrayList<Category> getListCategories() {
+    	ArrayList<Category> categories = new ArrayList<Category>();
+    	try {
+            stmt = conn.createStatement();
+            
+            String query = "select * from " + categoryTable;
+            
+            ResultSet results = stmt.executeQuery(query);
+            while (results.next()) {
+            	long id = results.getLong(1);
+            	String name = results.getString(2);
+            	Category cat = new Category(id, name);
+            	categories.add(cat);
+            }
+            results.close();
+            stmt.close();
+        } catch (SQLException sqlExcept) {
+            sqlExcept.printStackTrace();
+        }
+    	return categories;
     }
     
     public ArrayList<String> getListAuthors() {

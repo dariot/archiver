@@ -1,6 +1,7 @@
 package antics;
 
 import java.awt.BorderLayout;
+import java.awt.FileDialog;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
@@ -133,7 +134,7 @@ public class PictureFactory {
 		
 		FileNameExtensionFilter filter = new FileNameExtensionFilter("Image Files", "jpg", "png", "gif", "jpeg", "pdf");
 		chooser = new JFileChooser();
-		chooser.setFileFilter(filter);
+		//chooser.setFileFilter(filter);
 		
 		panelPictures = new JPanel();
 		panelPictures.setSize(200, 200);
@@ -147,6 +148,10 @@ public class PictureFactory {
 		addPictureBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int returnVal = chooser.showOpenDialog(mainFrame);
+//				chooser.setDirectory("C:\\");
+//				chooser.setFile("*.*");
+//				chooser.setVisible(true);
+//				String filename = chooser.getFile();
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
 					File file = chooser.getSelectedFile();
 					byte[] bytes = getBytesFromFile(file);
