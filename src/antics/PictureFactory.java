@@ -19,11 +19,9 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.filechooser.FileNameExtensionFilter;
 
 import dto.Picture;
 
@@ -41,7 +39,7 @@ public class PictureFactory {
 	private static JPanel panelPictures;
 	private static JLabel labelPictures;
 	
-	private static JFileChooser chooser;
+	private static FileDialog chooser;
 	
 	private static final String CD_BTN_ADD_PICTURE = "Aggiungi immagine";
 	private static final String CD_BTN_REMOVE_PICTURE = "Rimuovi immagine";
@@ -132,10 +130,6 @@ public class PictureFactory {
 		final Database thisDb = db;
 		final long thisEntityId = entityId;
 		
-		FileNameExtensionFilter filter = new FileNameExtensionFilter("Image Files", "jpg", "png", "gif", "jpeg", "pdf");
-		chooser = new JFileChooser();
-		//chooser.setFileFilter(filter);
-		
 		panelPictures = new JPanel();
 		panelPictures.setSize(200, 200);
 		
@@ -147,13 +141,14 @@ public class PictureFactory {
 		addPictureBtn.setSize(100, 40);
 		addPictureBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				int returnVal = chooser.showOpenDialog(mainFrame);
-//				chooser.setDirectory("C:\\");
-//				chooser.setFile("*.*");
-//				chooser.setVisible(true);
-//				String filename = chooser.getFile();
-				if (returnVal == JFileChooser.APPROVE_OPTION) {
-					File file = chooser.getSelectedFile();
+				chooser = new FileDialog(mainFrame);
+				chooser.setDirectory("C:\\");
+				chooser.setFile("*.*");
+				chooser.setVisible(true);
+				String directory = chooser.getDirectory();
+				String filename = chooser.getFile();
+				if (directory != null && filename != null) {
+					File file = new File(directory + filename);
 					byte[] bytes = getBytesFromFile(file);
 					
 					long id = getMaxPictureId(thisDb) + 1;
