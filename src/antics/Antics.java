@@ -603,6 +603,10 @@ public class Antics implements ActionListener {
     				String actualPlace = (String) tableEntities.getValueAt(row, 10);
     				String currentValue = (String) tableEntities.getValueAt(row, 11);
     				
+    				Entity entityFromDb = db.getEntity(id);
+    				String currentValueDate = entityFromDb.getCurrentValueDate();
+    				String sold = entityFromDb.getSold();
+    				
     				Entity originalEntity = findEntityById(id);
     				String paymentType = originalEntity.getPaymentType();
     				String notes = originalEntity.getNotes();
@@ -619,6 +623,8 @@ public class Antics implements ActionListener {
     				entity.setOriginalPlace(originalPlace);
     				entity.setActualPlace(actualPlace);
     				entity.setCurrentValue(currentValue);
+    				entity.setCurrentValueDate(currentValueDate);
+    				entity.setSold(sold);
     				entity.setPaymentType(paymentType);
     				entity.setNotes(notes);
     				

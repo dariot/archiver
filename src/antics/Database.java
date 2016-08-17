@@ -220,14 +220,12 @@ public class Database {
             String notes = e.getNotes();
             String sold = e.getSold();
             
-            String update = "Update " + entityTable + " set category_id = " + categoryId + ",";
-            update += "author = '" + author + "', title = '" + title + "', technique = '" + technique + "',";
-            update += "measures = '" + measures + "', buy_year = '" + buyYear + "', price = '" + price + "', payment_type = '" + paymentType + "',";
-            update += "original_place = '" + originalPlace + "', actual_place = '" + actualPlace + "', current_value = '" + currentValue + "',";
+            String update = "Update " + entityTable + " set category_id = " + categoryId + ", ";
+            update += "author = '" + author + "', title = '" + title + "', technique = '" + technique + "', ";
+            update += "measures = '" + measures + "', buy_year = '" + buyYear + "', price = '" + price + "', payment_type = '" + paymentType + "', ";
+            update += "original_place = '" + originalPlace + "', actual_place = '" + actualPlace + "', current_value = '" + currentValue + "', ";
             update += "current_value_date = '" + currentValueDate +"', notes = '" + notes + "', sold = '" + sold + "'";
-            update += "where id = " + id;
-            
-            System.out.println(update);
+            update += " where id = " + id;
             
             stmt.execute(update);
             stmt.close();
