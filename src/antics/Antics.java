@@ -1061,6 +1061,8 @@ public class Antics implements ActionListener {
 		if (isUsedCategory(category)) {
 			JOptionPane.showMessageDialog(frameAmministrazione, "Categoria in uso, impossibile eliminarla.");
 		} else {
+			db.deleteCategory(category.getId());
+			
 			for (int i = 0; i < listCategories.size(); i++) {
 				Category current = listCategories.get(i);
 				if (current.getId() == category.getId()) {
@@ -1069,7 +1071,8 @@ public class Antics implements ActionListener {
 					break;
 				}
 			}
-			db.deleteCategory(category.getId());
+			
+			refreshComboCategoria();
 		}
 	}
 	
