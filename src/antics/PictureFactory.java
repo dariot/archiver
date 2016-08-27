@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.image.BufferedImage;
+import java.awt.image.ImageObserver;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -51,9 +52,12 @@ public class PictureFactory {
 	private static final String MSG_REMOVE_PICTURE_OK = "Immagine rimossa correttamente.";
 	private static final String MSG_REMOVE_PICTURE_KO = "Si e' verificato un problema nella rimozione dell''immagine.";
 	
+	private static final int MAX_WIDTH = 400;
+	private static final int MAX_HEIGHT = 300;
+	
 	private static ArrayList<Picture> pictures = new ArrayList<Picture>();
 	
-	int currentPictureIdx = 0;
+	static int currentPictureIdx = 0;
 	
 	private byte[] getBytesFromFile(File f) {
 		byte[] bFile = new byte[(int) f.length()];
@@ -78,21 +82,41 @@ public class PictureFactory {
 		return pictures;
 	}
 	
-	private void showPicture(byte[] bytes) {
+	public static int[] getScaledMeasures(Image image) {
+		int[] scaled = new int[2];
+		int height = image.getHeight(null);
+		int width = image.getWidth(null);
+		if (width > height) {
+			double scaling = (double) MAX_WIDTH / (double) width;
+			width = (int) ((double) width * scaling);
+			height = (int) ((double) height * scaling);
+		} else {
+			double scaling = (double) MAX_HEIGHT / (double) height;
+			height = (int) ((double) height * scaling);
+			width = (int) ((double) width * scaling);
+		}
+		scaled[0] = width;
+		scaled[1] = height;
+		return scaled;
+	}
+	
+	private static void showPicture(byte[] bytes) {
 		ImageIcon imageIcon = new ImageIcon(bytes);
 		Image image = imageIcon.getImage();
-		image = image.getScaledInstance(400, 300, Image.SCALE_SMOOTH);
+		int[] scaledMeasures = getScaledMeasures(image);
+		image = image.getScaledInstance(scaledMeasures[0], scaledMeasures[1], Image.SCALE_SMOOTH);
 		imageIcon = new ImageIcon(image);
 		labelPictures = new JLabel(imageIcon);
 		
 		panelPictures.removeAll();
+		panelPictures.updateUI();
 		panelPictures.add(labelPictures);
 		panelPictures.revalidate();
 	}
 	
 	public static ImageIcon resizeIcon(ImageIcon icon, int width, int height) {
 		Image img = icon.getImage();
-		Image resized = img.getScaledInstance(width, height,  java.awt.Image.SCALE_SMOOTH);
+		Image resized = img.getScaledInstance(width, height, java.awt.Image.SCALE_SMOOTH);
 		return new ImageIcon(resized);
 	}
 	
@@ -123,6 +147,27 @@ public class PictureFactory {
 		return ext;
 	}
 	
+	private static void movePrev() {
+		if (pictures.size() > 0) {
+			currentPictureIdx--;
+			if (currentPictureIdx < 0) {
+				currentPictureIdx = pictures.size() - Math.abs(currentPictureIdx);
+			}
+			Picture current = pictures.get(currentPictureIdx);
+			checkbox.setSelected("S".equals(current.getIsMainPic()));
+			showPicture(current.getData());
+		}
+	}
+	
+	private static void moveNext() {
+		if (pictures.size() > 0) {
+			currentPictureIdx = (currentPictureIdx + 1) % pictures.size();
+			Picture current = pictures.get(currentPictureIdx);
+			checkbox.setSelected("S".equals(current.getIsMainPic()));
+			showPicture(current.getData());
+		}
+	}
+	
 	public PictureFactory(Database db, long entityId) {
 		mainFrame = new JFrame("Immagini");
 		mainFrame.setLayout(new BorderLayout());
@@ -131,7 +176,6 @@ public class PictureFactory {
 		final long thisEntityId = entityId;
 		
 		panelPictures = new JPanel();
-		panelPictures.setSize(200, 200);
 		
 		JPanel panelButtons = new JPanel();
 		
@@ -218,9 +262,13 @@ public class PictureFactory {
 		removePictureBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (pictures.size() > 0) {
+					moveNext();
+					
 					Picture p = pictures.get(currentPictureIdx);
 					thisDb.deletePicture(p.getId());
 					thisDb.deletePictureThumbnail(p.getId());
+					
+					pictures = loadPictures(thisDb, thisEntityId);
 				}
 			}
 		});
@@ -230,15 +278,7 @@ public class PictureFactory {
 		prevPictureBtn.setSize(100, 40);
 		prevPictureBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (pictures.size() > 0) {
-					currentPictureIdx--;
-					if (currentPictureIdx < 0) {
-						currentPictureIdx = pictures.size() - Math.abs(currentPictureIdx);
-					}
-					Picture current = pictures.get(currentPictureIdx);
-					checkbox.setSelected("S".equals(current.getIsMainPic()));
-					showPicture(current.getData());
-				}
+				movePrev();
 			}
 		});
 		
@@ -246,12 +286,7 @@ public class PictureFactory {
 		nextPictureBtn.setSize(100, 40);
 		nextPictureBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (pictures.size() > 0) {
-					currentPictureIdx = (currentPictureIdx + 1) % pictures.size();
-					Picture current = pictures.get(currentPictureIdx);
-					checkbox.setSelected("S".equals(current.getIsMainPic()));
-					showPicture(current.getData());
-				}
+				moveNext();
 			}
 		});
 		
