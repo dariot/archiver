@@ -9,7 +9,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.image.BufferedImage;
-import java.awt.image.ImageObserver;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -29,6 +28,7 @@ import dto.Picture;
 public class PictureFactory {
 	
 	public static JFrame mainFrame;
+	public static JPanel mainPanel;
 	
 	private static JButton addPictureBtn;
 	private static JButton removePictureBtn;
@@ -168,6 +168,10 @@ public class PictureFactory {
 		}
 	}
 	
+	public JPanel getPanel() {
+		return mainPanel;
+	}
+	
 	public PictureFactory(Database db, long entityId) {
 		mainFrame = new JFrame("Immagini");
 		mainFrame.setLayout(new BorderLayout());
@@ -290,14 +294,17 @@ public class PictureFactory {
 			}
 		});
 		
-		mainFrame.getContentPane().add(prevPictureBtn, BorderLayout.LINE_START);
-		mainFrame.getContentPane().add(panelPictures, BorderLayout.CENTER);
-		mainFrame.getContentPane().add(nextPictureBtn, BorderLayout.LINE_END);
-		mainFrame.getContentPane().add(panelButtons, BorderLayout.PAGE_END);
+		mainPanel = new JPanel(new BorderLayout());
+		mainPanel.add(prevPictureBtn, BorderLayout.LINE_START);
+		mainPanel.add(panelPictures, BorderLayout.CENTER);
+		mainPanel.add(nextPictureBtn, BorderLayout.LINE_END);
+		mainPanel.add(panelButtons, BorderLayout.PAGE_END);
 		
-		mainFrame.setSize(600, 500);
-		mainFrame.setLocationRelativeTo(null);
-		mainFrame.setVisible(true);
+//		mainFrame.getContentPane().add(mainPanel);
+//		
+//		mainFrame.setSize(600, 500);
+//		mainFrame.setLocationRelativeTo(null);
+//		mainFrame.setVisible(true);
 		
 		if (pictures.size() > 0) {
 			Picture firstPicture = pictures.get(0);

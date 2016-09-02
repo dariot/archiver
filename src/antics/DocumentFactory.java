@@ -130,6 +130,10 @@ public class DocumentFactory {
 		return name;
 	}
 	
+	public JPanel getPanel() {
+		return panelDocuments;
+	}
+	
 	public DocumentFactory(Database db, long entityId) {
 		mainFrame = new JFrame("Documenti");
 		mainFrame.setLayout(new BorderLayout());
@@ -196,12 +200,12 @@ public class DocumentFactory {
 		});
 		panelButtons.add(removeDocumentBtn);
 		
-		showTableDocuments();
-		mainFrame.getContentPane().add(panelButtons, BorderLayout.PAGE_END);
-		
-		mainFrame.setSize(500, 500);
-		mainFrame.setLocationRelativeTo(null);
-		mainFrame.setVisible(true);
+//		showTableDocuments();
+//		mainFrame.getContentPane().add(panelButtons, BorderLayout.PAGE_END);
+//		
+//		mainFrame.setSize(500, 500);
+//		mainFrame.setLocationRelativeTo(null);
+//		mainFrame.setVisible(true);
 	}
 
 }

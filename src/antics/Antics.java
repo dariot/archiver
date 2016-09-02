@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -104,10 +105,11 @@ public class Antics implements ActionListener {
 	
 	// dettaglio oggetto
 	private static JFrame frameDettaglioEntity;
+	private static JPanel panelDettaglioEntity;
 	private static JButton salvaEntityBtn;
 	private static JButton rimuoviEntityBtn;
-	private static JButton picturesBtn;
-	private static JButton documentsBtn;
+//	private static JButton picturesBtn;
+//	private static JButton documentsBtn;
 	private static JPanel panelDocuments;
 	private static JButton addDocumentBtn;
 	private static JButton removeDocumentBtn;
@@ -130,9 +132,6 @@ public class Antics implements ActionListener {
 	
 	private static final String CD_BTN_ADD_DOCUMENT = "Aggiungi documento";
 	private static final String CD_BTN_REMOVE_DOCUMENT = "Rimuovi documento";
-	
-	private static final String CD_BTN_PICTURES = "Immagini";
-	private static final String CD_BTN_DOCUMENTS = "Documenti";
 	
 	private static final String MSG_PROBLEM_LOAD_CATEGORIES = "Si e' verificato un problema nel caricamento delle categorie";
 	private static final String MSG_PROBLEM_LOAD_ENTITIES = "Si e' verificato un problema nel caricamento degli oggetti";
@@ -309,83 +308,83 @@ public class Antics implements ActionListener {
 	
 	private static void createDettaglioEntity(Entity e) {
 		categoryLabel = new JLabel("Categoria dell'oggetto");
-		frameDettaglioEntity.add(categoryLabel);
+		panelDettaglioEntity.add(categoryLabel);
 		comboCategoriaDettaglioEntity = new JComboBox<String>();
         for (int i = 0; i < listCategories.size(); i++) {
         	comboCategoriaDettaglioEntity.insertItemAt(listCategories.get(i).getName(), i);
         }
         String categoryName = findCategoryById(e.getCategoryId()).getName();
         comboCategoriaDettaglioEntity.setSelectedItem(categoryName);
-		frameDettaglioEntity.add(comboCategoriaDettaglioEntity);
+		panelDettaglioEntity.add(comboCategoriaDettaglioEntity);
 		
 		authorLabel = new JLabel("Autore");
-		frameDettaglioEntity.add(authorLabel);
+		panelDettaglioEntity.add(authorLabel);
 		authorTF = new JTextField(e.getAuthor());
-		frameDettaglioEntity.add(authorTF);
+		panelDettaglioEntity.add(authorTF);
 		
 		titleLabel = new JLabel("Titolo o descrizione dell'oggetto");
-		frameDettaglioEntity.add(titleLabel);
+		panelDettaglioEntity.add(titleLabel);
 		titleTF = new JTextField(e.getTitle());
-		frameDettaglioEntity.add(titleTF);
+		panelDettaglioEntity.add(titleTF);
 	
 		techniqueLabel = new JLabel("Tecnica usata");
-		frameDettaglioEntity.add(techniqueLabel);
+		panelDettaglioEntity.add(techniqueLabel);
 		techniqueTF = new JTextField(e.getTechnique());
-		frameDettaglioEntity.add(techniqueTF);
+		panelDettaglioEntity.add(techniqueTF);
 		
 		measuresLabel = new JLabel("Misure");
-		frameDettaglioEntity.add(measuresLabel);
+		panelDettaglioEntity.add(measuresLabel);
 		measuresTF = new JTextField(e.getMeasures());
-		frameDettaglioEntity.add(measuresTF);
+		panelDettaglioEntity.add(measuresTF);
 		
 		buyYearLabel = new JLabel("Anno di acquisizione");
-		frameDettaglioEntity.add(buyYearLabel);
+		panelDettaglioEntity.add(buyYearLabel);
 		buyYearTF = new JTextField(e.getBuyYear());
-		frameDettaglioEntity.add(buyYearTF);
+		panelDettaglioEntity.add(buyYearTF);
 		
 		priceLabel = new JLabel("Importo originario pagato");
-		frameDettaglioEntity.add(priceLabel);
+		panelDettaglioEntity.add(priceLabel);
 		priceTF = new JTextField(e.getPrice());
-		frameDettaglioEntity.add(priceTF);
+		panelDettaglioEntity.add(priceTF);
 		
 		paymentTypeLabel = new JLabel("Modalita' di pagamento");
-		frameDettaglioEntity.add(paymentTypeLabel);
+		panelDettaglioEntity.add(paymentTypeLabel);
 		paymentTypeTA = new JTextArea(e.getPaymentType());
 		paymentTypeTA.setSize(15, 20);
 		JScrollPane scrollPanePaymentType = new JScrollPane(paymentTypeTA);
-		frameDettaglioEntity.add(scrollPanePaymentType);
+		panelDettaglioEntity.add(scrollPanePaymentType);
 		
 		originalPlaceLabel = new JLabel("Provenienza");
-		frameDettaglioEntity.add(originalPlaceLabel);
+		panelDettaglioEntity.add(originalPlaceLabel);
 		originalPlaceTF = new JTextField(e.getOriginalPlace());
-		frameDettaglioEntity.add(originalPlaceTF);
+		panelDettaglioEntity.add(originalPlaceTF);
 		
 		actualPlaceLabel = new JLabel("Localizzazione dell'oggetto");
-		frameDettaglioEntity.add(actualPlaceLabel);
+		panelDettaglioEntity.add(actualPlaceLabel);
 		actualPlaceTF = new JTextField(e.getActualPlace());
-		frameDettaglioEntity.add(actualPlaceTF);
+		panelDettaglioEntity.add(actualPlaceTF);
 		
 		currentValueLabel = new JLabel("Valore odierno");
-		frameDettaglioEntity.add(currentValueLabel);
+		panelDettaglioEntity.add(currentValueLabel);
 		currentValueTF = new JTextField(e.getCurrentValue());
-		frameDettaglioEntity.add(currentValueTF);
+		panelDettaglioEntity.add(currentValueTF);
 		
 		currentValueDateLabel = new JLabel("Data valore odierno");
-		frameDettaglioEntity.add(currentValueDateLabel);
+		panelDettaglioEntity.add(currentValueDateLabel);
 		currentValueDateTF = new JTextField(e.getCurrentValueDate());
-		frameDettaglioEntity.add(currentValueDateTF);
+		panelDettaglioEntity.add(currentValueDateTF);
 		
 		soldLabel = new JLabel("Oggetto venduto");
-		frameDettaglioEntity.add(soldLabel);
+		panelDettaglioEntity.add(soldLabel);
 		soldTF = new JTextField(e.getSold());
-		frameDettaglioEntity.add(soldTF);
+		panelDettaglioEntity.add(soldTF);
 		
 		notesLabel = new JLabel("Annotazioni varie");
-		frameDettaglioEntity.add(notesLabel);
+		panelDettaglioEntity.add(notesLabel);
 		notesTA = new JTextArea(e.getNotes());
 		notesTA.setSize(15, 20);
 		JScrollPane scrollPaneNotes = new JScrollPane(notesTA);
-		frameDettaglioEntity.add(scrollPaneNotes);
+		panelDettaglioEntity.add(scrollPaneNotes);
 	}
 	
 	private static void clearTableEntities() {
@@ -584,9 +583,12 @@ public class Antics implements ActionListener {
     	tableEntities.addMouseListener(new MouseAdapter() {
     		public void mouseClicked(MouseEvent event) {
     			if (event.getClickCount() == 2) {
-    				
     				frameDettaglioEntity = new JFrame("Dettaglio");
-    				frameDettaglioEntity.setLayout(new GridLayout(16, 2, 10, 10));
+    				
+    				panelDettaglioEntity = new JPanel();
+    				panelDettaglioEntity.setLayout(new GridLayout(16, 2, 10, 10));
+    				
+    				frameDettaglioEntity.setLayout(new BoxLayout(frameDettaglioEntity.getContentPane(), BoxLayout.PAGE_AXIS));
     				
     				int row = tableEntities.getSelectedRow();
     				int convertedRow = tableEntities.convertRowIndexToModel(row);
@@ -631,24 +633,34 @@ public class Antics implements ActionListener {
     				createDettaglioEntity(entity);
     				
     				// pictures
-    				picturesBtn = new JButton(CD_BTN_PICTURES);
-    				picturesBtn.setSize(100, 40);
-    				picturesBtn.addActionListener(new ActionListener() {
-    					public void actionPerformed(ActionEvent e) {
-    						PictureFactory pic = new PictureFactory(db, id);
-    					}
-    				});
-    				frameDettaglioEntity.getContentPane().add(picturesBtn);
+    				PictureFactory pic = new PictureFactory(db, id);
+    				JPanel panelPictures = pic.getPanel();
+    				frameDettaglioEntity.add(panelPictures);
     				
     				// documents
-    				documentsBtn = new JButton(CD_BTN_DOCUMENTS);
-    				documentsBtn.setSize(100, 40);
-    				documentsBtn.addActionListener(new ActionListener() {
-    					public void actionPerformed(ActionEvent e) {
-    						DocumentFactory doc = new DocumentFactory(db, id);
-    					}
-    				});
-    				frameDettaglioEntity.getContentPane().add(documentsBtn);
+    				DocumentFactory doc = new DocumentFactory(db, id);
+    				JPanel panelDocuments = doc.getPanel();
+    				frameDettaglioEntity.add(panelDocuments);
+    				
+//    				// pictures
+//    				picturesBtn = new JButton(CD_BTN_PICTURES);
+//    				picturesBtn.setSize(100, 40);
+//    				picturesBtn.addActionListener(new ActionListener() {
+//    					public void actionPerformed(ActionEvent e) {
+//    						PictureFactory pic = new PictureFactory(db, id);
+//    					}
+//    				});
+//    				frameDettaglioEntity.getContentPane().add(picturesBtn);
+//    				
+//    				// documents
+//    				documentsBtn = new JButton(CD_BTN_DOCUMENTS);
+//    				documentsBtn.setSize(100, 40);
+//    				documentsBtn.addActionListener(new ActionListener() {
+//    					public void actionPerformed(ActionEvent e) {
+//    						DocumentFactory doc = new DocumentFactory(db, id);
+//    					}
+//    				});
+//    				frameDettaglioEntity.getContentPane().add(documentsBtn);
     				
     				salvaEntityBtn = new JButton(CD_BTN_SALVA_ENTITY);
     				salvaEntityBtn.setSize(100, 40);
@@ -656,11 +668,11 @@ public class Antics implements ActionListener {
     					public void actionPerformed(ActionEvent e) {
     						updateEntity(id, getEntityFromUI(id));
     						onEntityChanged();
-    						frameDettaglioEntity.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
+    						panelDettaglioEntity.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
     						JOptionPane.showMessageDialog(frame, MSG_AGGIORNA_ENTITY_OK);
     					}
     				});
-    				frameDettaglioEntity.getContentPane().add(salvaEntityBtn);
+    				panelDettaglioEntity.add(salvaEntityBtn);
     				
     				rimuoviEntityBtn = new JButton(CD_BTN_RIMUOVI_ENTITY);
     				rimuoviEntityBtn.setSize(100, 40);
@@ -668,11 +680,13 @@ public class Antics implements ActionListener {
     					public void actionPerformed(ActionEvent e) {
     						removeEntity(id);
     						onEntityChanged();
-    						frameDettaglioEntity.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
+    						panelDettaglioEntity.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
     						JOptionPane.showMessageDialog(frame, MSG_RIMUOVI_ENTITY_OK);
     					}
     				});
-    				frameDettaglioEntity.getContentPane().add(rimuoviEntityBtn);
+    				panelDettaglioEntity.add(rimuoviEntityBtn);
+    				
+    				frameDettaglioEntity.add(panelDettaglioEntity);
     				
     				frameDettaglioEntity.setSize(600, 750);
     				frameDettaglioEntity.setLocationRelativeTo(null);
@@ -833,108 +847,120 @@ public class Antics implements ActionListener {
 	
 	public static void showPanelDettaglioEntity() {
 		frameDettaglioEntity = new JFrame("DETTAGLIO");
-		frameDettaglioEntity.setLayout(new GridLayout(17, 2, 10, 10));
+		
+		panelDettaglioEntity = new JPanel();
+		panelDettaglioEntity.setLayout(new GridLayout(17, 2, 10, 10));
 		
 		categoryLabel = new JLabel("Categoria dell'oggetto");
-		frameDettaglioEntity.add(categoryLabel);
+		panelDettaglioEntity.add(categoryLabel);
 		comboCategoriaDettaglioEntity = new JComboBox<String>();
         for (int i = 0; i < listCategories.size(); i++) {
         	comboCategoriaDettaglioEntity.insertItemAt(listCategories.get(i).getName(), i);
         }
-		frameDettaglioEntity.add(comboCategoriaDettaglioEntity);
+		panelDettaglioEntity.add(comboCategoriaDettaglioEntity);
 		
 		authorLabel = new JLabel("Autore");
-		frameDettaglioEntity.add(authorLabel);
+		panelDettaglioEntity.add(authorLabel);
 		authorTF = new JTextField();
 		setAutocomplete(authorTF, "AUTHOR");
-		frameDettaglioEntity.add(authorTF);
+		panelDettaglioEntity.add(authorTF);
 		
 		titleLabel = new JLabel("Titolo o descrizione dell'oggetto");
-		frameDettaglioEntity.add(titleLabel);
+		panelDettaglioEntity.add(titleLabel);
 		titleTF = new JTextField();
-		frameDettaglioEntity.add(titleTF);
+		panelDettaglioEntity.add(titleTF);
 	
 		techniqueLabel = new JLabel("Tecnica usata");
-		frameDettaglioEntity.add(techniqueLabel);
+		panelDettaglioEntity.add(techniqueLabel);
 		techniqueTF = new JTextField();
 		setAutocomplete(techniqueTF, "TECHNIQUE");
-		frameDettaglioEntity.add(techniqueTF);
+		panelDettaglioEntity.add(techniqueTF);
 		
 		measuresLabel = new JLabel("Misure");
-		frameDettaglioEntity.add(measuresLabel);
+		panelDettaglioEntity.add(measuresLabel);
 		measuresTF = new JTextField();
-		frameDettaglioEntity.add(measuresTF);
+		panelDettaglioEntity.add(measuresTF);
 		
 		buyYearLabel = new JLabel("Anno di acquisizione");
-		frameDettaglioEntity.add(buyYearLabel);
+		panelDettaglioEntity.add(buyYearLabel);
 		buyYearTF = new JTextField();
-		frameDettaglioEntity.add(buyYearTF);
+		panelDettaglioEntity.add(buyYearTF);
 		
 		priceLabel = new JLabel("Importo originario pagato");
-		frameDettaglioEntity.add(priceLabel);
+		panelDettaglioEntity.add(priceLabel);
 		priceTF = new JTextField();
-		frameDettaglioEntity.add(priceTF);
+		panelDettaglioEntity.add(priceTF);
 		
 		paymentTypeLabel = new JLabel("Modalita' di pagamento");
-		frameDettaglioEntity.add(paymentTypeLabel);
+		panelDettaglioEntity.add(paymentTypeLabel);
 		paymentTypeTA = new JTextArea(15, 20);
 		//setAutocomplete(paymentTypeTA, "PAYMENT_TYPE");
 		JScrollPane scrollPanePaymentType = new JScrollPane(paymentTypeTA);
-		frameDettaglioEntity.add(scrollPanePaymentType);
+		panelDettaglioEntity.add(scrollPanePaymentType);
 		
 		originalPlaceLabel = new JLabel("Provenienza");
-		frameDettaglioEntity.add(originalPlaceLabel);
+		panelDettaglioEntity.add(originalPlaceLabel);
 		originalPlaceTF = new JTextField();
-		frameDettaglioEntity.add(originalPlaceTF);
+		panelDettaglioEntity.add(originalPlaceTF);
 		
 		actualPlaceLabel = new JLabel("Localizzazione dell'oggetto");
-		frameDettaglioEntity.add(actualPlaceLabel);
+		panelDettaglioEntity.add(actualPlaceLabel);
 		actualPlaceTF = new JTextField();
 		setAutocomplete(actualPlaceTF, "ACTUAL_PLACE");
-		frameDettaglioEntity.add(actualPlaceTF);
+		panelDettaglioEntity.add(actualPlaceTF);
 		
 		currentValueLabel = new JLabel("Valore odierno");
-		frameDettaglioEntity.add(currentValueLabel);
+		panelDettaglioEntity.add(currentValueLabel);
 		currentValueTF = new JTextField();
-		frameDettaglioEntity.add(currentValueTF);
+		panelDettaglioEntity.add(currentValueTF);
 		
 		currentValueDateLabel = new JLabel("Data valore odierno");
-		frameDettaglioEntity.add(currentValueDateLabel);
+		panelDettaglioEntity.add(currentValueDateLabel);
 		currentValueDateTF = new JTextField();
-		frameDettaglioEntity.add(currentValueDateTF);
+		panelDettaglioEntity.add(currentValueDateTF);
 		
 		soldLabel = new JLabel("Oggetto venduto");
-		frameDettaglioEntity.add(soldLabel);
+		panelDettaglioEntity.add(soldLabel);
 		soldTF = new JTextField();
-		frameDettaglioEntity.add(soldTF);
+		panelDettaglioEntity.add(soldTF);
 		
 		notesLabel = new JLabel("Annotazioni varie");
-		frameDettaglioEntity.add(notesLabel);
+		panelDettaglioEntity.add(notesLabel);
 		notesTA = new JTextArea(15, 20);
 		JScrollPane scrollPaneNotes = new JScrollPane(notesTA);
-		frameDettaglioEntity.add(scrollPaneNotes);
+		panelDettaglioEntity.add(scrollPaneNotes);
 		
 		final long id = getMaxIdEntities() + 1;
 		
-		// pictures
-		picturesBtn = new JButton(CD_BTN_PICTURES);
-		picturesBtn.setSize(100, 40);
-		picturesBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				PictureFactory pic = new PictureFactory(db, id);
-			}
-		});
-		frameDettaglioEntity.getContentPane().add(picturesBtn);
+		// TODO Crea il pannello immagini
+		PictureFactory pic = new PictureFactory(db, id);
+		JPanel panelPictures = pic.getPanel();
+		frameDettaglioEntity.getContentPane().add(panelPictures);
 		
-		// documents
-		documentsBtn = new JButton(CD_BTN_DOCUMENTS);
-		documentsBtn.setSize(100, 40);
-		documentsBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				DocumentFactory doc = new DocumentFactory(db, id);
-			}
-		});
-		frameDettaglioEntity.getContentPane().add(documentsBtn);
+		// TODO Crea il pannello documenti
+		DocumentFactory doc = new DocumentFactory(db, id);
+		JPanel panelDocuments = doc.getPanel();
+		frameDettaglioEntity.getContentPane().add(panelDocuments);
+		
+		// pictures
+//		picturesBtn = new JButton(CD_BTN_PICTURES);
+//		picturesBtn.setSize(100, 40);
+//		picturesBtn.addActionListener(new ActionListener() {
+//			public void actionPerformed(ActionEvent e) {
+//				PictureFactory pic = new PictureFactory(db, id);
+//			}
+//		});
+//		frameDettaglioEntity.getContentPane().add(picturesBtn);
+//		
+//		// documents
+//		documentsBtn = new JButton(CD_BTN_DOCUMENTS);
+//		documentsBtn.setSize(100, 40);
+//		documentsBtn.addActionListener(new ActionListener() {
+//			public void actionPerformed(ActionEvent e) {
+//				DocumentFactory doc = new DocumentFactory(db, id);
+//			}
+//		});
+//		frameDettaglioEntity.getContentPane().add(documentsBtn);
 		
 		salvaEntityBtn = new JButton(CD_BTN_SALVA_ENTITY);
 		salvaEntityBtn.setSize(100, 40);
@@ -985,11 +1011,13 @@ public class Antics implements ActionListener {
 						newEntity.getCurrentValue(), newEntity.getCurrentValueDate(), newEntity.getSold()  
 				});
 				onEntityChanged();
-				frameDettaglioEntity.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
+				panelDettaglioEntity.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
 				JOptionPane.showMessageDialog(frame, MSG_SALVA_ENTITY_OK);
 			}
 		});
-		frameDettaglioEntity.add(salvaEntityBtn);
+		panelDettaglioEntity.add(salvaEntityBtn);
+		
+		frameDettaglioEntity.getContentPane().add(panelDettaglioEntity);
 		
 		frameDettaglioEntity.setSize(600, 650);
 		frameDettaglioEntity.setLocationRelativeTo(null);
