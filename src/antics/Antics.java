@@ -114,6 +114,8 @@ public class Antics implements ActionListener {
 	private static JButton addDocumentBtn;
 	private static JButton removeDocumentBtn;
 	
+	private static JPanel panelDocumentsAndPictures;
+	
 	private static ArrayList<Category> listCategories = new ArrayList<Category>();
 	private static ArrayList<Entity> listEntities = new ArrayList<Entity>();
 	
@@ -552,6 +554,24 @@ public class Antics implements ActionListener {
 		return id;
 	}
 	
+	private static JPanel createPanelDocumentsAndPictures(long id) {
+		JPanel panel = new JPanel();
+		panel.setSize(600, 750);
+		panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
+		
+		// pictures
+		PictureFactory pic = new PictureFactory(db, id);
+		JPanel panelPictures = pic.getPanel();
+		panel.add(panelPictures);
+		
+		// documents
+		DocumentFactory doc = new DocumentFactory(db, id);
+		JPanel panelDocuments = doc.getPanel();
+		panel.add(panelDocuments);
+		
+		return panel;
+	}
+	
 	// la lista delle entita' riceve in input la categoria per cui devono essere filtrate
 	private static void showTableEntities(Category c) {
     	for (int i = 0; i < listEntities.size(); i++) {
@@ -586,9 +606,10 @@ public class Antics implements ActionListener {
     				frameDettaglioEntity = new JFrame("Dettaglio");
     				
     				panelDettaglioEntity = new JPanel();
+    				panelDettaglioEntity.setSize(600, 750);
     				panelDettaglioEntity.setLayout(new GridLayout(16, 2, 10, 10));
     				
-    				frameDettaglioEntity.setLayout(new BoxLayout(frameDettaglioEntity.getContentPane(), BoxLayout.PAGE_AXIS));
+    				frameDettaglioEntity.setLayout(new BoxLayout(frameDettaglioEntity.getContentPane(), BoxLayout.LINE_AXIS));
     				
     				int row = tableEntities.getSelectedRow();
     				int convertedRow = tableEntities.convertRowIndexToModel(row);
@@ -631,16 +652,6 @@ public class Antics implements ActionListener {
     				entity.setNotes(notes);
     				
     				createDettaglioEntity(entity);
-    				
-    				// pictures
-    				PictureFactory pic = new PictureFactory(db, id);
-    				JPanel panelPictures = pic.getPanel();
-    				frameDettaglioEntity.add(panelPictures);
-    				
-    				// documents
-    				DocumentFactory doc = new DocumentFactory(db, id);
-    				JPanel panelDocuments = doc.getPanel();
-    				frameDettaglioEntity.add(panelDocuments);
     				
 //    				// pictures
 //    				picturesBtn = new JButton(CD_BTN_PICTURES);
@@ -688,7 +699,10 @@ public class Antics implements ActionListener {
     				
     				frameDettaglioEntity.add(panelDettaglioEntity);
     				
-    				frameDettaglioEntity.setSize(600, 750);
+    				panelDocumentsAndPictures = createPanelDocumentsAndPictures(id);
+    				frameDettaglioEntity.add(panelDocumentsAndPictures);
+    				
+    				frameDettaglioEntity.setSize(600*2, 750);
     				frameDettaglioEntity.setLocationRelativeTo(null);
     				frameDettaglioEntity.setVisible(true);
     			}

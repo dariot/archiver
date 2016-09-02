@@ -200,7 +200,7 @@ public class DocumentFactory {
 		});
 		panelButtons.add(removeDocumentBtn);
 		
-//		showTableDocuments();
+		showTableDocuments();
 //		mainFrame.getContentPane().add(panelButtons, BorderLayout.PAGE_END);
 //		
 //		mainFrame.setSize(500, 500);
