@@ -702,6 +702,8 @@ public class Antics implements ActionListener {
     				panelDocumentsAndPictures = createPanelDocumentsAndPictures(id);
     				frameDettaglioEntity.add(panelDocumentsAndPictures);
     				
+    				//frameDettaglioEntity.addWindowListener(new WindowAdapter());
+    				
     				frameDettaglioEntity.setSize(600*2, 750);
     				frameDettaglioEntity.setLocationRelativeTo(null);
     				frameDettaglioEntity.setVisible(true);
@@ -1054,6 +1056,10 @@ public class Antics implements ActionListener {
 		nuovaCategoriaBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String categoryName = nuovaCategoriaTF.getText();
+				if (categoryName.trim().isEmpty()) {
+					JOptionPane.showMessageDialog(frameAmministrazione, "Non è possibile inserire una categoria vuota.");
+					return;
+				}
 				long newId = getMaxIdCategories() + 1;
 				
 				Category newCategory = new Category(newId, categoryName);

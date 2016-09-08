@@ -1,14 +1,14 @@
-Fri Sep 02 17:24:13 CEST 2016 : Server di rete Apache Derby: 10.11.1.1 - (1616546) avviato e pronto ad accettare connessioni sulla porta 1527
 ----------------------------------------------------------------
-Fri Sep 02 17:24:13 CEST 2016:
-Avvio della versione di Derby The Apache Software Foundation - Apache Derby - 10.11.1.1 - (1616546): istanza a816c00e-0156-eb80-0f75-000002f29900
-sulla directory di database C:\Users\dariot\workspace\antics\NON_TOCCARE con caricatore classi sun.misc.Launcher$AppClassLoader@4e0e2f2a 
-Caricato da file:/C:/Users/dariot/workspace/antics/lib/derby.jar
+Thu Sep 08 21:50:41 CEST 2016:
+Avvio della versione di Derby The Apache Software Foundation - Apache Derby - 10.11.1.1 - (1616546): istanza a816c00e-0157-0b5a-2d57-0000030fae60
+sulla directory di database /Users/dario/Documents/workspace/archiver/NON_TOCCARE con caricatore classi sun.misc.Launcher$AppClassLoader@530f243b 
+Caricato da file:/Users/dario/Documents/workspace/archiver/lib/derby.jar
 java.vendor=Oracle Corporation
-java.runtime.version=1.8.0_73-b02
-user.dir=C:\Users\dariot\workspace\antics
-os.name=Windows 8
-os.arch=amd64
-os.version=6.2
+java.runtime.version=1.7.0_45-b18
+user.dir=/Users/dario/Documents/workspace/archiver
+os.name=Mac OS X
+os.arch=x86_64
+os.version=10.11.1
 derby.system.home=null
 Programma di caricamento classe database avviato - derby.database.classpath=''
+Thu Sep 08 21:50:42 CEST 2016 : Server di rete Apache Derby: 10.11.1.1 - (1616546) avviato e pronto ad accettare connessioni sulla porta 1527
