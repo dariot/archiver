@@ -29,6 +29,7 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
+import javax.swing.WindowConstants;
 
 import org.apache.commons.io.FileUtils;
 
@@ -1033,9 +1034,13 @@ public class Antics implements ActionListener {
 		panelDettaglioEntity.add(salvaEntityBtn);
 		
 		frameDettaglioEntity.getContentPane().add(panelDettaglioEntity);
+		frameDettaglioEntity.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		frameDettaglioEntity.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
-				JOptionPane.showConfirmDialog(frameDettaglioEntity, "Sei sicuro di voler chiudere la finestra senza salvare?");
+				int op = JOptionPane.showConfirmDialog(frameDettaglioEntity, "Sei sicuro di voler chiudere la finestra senza salvare?");
+				if (op == 0) {
+					frameDettaglioEntity.setVisible(false);
+				}
 			};
 		});
 		
