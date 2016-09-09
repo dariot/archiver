@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
@@ -702,8 +703,6 @@ public class Antics implements ActionListener {
     				panelDocumentsAndPictures = createPanelDocumentsAndPictures(id);
     				frameDettaglioEntity.add(panelDocumentsAndPictures);
     				
-    				//frameDettaglioEntity.addWindowListener(new WindowAdapter());
-    				
     				frameDettaglioEntity.setSize(600*2, 750);
     				frameDettaglioEntity.setLocationRelativeTo(null);
     				frameDettaglioEntity.setVisible(true);
@@ -1034,6 +1033,11 @@ public class Antics implements ActionListener {
 		panelDettaglioEntity.add(salvaEntityBtn);
 		
 		frameDettaglioEntity.getContentPane().add(panelDettaglioEntity);
+		frameDettaglioEntity.addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+				JOptionPane.showConfirmDialog(frameDettaglioEntity, "Sei sicuro di voler chiudere la finestra senza salvare?");
+			};
+		});
 		
 		frameDettaglioEntity.setSize(600, 650);
 		frameDettaglioEntity.setLocationRelativeTo(null);
