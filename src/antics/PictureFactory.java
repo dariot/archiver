@@ -1,6 +1,7 @@
 package antics;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.FileDialog;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -299,6 +300,7 @@ public class PictureFactory {
 		mainPanel.add(panelPictures, BorderLayout.CENTER);
 		mainPanel.add(nextPictureBtn, BorderLayout.LINE_END);
 		mainPanel.add(panelButtons, BorderLayout.PAGE_END);
+		mainPanel.setPreferredSize(new Dimension(550, 350));
 		
 //		mainFrame.getContentPane().add(mainPanel);
 //		

@@ -1,5 +1,6 @@
 package antics;
 
+import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -16,6 +17,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -107,6 +109,9 @@ public class Antics implements ActionListener {
 	
 	// dettaglio oggetto
 	private static JFrame frameDettaglioEntity;
+	
+	private static JFrame frameProva;
+	
 	private static JPanel panelDettaglioEntity;
 	private static JButton salvaEntityBtn;
 	private static JButton rimuoviEntityBtn;
@@ -558,18 +563,20 @@ public class Antics implements ActionListener {
 	
 	private static JPanel createPanelDocumentsAndPictures(long id) {
 		JPanel panel = new JPanel();
-		panel.setSize(600, 750);
-		panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
 		
 		// pictures
 		PictureFactory pic = new PictureFactory(db, id);
 		JPanel panelPictures = pic.getPanel();
-		panel.add(panelPictures);
+		panel.add(panelPictures, BorderLayout.CENTER);
+		
+		JPanel separator = new JPanel();
+		separator.setPreferredSize(new Dimension(600, 30));
+		panel.add(separator, BorderLayout.CENTER);
 		
 		// documents
 		DocumentFactory doc = new DocumentFactory(db, id);
 		JPanel panelDocuments = doc.getPanel();
-		panel.add(panelDocuments);
+		panel.add(panelDocuments, BorderLayout.CENTER);
 		
 		return panel;
 	}
@@ -608,7 +615,7 @@ public class Antics implements ActionListener {
     				frameDettaglioEntity = new JFrame("Dettaglio");
     				
     				panelDettaglioEntity = new JPanel();
-    				panelDettaglioEntity.setSize(600, 750);
+//    				panelDettaglioEntity.setSize(1200, 750);
     				panelDettaglioEntity.setLayout(new GridLayout(16, 2, 10, 10));
     				
     				frameDettaglioEntity.setLayout(new BoxLayout(frameDettaglioEntity.getContentPane(), BoxLayout.LINE_AXIS));
@@ -681,8 +688,8 @@ public class Antics implements ActionListener {
     					public void actionPerformed(ActionEvent e) {
     						updateEntity(id, getEntityFromUI(id));
     						onEntityChanged();
-    						panelDettaglioEntity.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
-    						JOptionPane.showMessageDialog(frame, MSG_AGGIORNA_ENTITY_OK);
+    						panelDettaglioEntity.dispatchEvent(new WindowEvent(frameDettaglioEntity, WindowEvent.WINDOW_CLOSING));
+    						//JOptionPane.showMessageDialog(frame, MSG_AGGIORNA_ENTITY_OK);
     					}
     				});
     				panelDettaglioEntity.add(salvaEntityBtn);
@@ -693,7 +700,7 @@ public class Antics implements ActionListener {
     					public void actionPerformed(ActionEvent e) {
     						removeEntity(id);
     						onEntityChanged();
-    						panelDettaglioEntity.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
+    						panelDettaglioEntity.dispatchEvent(new WindowEvent(frameDettaglioEntity, WindowEvent.WINDOW_CLOSING));
     						JOptionPane.showMessageDialog(frame, MSG_RIMUOVI_ENTITY_OK);
     					}
     				});
@@ -702,9 +709,11 @@ public class Antics implements ActionListener {
     				frameDettaglioEntity.add(panelDettaglioEntity);
     				
     				panelDocumentsAndPictures = createPanelDocumentsAndPictures(id);
+    				panelDocumentsAndPictures.setPreferredSize(new Dimension(600, 750));
+    				
     				frameDettaglioEntity.add(panelDocumentsAndPictures);
     				
-    				frameDettaglioEntity.setSize(600*2, 750);
+    				frameDettaglioEntity.setSize(1100, 750);
     				frameDettaglioEntity.setLocationRelativeTo(null);
     				frameDettaglioEntity.setVisible(true);
     			}
@@ -1028,7 +1037,7 @@ public class Antics implements ActionListener {
 				});
 				onEntityChanged();
 				panelDettaglioEntity.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
-				JOptionPane.showMessageDialog(frame, MSG_SALVA_ENTITY_OK);
+				//JOptionPane.showMessageDialog(frame, MSG_SALVA_ENTITY_OK);
 			}
 		});
 		panelDettaglioEntity.add(salvaEntityBtn);

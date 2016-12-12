@@ -120,7 +120,9 @@ public class DocumentFactory {
     	});
     	
     	JScrollPane scrollPane = new JScrollPane(tableDocuments);
-    	mainFrame.getContentPane().add(scrollPane, BorderLayout.CENTER);
+    	panelDocuments.add(scrollPane);
+    	
+//    	mainFrame.getContentPane().add(scrollPane, BorderLayout.CENTER);
 	}
 	
 	public static String getFileNameFromPath(String path) {
@@ -144,7 +146,6 @@ public class DocumentFactory {
 		chooser = new JFileChooser();
 		
 		panelDocuments = new JPanel();
-		panelDocuments.setSize(200, 200);
 		
 		JPanel panelButtons = new JPanel();
 		
@@ -200,7 +201,11 @@ public class DocumentFactory {
 		});
 		panelButtons.add(removeDocumentBtn);
 		
+		panelDocuments.setPreferredSize(new Dimension(550, 300));
+
 		showTableDocuments();
+		panelDocuments.add(panelButtons);
+		
 //		mainFrame.getContentPane().add(panelButtons, BorderLayout.PAGE_END);
 //		
 //		mainFrame.setSize(500, 500);
