@@ -9,17 +9,22 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+
+import org.apache.commons.lang3.ArrayUtils;
 
 import dto.CommonTableModel;
 import dto.Document;
@@ -36,7 +41,6 @@ public class DocumentFactory {
 	private static JButton removeDocumentBtn;
 	
 	private static JPanel panelDocuments;
-	private static JLabel labelDocuments;
 	
 	private static CommonTableModel dtmDocuments;
 	private static JTable tableDocuments;
@@ -51,6 +55,10 @@ public class DocumentFactory {
 	private static final String MSG_ADD_DOCUMENT_KO = "Si e' verificato un problema nel salvataggio del documento.";
 	private static final String MSG_REMOVE_DOCUMENT_OK = "Documento rimosso correttamente.";
 	private static final String MSG_REMOVE_DOCUMENT_KO = "Si e' verificato un problema nella rimozione del documento.";
+	
+	private static final String[] documentTypes = {"csv", "doc", "docx", "odt", "ods", "odg", "odp", 
+			          "pdf", "ppt", "pptx", "txt", "tex", "ltx", "rtf", "xls", "xlsx"};
+	private static final String[] supportedDocumentTypes = {"doc", "docx", "pdf", "ppt", "pptx", "txt", "xls", "xlsx"};
 	
 	private ArrayList<Document> documents = new ArrayList<Document>();
 	
@@ -68,6 +76,22 @@ public class DocumentFactory {
         return bFile;
 	}
 	
+	public static boolean isDocumentFile(String ext)	{
+		if (ArrayUtils.contains(documentTypes, ext)){
+			return true;
+		}else {
+			return false;
+		}
+	}
+	
+	public static boolean isDocumentFileSupported(String ext){
+		if (ArrayUtils.contains(supportedDocumentTypes, ext)){
+			return true;
+		}else {
+			return false;
+		}
+	}
+	
 	private long getMaxDocumentId(Database db) {
 		return db.getMaxDocumentsId();
 	}
@@ -80,14 +104,18 @@ public class DocumentFactory {
 	private void openDocumentFromByteArray(byte[] data, String name) throws IOException {
 		if (Desktop.isDesktopSupported()) {
 			Desktop desktop = Desktop.getDesktop();
-			
-			FileOutputStream fos = new FileOutputStream(FILE_PATH + name);
-			fos.write(data);
-			fos.close();
-			
-			File file = new File(FILE_PATH + name);
+			File file = byteArrayToFile(data, name);
 			desktop.open(file);
 		}
+	}
+	
+	public static File byteArrayToFile(byte[] data, String name) throws IOException {
+		FileOutputStream fos = new FileOutputStream(FILE_PATH + name);
+		fos.write(data);
+		fos.close();
+		
+		File file = new File(FILE_PATH + name);
+		return file;
 	}
 	
 	private void showTableDocuments() {
@@ -125,13 +153,6 @@ public class DocumentFactory {
 //    	mainFrame.getContentPane().add(scrollPane, BorderLayout.CENTER);
 	}
 	
-	public static String getFileNameFromPath(String path) {
-		String name = "";
-		String[] splitted = path.split("\\" + File.separator);
-		name = splitted[splitted.length - 1];
-		return name;
-	}
-	
 	public JPanel getPanel() {
 		return panelDocuments;
 	}
@@ -154,7 +175,9 @@ public class DocumentFactory {
 		dtmDocuments.setColumnIdentifiers(documentsColumns);
 		tableDocuments.setModel(dtmDocuments);
 		
-		final ArrayList<Document> documents = loadDocuments(thisDb, thisEntityId);
+		documents = loadDocuments(thisDb, thisEntityId);
+		
+		final ArrayList<Document> documentsF = documents;
 		
 		addDocumentBtn = new JButton(CD_BTN_ADD_DOCUMENT);
 		addDocumentBtn.setSize(100, 40);
@@ -163,20 +186,34 @@ public class DocumentFactory {
 				int returnVal = chooser.showOpenDialog(mainFrame);
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
 					File file = chooser.getSelectedFile();
-					byte[] bytes = getBytesFromFile(file);
-					
-					long id = getMaxDocumentId(thisDb) + 1;
-					
-					String name = getFileNameFromPath(file.getPath());
-					
-					Document d = new Document();
-					d.setId(id);
-					d.setEntityId(thisEntityId);
-					d.setName(name);
-					d.setData(bytes);
-					thisDb.insertDocument(d);
-					
-					dtmDocuments.addRow(new Object[] {d.getId(), d.getName()});
+					String name = Antics.getFileNameFromPath(file.getPath());
+					String extension = Antics.getFileExtension(name);
+					if(isDocumentFile(extension)) {
+						if(isDocumentFileSupported(extension)) {
+							byte[] bytes = getBytesFromFile(file);
+		
+							long id = getMaxDocumentId(thisDb) + 1;
+		
+							Document d = new Document();
+							d.setId(id);
+							d.setEntityId(thisEntityId);
+							d.setName(name);
+							d.setData(bytes);
+							try {
+								thisDb.insertDocument(d);
+							} catch (SQLException ex) {
+								String errore = MSG_ADD_DOCUMENT_KO + " Errore: " + ex.getMessage();
+								JOptionPane.showMessageDialog(mainFrame, errore, errore, JOptionPane.ERROR_MESSAGE);
+							}
+							
+							dtmDocuments.addRow(new Object[] {d.getId(), d.getName()});
+							JOptionPane.showMessageDialog(mainFrame, MSG_ADD_DOCUMENT_OK);
+						}else {
+							JOptionPane.showMessageDialog(null, "Il formato del documento non e' supportato", "Formato non corretto", JOptionPane.INFORMATION_MESSAGE);
+						}
+					} else {
+						JOptionPane.showMessageDialog(null, "Il file inserito non e' un documento", "Formato non corretto", JOptionPane.INFORMATION_MESSAGE);
+					}
 				}
 			}
 		});
@@ -186,22 +223,28 @@ public class DocumentFactory {
 		removeDocumentBtn.setSize(100, 40);
 		removeDocumentBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
-				if (documents.size() > 0) {
+				if (documentsF.size() > 0) {
 					int row = tableDocuments.getSelectedRow();
-    				if (row >= 0 && row <= documents.size() - 1) {
+    				if (row >= 0 && row <= documentsF.size() - 1) {
 	    				int convertedRow = tableDocuments.convertRowIndexToModel(row);
 	    				final long id = (Long) tableDocuments.getValueAt(convertedRow, 0);
 	    				
-	    				thisDb.deleteDocument(id);
+	    				try {
+	    					thisDb.deleteDocument(id);
+	    				} catch (SQLException ex) {
+							String errore =  MSG_REMOVE_DOCUMENT_KO + " Errore: " + ex.getMessage();
+							JOptionPane.showMessageDialog(mainFrame, errore, errore, JOptionPane.ERROR_MESSAGE);
+	    				}
 	    				
 	    				dtmDocuments.removeRow(row);
+	    				JOptionPane.showMessageDialog(mainFrame, MSG_REMOVE_DOCUMENT_OK);
     				}
 				}
 			}
 		});
 		panelButtons.add(removeDocumentBtn);
 		
-		panelDocuments.setPreferredSize(new Dimension(550, 300));
+		panelDocuments.setPreferredSize(new Dimension(550, 250));
 
 		showTableDocuments();
 		panelDocuments.add(panelButtons);

@@ -2,7 +2,7 @@ package dto;
 
 public class Entity {
 
-	private long id = 0;
+	private long id = -1;
 	private long categoryId = 0;
 	private String author = "";
 	private String title = "";

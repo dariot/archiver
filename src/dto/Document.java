@@ -2,8 +2,8 @@ package dto;
 
 public class Document {
 
-	private long id = 0;
-	private long entityId = 0;
+	private long id = -1;
+	private long entityId = -1;
 	private String name = "";
 	private byte[] data;
 

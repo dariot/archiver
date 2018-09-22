@@ -1,7 +1,7 @@
 package dto;
 
 public class Category {
-	private long id = 0;
+	private long id = -1;
 	private String name = "";
 	
 	public Category() {}

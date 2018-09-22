@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+
 import org.apache.commons.io.IOUtils;
 import org.apache.derby.drda.NetworkServerControl;
 
@@ -27,6 +28,11 @@ public class Database {
     private static String pictureTable = "picture";
     private static String pictureThumbnailsTable = "picture_thumbnails";
     private static String documentTable = "document";
+    
+    private static final String defaultCategoryName = "Default";
+    
+    private static String stringType = "STRING";
+    private static String longType = "LONG";
     
     // jdbc Connection
     private static Connection conn = null;
@@ -68,12 +74,13 @@ public class Database {
             
             stmt.execute(insert);
             stmt.close();
-        } catch (SQLException sqlExcept) {
+        }  catch (SQLException sqlExcept) {
+            sqlExcept.printStackTrace();
             throw sqlExcept;
         }
     }
     
-    public void updateCategory(Category c) {
+    public void updateCategory(Category c) throws SQLException{
         try {
             stmt = conn.createStatement();
             
@@ -85,10 +92,25 @@ public class Database {
             stmt.close();
         } catch (SQLException sqlExcept) {
             sqlExcept.printStackTrace();
+            throw sqlExcept;
         }
     }
     
-    public void deleteCategory(long id) {
+    public void insert_update_default_category() throws SQLException {
+    	Category defaultC = new Category();
+    	Category c = new Category(0, defaultCategoryName);
+    	defaultC = getCategoryByName(defaultCategoryName);
+    	if(defaultC.getId()<0) {
+    		insertCategory(c);
+    	}else {
+    		if(defaultC.getId()!=0) {
+    			deleteCategory(defaultC.getId());
+    			insertCategory(c);
+    		}
+    	}
+    }
+    
+    public void deleteCategory(long id) throws SQLException {
     	try {
             stmt = conn.createStatement();
             
@@ -96,17 +118,18 @@ public class Database {
             
             stmt.execute(delete);
             stmt.close();
-        } catch (SQLException sqlExcept) {
+        }  catch (SQLException sqlExcept) {
             sqlExcept.printStackTrace();
+            throw sqlExcept;
         }
     }
     
-    public Category getCategory(long id) {
+    public Category getCategory(long id) throws SQLException {
     	Category output = new Category();
         try {
             stmt = conn.createStatement();
             
-            String query = "select * from " + categoryTable;
+            String query = "select * from " + categoryTable + " where id = " + id;
             
             ResultSet results = stmt.executeQuery(query);
             while (results.next()) {
@@ -117,11 +140,33 @@ public class Database {
             stmt.close();
         } catch (SQLException sqlExcept) {
             sqlExcept.printStackTrace();
+            throw sqlExcept;
         }
         return output;
     }
     
-    public ArrayList<Category> getCategories() {
+    public Category getCategoryByName(String name) throws SQLException {
+    	Category output = new Category();
+        try {
+            stmt = conn.createStatement();
+            
+            String query = "select * from " + categoryTable + " where name = '" + name + "'";
+            
+            ResultSet results = stmt.executeQuery(query);
+            while (results.next()) {
+            	output.setId(results.getLong(1));
+            	output.setName(results.getString(2));
+            }
+            results.close();
+            stmt.close();
+        } catch (SQLException sqlExcept) {
+            sqlExcept.printStackTrace();
+            throw sqlExcept;
+        }
+        return output;
+    }
+    
+    public ArrayList<Category> getCategories() throws SQLException {
     	ArrayList<Category> output = new ArrayList<Category>();
         try {
             stmt = conn.createStatement();
@@ -139,6 +184,7 @@ public class Database {
             stmt.close();
         } catch (SQLException sqlExcept) {
             sqlExcept.printStackTrace();
+            throw sqlExcept;
         }
         return output;
     }
@@ -163,14 +209,35 @@ public class Database {
             } else {
             	isUsedCategory = false;
             }
-        } catch (SQLException sqlExcept) {
+        }  catch (SQLException sqlExcept) {
             sqlExcept.printStackTrace();
         }
     	return isUsedCategory;
     }
     
+    public long getMaxCategoryId() {
+    	long max = 0;
+    	try {
+            stmt = conn.createStatement();
+            
+            String query = "select max(id) from " + categoryTable;
+            
+            ResultSet results = stmt.executeQuery(query);
+            while (results.next()) {
+            	if (max < results.getLong(1)) {
+            		max = results.getLong(1);
+            	}
+            }
+            results.close();
+            stmt.close();
+        } catch (SQLException sqlExcept) {
+            sqlExcept.printStackTrace();
+        }
+    	return max;
+    }
+    
     // ENTITIES
-    public void insertEntity(Entity e) {
+    public void insertEntity(Entity e) throws SQLException {
         try {
             stmt = conn.createStatement();
             
@@ -195,12 +262,13 @@ public class Database {
             
             stmt.execute(insert);
             stmt.close();
-        } catch (SQLException sqlExcept) {
+        }  catch (SQLException sqlExcept) {
             sqlExcept.printStackTrace();
+            throw sqlExcept;
         }
     }
     
-    public void updateEntity(Entity e) {
+    public void updateEntity(Entity e) throws SQLException {
         try {
             stmt = conn.createStatement();
             
@@ -231,10 +299,11 @@ public class Database {
             stmt.close();
         } catch (SQLException sqlExcept) {
             sqlExcept.printStackTrace();
+            throw sqlExcept;
         }
     }
     
-    public void deleteEntity(long id) {
+    public void deleteEntity(long id) throws SQLException {
     	try {
             stmt = conn.createStatement();
             
@@ -244,6 +313,7 @@ public class Database {
             stmt.close();
         } catch (SQLException sqlExcept) {
             sqlExcept.printStackTrace();
+            throw sqlExcept;
         }
     }
     
@@ -279,7 +349,7 @@ public class Database {
         }
         return output;
     }
-    
+ 
     private Entity getEntityFromResultSet(ResultSet results) throws SQLException {
     	Entity e = new Entity();
         e.setId(results.getLong(1));
@@ -301,7 +371,7 @@ public class Database {
     	return e;
     }
     
-    public ArrayList<Entity> getEntities() {
+    public ArrayList<Entity> getEntities() throws SQLException {
     	ArrayList<Entity> output = new ArrayList<Entity>();
         try {
             stmt = conn.createStatement();
@@ -317,18 +387,42 @@ public class Database {
             stmt.close();
         } catch (SQLException sqlExcept) {
             sqlExcept.printStackTrace();
+            throw sqlExcept;
         }
         return output;
     }
     
+    public long getMaxEntityId() {
+    	long max = 0;
+    	try {
+            stmt = conn.createStatement();
+            
+            String query = "select max(id) from " + entityTable;
+            
+            ResultSet results = stmt.executeQuery(query);
+            while (results.next()) {
+            	if (max < results.getLong(1)) {
+            		max = results.getLong(1);
+            	}
+            }
+            results.close();
+            stmt.close();
+        } catch (SQLException sqlExcept) {
+            sqlExcept.printStackTrace();
+        }
+    	return max;
+    }
+    
     // PICTURES
-    public void insertPicture(Picture p) {
+    public void insertPicture(Picture p) throws SQLException {
         try {
-            ps = conn.prepareStatement("Insert into " + pictureTable + " (id, entity_id, data, is_main_pic) VALUES (?, ?, ?, 'N')");
+            ps = conn.prepareStatement("Insert into " + pictureTable + " (id, entity_id, data, is_main_pic, name) VALUES (?, ?, ?, ?, ?)");
             
             long id = p.getId();
             long entityId = p.getEntityId();
             byte[] data = p.getData();
+            String isMainPic = p.getIsMainPic().equalsIgnoreCase("")? "N":p.getIsMainPic();
+            String name = p.getName();
             
             Clob clob = conn.createClob();
             OutputStream out = (OutputStream) clob.setAsciiStream(1);
@@ -336,22 +430,25 @@ public class Database {
 	            out.write(data);
 	            out.flush();
 	            out.close();
-            } catch (IOException e) {
-            	e.printStackTrace();
+            } catch (IOException ioExcept) {
+            	ioExcept.printStackTrace();
             }
             
             ps.setLong(1, id);
             ps.setLong(2, entityId);
             ps.setClob(3, clob);
+            ps.setString(4, isMainPic);
+            ps.setString(5, name);
             
             ps.execute();
             ps.close();
         } catch (SQLException sqlExcept) {
             sqlExcept.printStackTrace();
+            throw sqlExcept;
         }
     }
     
-    public void deletePicture(long id) {
+    public void deletePicture(long id) throws SQLException {
     	try {
             stmt = conn.createStatement();
             
@@ -361,25 +458,28 @@ public class Database {
             stmt.close();
         } catch (SQLException sqlExcept) {
             sqlExcept.printStackTrace();
+            throw sqlExcept;
         }
     }
     
-    public void updatePicture(Picture p) {
+    public void updatePicture(Picture p) throws SQLException {
     	try {
             stmt = conn.createStatement();
             
             long id = p.getId();
             String isMainPic = p.getIsMainPic();
-            String update = "update " + pictureTable + " set is_main_pic = '" + isMainPic + "' where id = " + id;
+            String name = p.getName();
+            String update = "update " + pictureTable + " set is_main_pic = '" + isMainPic + "', name = '" + name + "' where id = " + id;
             
             stmt.execute(update);
             stmt.close();
         } catch (SQLException sqlExcept) {
             sqlExcept.printStackTrace();
+            throw sqlExcept;
         }
     }
     
-    public Picture getPicture(long id) {
+    public Picture getPicture(long id) throws SQLException {
     	Picture output = new Picture();
         try {
             stmt = conn.createStatement();
@@ -392,16 +492,18 @@ public class Database {
             	output.setEntityId(results.getLong(2));
             	output.setData(results.getBytes(3));
             	output.setIsMainPic(results.getString(4));
+            	output.setName(results.getString(5));
             }
             results.close();
             stmt.close();
         } catch (SQLException sqlExcept) {
             sqlExcept.printStackTrace();
+            throw sqlExcept;
         }
         return output;
     }
     
-    public ArrayList<Picture> getPicturesFromEntityId(long entityId) {
+    public ArrayList<Picture> getPicturesFromEntityId(long entityId){
     	ArrayList<Picture> output = new ArrayList<Picture>();
         try {
             stmt = conn.createStatement();
@@ -420,6 +522,7 @@ public class Database {
 					e.printStackTrace();
 				}
                 p.setIsMainPic(results.getString(4));
+                p.setName(results.getString(5));
                 output.add(p);
             }
             results.close();
@@ -449,6 +552,7 @@ public class Database {
 					e.printStackTrace();
 				}
             	output.setIsMainPic(results.getString(4));
+            	output.setName(results.getString(5));
             }
             results.close();
             stmt.close();
@@ -480,7 +584,7 @@ public class Database {
     }
     
     // PICTURES THUMBNAILS
-    public void insertPictureThumbnail(Picture p) {
+    public void insertPictureThumbnail(Picture p) throws SQLException {
         try {
             ps = conn.prepareStatement("Insert into " + pictureThumbnailsTable + " (id, entity_id, data, is_main_pic) VALUES (?, ?, ?, 'N')");
             
@@ -494,8 +598,8 @@ public class Database {
 	            out.write(data);
 	            out.flush();
 	            out.close();
-            } catch (IOException e) {
-            	e.printStackTrace();
+            } catch (IOException ioExcept) {
+                ioExcept.printStackTrace();
             }
             
             ps.setLong(1, id);
@@ -506,10 +610,11 @@ public class Database {
             ps.close();
         } catch (SQLException sqlExcept) {
             sqlExcept.printStackTrace();
+            throw sqlExcept;
         }
     }
     
-    public void deletePictureThumbnail(long id) {
+    public void deletePictureThumbnail(long id) throws SQLException {
     	try {
             stmt = conn.createStatement();
             
@@ -519,10 +624,11 @@ public class Database {
             stmt.close();
         } catch (SQLException sqlExcept) {
             sqlExcept.printStackTrace();
+            throw sqlExcept;
         }
     }
     
-    public void updatePictureThumbnail(Picture p) {
+    public void updatePictureThumbnail(Picture p) throws SQLException {
     	try {
             stmt = conn.createStatement();
             
@@ -534,10 +640,11 @@ public class Database {
             stmt.close();
         } catch (SQLException sqlExcept) {
             sqlExcept.printStackTrace();
+            throw sqlExcept;
         }
     }
     
-    public Picture getPictureThumbnail(long id) {
+    public Picture getPictureThumbnail(long id) throws SQLException {
     	Picture output = new Picture();
         try {
             stmt = conn.createStatement();
@@ -555,6 +662,7 @@ public class Database {
             stmt.close();
         } catch (SQLException sqlExcept) {
             sqlExcept.printStackTrace();
+            throw sqlExcept;
         }
         return output;
     }
@@ -617,13 +725,14 @@ public class Database {
     }
     
     // DOCUMENTS
-    public void insertDocument(Document d) {
+    public void insertDocument(Document d) throws SQLException {
         try {
-            ps = conn.prepareStatement("Insert into " + documentTable + " (id, entity_id, data) VALUES (?, ?, ?)");
+            ps = conn.prepareStatement("Insert into " + documentTable + " (id, entity_id, data, name) VALUES (?, ?, ?, ?)");
             
             long id = d.getId();
             long entityId = d.getEntityId();
             byte[] data = d.getData();
+            String name = d.getName();
             
             Clob clob = conn.createClob();
             OutputStream out = (OutputStream) clob.setAsciiStream(1);
@@ -631,22 +740,40 @@ public class Database {
 	            out.write(data);
 	            out.flush();
 	            out.close();
-            } catch (IOException e) {
-            	e.printStackTrace();
+            } catch (IOException ioExcept) {
+                ioExcept.printStackTrace();
             }
             
             ps.setLong(1, id);
             ps.setLong(2, entityId);
             ps.setClob(3, clob);
+            ps.setString(4, name);
             
             ps.execute();
             ps.close();
         } catch (SQLException sqlExcept) {
             sqlExcept.printStackTrace();
+            throw sqlExcept;
         }
     }
     
-    public void deleteDocument(long id) {
+    public void updateDocument (Document d) throws SQLException {
+    	try {
+            stmt = conn.createStatement();
+            
+            long id = d.getId();
+            String name = d.getName();
+            String update = "update " + documentTable + " set name = '" + name + "' where id = " + id;
+            
+            stmt.execute(update);
+            stmt.close();
+        } catch (SQLException sqlExcept) {
+            sqlExcept.printStackTrace();
+            throw sqlExcept;
+        }
+    }
+    
+    public void deleteDocument(long id) throws SQLException {
     	try {
             stmt = conn.createStatement();
             
@@ -656,6 +783,7 @@ public class Database {
             stmt.close();
         } catch (SQLException sqlExcept) {
             sqlExcept.printStackTrace();
+            throw sqlExcept;
         }
     }
     
@@ -676,6 +804,7 @@ public class Database {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
+                output.setName(results.getString(4));
             }
             results.close();
             stmt.close();
@@ -700,9 +829,10 @@ public class Database {
                 Clob clob = results.getClob(3);
                 try {
 					d.setData(IOUtils.toByteArray(clob.getAsciiStream()));
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+				} catch (IOException ioExcept) {
+		            ioExcept.printStackTrace();
+		        }
+                d.setName(results.getString(4));
                 output.add(d);
             }
             results.close();
@@ -821,20 +951,14 @@ public class Database {
             
             String query = "select * from " + entityTable;
             
-            if (c != null || author != null || location != null || originalPlace != null) {
-            	query += " where";
-            	if (c != null) {
-            		query += " category_id = " + c.getId() + " and";
+            if ((c != null && c.getId()!= -1)|| author != null || location != null || originalPlace != null) {
+            	query += " where ";
+            	if (c != null && c.getId()!= -1) {
+            		query = addWhereElementToQuery(query, "category_id", c.getId(), longType);
             	}
-            	if (author != null && !author.trim().isEmpty()) {
-            		query += " author = '" + author + "' and";
-            	}
-            	if (location != null && !location.trim().isEmpty()) {
-            		query += " actual_place = '" + location + "' and";
-            	}
-            	if (originalPlace != null && !originalPlace.trim().isEmpty()) {
-            		query += " original_place = '" + originalPlace + "' and";
-            	}
+            	query = addWhereElementToQuery(query, "author", author, stringType);
+            	query = addWhereElementToQuery(query, "actual_place", location, stringType);
+            	query = addWhereElementToQuery(query, "original_place", originalPlace, stringType);
             	query = query.substring(0, query.length() - 4);
             }
             
@@ -850,6 +974,62 @@ public class Database {
         }
     	
     	return listEntities;
+    }
+    
+    public long getEntityIdFromDescription(Entity e) throws SQLException {
+    	long outputId = -1;
+        try {
+            stmt = conn.createStatement();
+            
+            String query = "select id from " + entityTable + " where ";
+            
+            String whereQuery = "";
+
+            whereQuery = addWhereElementToQuery(whereQuery, "category_id", e.getCategoryId(), longType);
+            whereQuery = addWhereElementToQuery(whereQuery, "author", e.getAuthor(), stringType);
+            whereQuery = addWhereElementToQuery(whereQuery, "title", e.getTitle(), stringType);
+            whereQuery = addWhereElementToQuery(whereQuery, "technique", e.getTechnique(), stringType);
+            whereQuery = addWhereElementToQuery(whereQuery, "measures", e.getMeasures(), stringType);
+            whereQuery = addWhereElementToQuery(whereQuery, "buy_year", e.getBuyYear(), stringType);
+            whereQuery = addWhereElementToQuery(whereQuery, "price", e.getPrice(), stringType);
+            whereQuery = addWhereElementToQuery(whereQuery, "payment_type", e.getPaymentType(), stringType);
+            whereQuery = addWhereElementToQuery(whereQuery, "original_place", e.getOriginalPlace(), stringType);
+            whereQuery = addWhereElementToQuery(whereQuery, "actual_place", e.getActualPlace(), stringType);
+            whereQuery = addWhereElementToQuery(whereQuery, "current_value", e.getCurrentValue(), stringType);
+            whereQuery = addWhereElementToQuery(whereQuery, "current_value_date", e.getCurrentValueDate(), stringType);
+            whereQuery = addWhereElementToQuery(whereQuery, "notes", e.getNotes(), stringType);
+            whereQuery = addWhereElementToQuery(whereQuery, "sold", e.getSold(), stringType);
+            
+            if(whereQuery.length()>0) {
+            	whereQuery = whereQuery.substring(0, whereQuery.length() - 4);          
+            	query += whereQuery;
+            	ResultSet results = stmt.executeQuery(query);
+            	while (results.next()) {
+            		outputId = results.getLong(1);
+            	}
+            	results.close();
+        	}
+            
+            stmt.close();
+        } catch (SQLException sqlExcept) {
+            sqlExcept.printStackTrace();
+            throw sqlExcept;
+        }
+        return outputId;
+    }
+    
+    
+    public String addWhereElementToQuery (String query, String colName, Object colVal, String colType){
+    	if ((colVal != null) && (colName != null && !colName.equalsIgnoreCase(""))){
+    		if(colType.equalsIgnoreCase(stringType)){
+    			if(!((String)colVal).equalsIgnoreCase("")) {
+    				query += colName + " = '" + (String)colVal + "' and ";
+    			}
+    		}else if(colType.equalsIgnoreCase(longType) && (long)colVal != 0) {
+    			query += colName + " = " + (long)colVal +" and ";
+    		}	
+    	}
+    	return query;
     }
     
     public ArrayList<String> getKeywords(String column) {

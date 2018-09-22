@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="resources"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/J2SE-1.5"/>
 	<classpathentry kind="lib" path="lib/derby.jar"/>
 	<classpathentry kind="lib" path="lib/derby.war"/>
@@ -22,6 +23,40 @@
 	<classpathentry kind="lib" path="lib/derbyoptionaltools.jar"/>
 	<classpathentry kind="lib" path="lib/derbyrun.jar"/>
 	<classpathentry kind="lib" path="lib/derbytools.jar"/>
-	<classpathentry kind="lib" path="lib/commons-io-2.5.jar"/>
+	<classpathentry kind="lib" path="lib/pdfbox-2.0.11.jar"/>
+	<classpathentry kind="lib" path="lib/jodconverter-core-3.0-beta-4-jahia2.jar"/>
+	<classpathentry kind="lib" path="lib/hyph-7.1.2.jar"/>
+	<classpathentry kind="lib" path="lib/com.lowagie.text-2.1.7.jar"/>
+	<classpathentry kind="lib" path="lib/itextpdf-5.5.4.jar"/>
+	<classpathentry kind="lib" path="lib/io-7.1.2.jar"/>
+	<classpathentry kind="lib" path="lib/pdfbox-debugger-2.0.11.jar"/>
+	<classpathentry kind="lib" path="lib/pdfbox-tools-2.0.11.jar"/>
+	<classpathentry kind="lib" path="lib/preflight-2.0.11.jar"/>
+	<classpathentry kind="lib" path="lib/xmpbox-2.0.11.jar"/>
+	<classpathentry kind="lib" path="lib/commons-logging-1.2.jar"/>
+	<classpathentry kind="lib" path="lib/commons-io-2.6.jar"/>
+	<classpathentry kind="lib" path="lib/fontbox-2.0.11.jar"/>
+	<classpathentry kind="lib" path="lib/slf4j-api-1.7.25.jar"/>
+	<classpathentry kind="lib" path="lib/html2pdf-1.0.1.jar"/>
+	<classpathentry kind="lib" path="lib/barcodes-7.1.2.jar"/>
+	<classpathentry kind="lib" path="lib/font-asian-7.1.2.jar"/>
+	<classpathentry kind="lib" path="lib/forms-7.1.2.jar"/>
+	<classpathentry kind="lib" path="lib/kernel-7.1.2.jar"/>
+	<classpathentry kind="lib" path="lib/layout-7.1.2.jar"/>
+	<classpathentry kind="lib" path="lib/pdfa-7.1.2.jar"/>
+	<classpathentry kind="lib" path="lib/pdftest-7.1.2.jar"/>
+	<classpathentry kind="lib" path="lib/svg-7.1.2.jar"/>
+	<classpathentry kind="lib" path="lib/openxml4j-1.0-beta.jar"/>
+	<classpathentry kind="lib" path="lib/curvesapi-1.04.jar"/>
+	<classpathentry kind="lib" path="lib/commons-codec-1.9.jar"/>
+	<classpathentry kind="lib" path="lib/dom4j-1.6.1.jar"/>
+	<classpathentry kind="lib" path="lib/poi-3.11.jar"/>
+	<classpathentry kind="lib" path="lib/poi-ooxml-3.11.jar"/>
+	<classpathentry kind="lib" path="lib/poi-ooxml-schemas-3.11.jar"/>
+	<classpathentry kind="lib" path="lib/stax-api-1.0.1.jar"/>
+	<classpathentry kind="lib" path="lib/xmlbeans-2.6.0.jar"/>
+	<classpathentry kind="lib" path="lib/poi-scratchpad-3.11.jar"/>
+	<classpathentry kind="lib" path="lib/activation-1.1.jar"/>
+	<classpathentry kind="lib" path="lib/commons-lang3-3.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -2,10 +2,11 @@ package dto;
 
 public class Picture {
 
-	private long id = 0;
+	private long id = -1;
 	private String isMainPic = "N";
-	private long entityId = 0;
+	private long entityId = -1;
 	private byte[] data;
+	private String name = "";
 
 	public Picture() {}
 
@@ -24,6 +25,10 @@ public class Picture {
 	public String getIsMainPic() {
 		return isMainPic;
 	}
+	
+	public String getName() {
+		return name;
+	}
 
 	public void setData(byte[] data) {
 		this.data = data;
@@ -39,6 +44,10 @@ public class Picture {
 
 	public void setIsMainPic(String isMainPic) {
 		this.isMainPic = isMainPic;
+	}
+	
+	public void setName(String name) {
+		this.name = name;
 	}
 
 }
