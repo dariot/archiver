@@ -1360,7 +1360,7 @@ public class Antics implements ActionListener {
         comboCategoria.removeAllItems();
         for (int i = 0; i < listCategories.size(); i++) {
         	comboCategoria.insertItemAt(listCategories.get(i).getName(), i);
-        	if (listCategories.get(i).equals(selectedCategory)) {
+        	if (listCategories.get(i).getName().equals(selectedCategory)) {
         		comboCategoria.setSelectedIndex(i);
         	}
         }

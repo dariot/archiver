@@ -1,7 +1,7 @@
-Sat Sep 22 16:39:43 CEST 2018 : Server di rete Apache Derby: 10.11.1.1 - (1616546) avviato e pronto ad accettare connessioni sulla porta 1527
+Sat Sep 22 16:49:37 CEST 2018 : Server di rete Apache Derby: 10.11.1.1 - (1616546) avviato e pronto ad accettare connessioni sulla porta 1527
 ----------------------------------------------------------------
-Sat Sep 22 16:39:43 CEST 2018:
-Avvio della versione di Derby The Apache Software Foundation - Apache Derby - 10.11.1.1 - (1616546): istanza a816c00e-0166-01b8-d9e4-00000648b5e8
+Sat Sep 22 16:49:37 CEST 2018:
+Avvio della versione di Derby The Apache Software Foundation - Apache Derby - 10.11.1.1 - (1616546): istanza a816c00e-0166-01c1-e77a-00000648b698
 sulla directory di database C:\Users\dariot\eclipse-workspace\archiver\NON_TOCCARE con caricatore classi sun.misc.Launcher$AppClassLoader@2a139a55 
 Caricato da file:/C:/Users/dariot/eclipse-workspace/archiver/lib/derby.jar
 java.vendor=Oracle Corporation
