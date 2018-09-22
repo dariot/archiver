@@ -11,7 +11,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-
 import org.apache.commons.io.IOUtils;
 import org.apache.derby.drda.NetworkServerControl;
 

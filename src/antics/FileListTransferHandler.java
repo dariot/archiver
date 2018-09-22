@@ -3,7 +3,6 @@ package antics;
 
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.UnsupportedFlavorException;
-import javax.activation.MimetypesFileTypeMap;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -17,8 +16,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 import javax.swing.TransferHandler;
-
-import org.apache.commons.lang3.ArrayUtils;
 
 import dto.Category;
 import dto.Document;
